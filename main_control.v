@@ -1,8 +1,8 @@
-//load_signal and start_signal are active high; done signifies end of the animations fsa
+//load_signal and start_signal are active high; finished_transaction signifies end of the animations fsa
 //load_screen signifies accessing the memory for the money of p1 and p2 to display it.
-//Done 
-module main_control(start_signal, load_signal, done, resetn, clock, load_amount, load_key, load_screen, start_animation);
-	input start_signal, load_signal, done, resetn, clock;
+//finished_transaction 
+module main_control(start_signal, load_signal, finished_transaction, resetn, clock, load_amount, load_key, load_screen, start_animation);
+	input start_signal, load_signal, finished_transaction, resetn, clock;
     output reg load_screen, load_amount, load_key, initialize_done, start_animation;
 	
     reg [2:0] y_Q, Y_D; // y_Q represents current state, Y_D represents next state
@@ -15,25 +15,25 @@ module main_control(start_signal, load_signal, done, resetn, clock, load_amount,
             start: begin
                    if (!load_signal) Y_D = start;
                    else Y_D = Load_Amount;
-               end
+		    end
             Load_Amount: begin
                    if(load_signal) Y_D = Load_Amount;
                    else Y_D = wait1;
-               end
+		    end
             wait1: begin
                    if(!load_signal) Y_D = wait1;
                    else Y_D = Load_Key;
-               end
+		    end
             Load_Key: begin
                    if(load_signal) Y_D = Load_Key;
                    else Y_D = wait2;
-               end
+		    end
             wait2: begin
                    if(!start_signal) Y_D = wait2;
                    else Y_D = Animations;
-               end
+		    end
             Animations: begin
-                   if(!done) Y_D = Animations;
+                   if(!finished_transaction) Y_D = Animations;
 				   else Y_D = start;
 				   end
             default: Y_D = start;
@@ -56,17 +56,17 @@ module main_control(start_signal, load_signal, done, resetn, clock, load_amount,
 				load_key = 1'b0;
 				start_animation = 1'b0;
 				load_screen = 1'b1;
-                end
+			end
             Load_Amount: begin
                 load_amount = 1'b1;
 				load_screen = 1'b0;
-                end
+			end
             wait1: begin
                 load_amount = 1'b0;
-                end
+			end
             Load_Key: begin
                 load_key = 1'b1;
-                end
+			end
             wait2: begin
                 load_key = 1'b0;
 				initialize_done = 1'b1;
