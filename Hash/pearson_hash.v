@@ -4,7 +4,7 @@ module pearson_hash(message, hash, reset_n)
 	input [7:0] message;
 	input reset_n;
 	
-	//Random bit registers
+	//Random 32 bit registers
 	reg[31:0] chunk_1;
 	reg[31:0] chunk_2;
 	reg[31:0] chunk_3;
@@ -29,7 +29,7 @@ module pearson_hash(message, hash, reset_n)
 	reg [287:0] random_table = {chunk_1, chunk_2, chunk_3, chunk_4, chunk_5, chunk_6, chunk_7, chunk_8, buffer_chunk};
 	
 	//Intialize variables for computation
-	reg [7:0] temp_hash;
+	reg [7:0] temp_hash = 8'b00000000;
 	reg [7:0] access_point;
 	reg [2:0] counter = 3'b000;
 	
@@ -43,6 +43,7 @@ module pearson_hash(message, hash, reset_n)
 		else if (counter != 3'b111) begin
 			access_point <= temp_hash ^ message; 
 			temp_hash <= random_table[access_point: (access_point + 8)];
+			counter <= counter + 1'b0;
 		end
 	end
 	
