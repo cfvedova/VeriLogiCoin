@@ -23,6 +23,5 @@ module main(SW, KEY);
 					.clock(CLOCK_50), .load_amount(load_amount), .load_key(load_key), .load_screen(load_main_screen), .start_animation(start_animation));
 	
 	animations_control ac(.start_animation(start_animation), .done_step(done_process), .done_travel(done_travel), .return_signal(KEY[0]),
-						.resetn(animations_reset), .clock(CLOCK_50), .finished_transaction(finished_transaction),
-						.step(process), .travel(travel));
+						.resetn(animations_reset), .clock(CLOCK_50), .finished_transaction(finished_transaction), .step(process), .travel(travel));
 endmodule
