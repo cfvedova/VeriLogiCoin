@@ -1,10 +1,10 @@
-// megafunction wizard: %RAM: 1-PORT%
+// megafunction wizard: %RAM: 1-PORT%VBB%
 // GENERATION: STANDARD
 // VERSION: WM1.0
 // MODULE: altsyncram 
 
 // ============================================================
-// File Name: ram32x4.v
+// File Name: ram_unit.v
 // Megafunction Name(s):
 // 			altsyncram
 //
@@ -16,7 +16,6 @@
 //
 // 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 // ************************************************************
-
 
 //Copyright (C) 2018  Intel Corporation. All rights reserved.
 //Your use of Intel Corporation's design tools, logic functions 
@@ -32,55 +31,18 @@
 //Intel and sold by Intel or its authorized distributors.  Please
 //refer to the applicable agreement for further details.
 
-
-// synopsys translate_off
-`timescale 1 ps / 1 ps
-// synopsys translate_on
-
-module ram(CLOCK_50, access_p2, access_type, data, result, wren);
-	input CLOCK_50;
-	input access_p2; // 0: accessing p1 data, 1: accessing p2 data
-	input access_type [1:0]; //00: private_key, 01: public key, 10: net_money, 11: UNDEFINED
-	input [7:0] data;
-	input wren; //Write or read
-	output [7:0] result;
-	
-	//Get memory address
-	wire [4:0] address_num = 4'b0;
-	address_num += 2 * access_type; //Memory stored as: (Private_key x 2) (Public_key x 2) (Net_money x 2)
-	if (access_p2) 
-		address_num += 6; //P2 memory starts from register 7
-	
-
-	ram32x4 ram1(
-		.address(address_num), //First 4 bits
-		.clock(CLOCK_50),
-		.data(data[3:0]),
-		.wren(wren),
-		.q(result[3:0])
-		);
-	ram32x4 ram2(
-		.address(address_num + 1), //Next 4 bits
-		.clock(CLOCK_50),
-		.data(data[7:4]),
-		.wren(wren),
-		.q(result[7:4])
-		);
-endmodule
-
-
-module ram32x4 (
+module ram_unit (
 	address,
 	clock,
 	data,
 	wren,
 	q);
 
-	input	[4:0]  address;
+	input	[5:0]  address;
 	input	  clock;
-	input	[3:0]  data;
+	input	[7:0]  data;
 	input	  wren;
-	output	[3:0]  q;
+	output	[7:0]  q;
 `ifndef ALTERA_RESERVED_QIS
 // synopsys translate_off
 `endif
@@ -88,50 +50,6 @@ module ram32x4 (
 `ifndef ALTERA_RESERVED_QIS
 // synopsys translate_on
 `endif
-
-	wire [3:0] sub_wire0;
-	wire [3:0] q = sub_wire0[3:0];
-
-	altsyncram	altsyncram_component (
-				.address_a (address),
-				.clock0 (clock),
-				.data_a (data),
-				.wren_a (wren),
-				.q_a (sub_wire0),
-				.aclr0 (1'b0),
-				.aclr1 (1'b0),
-				.address_b (1'b1),
-				.addressstall_a (1'b0),
-				.addressstall_b (1'b0),
-				.byteena_a (1'b1),
-				.byteena_b (1'b1),
-				.clock1 (1'b1),
-				.clocken0 (1'b1),
-				.clocken1 (1'b1),
-				.clocken2 (1'b1),
-				.clocken3 (1'b1),
-				.data_b (1'b1),
-				.eccstatus (),
-				.q_b (),
-				.rden_a (1'b1),
-				.rden_b (1'b1),
-				.wren_b (1'b0));
-	defparam
-		altsyncram_component.clock_enable_input_a = "BYPASS",
-		altsyncram_component.clock_enable_output_a = "BYPASS",
-		altsyncram_component.intended_device_family = "Cyclone V",
-		altsyncram_component.lpm_hint = "ENABLE_RUNTIME_MOD=NO",
-		altsyncram_component.lpm_type = "altsyncram",
-		altsyncram_component.numwords_a = 32,
-		altsyncram_component.operation_mode = "SINGLE_PORT",
-		altsyncram_component.outdata_aclr_a = "NONE",
-		altsyncram_component.outdata_reg_a = "UNREGISTERED",
-		altsyncram_component.power_up_uninitialized = "FALSE",
-		altsyncram_component.read_during_write_mode_port_a = "NEW_DATA_NO_NBE_READ",
-		altsyncram_component.widthad_a = 5,
-		altsyncram_component.width_a = 4,
-		altsyncram_component.width_byteena_a = 1;
-
 
 endmodule
 
@@ -158,7 +76,7 @@ endmodule
 // Retrieval info: PRIVATE: JTAG_ID STRING "NONE"
 // Retrieval info: PRIVATE: MAXIMUM_DEPTH NUMERIC "0"
 // Retrieval info: PRIVATE: MIFfilename STRING ""
-// Retrieval info: PRIVATE: NUMWORDS_A NUMERIC "32"
+// Retrieval info: PRIVATE: NUMWORDS_A NUMERIC "64"
 // Retrieval info: PRIVATE: RAM_BLOCK_TYPE NUMERIC "0"
 // Retrieval info: PRIVATE: READ_DURING_WRITE_MODE_PORT_A NUMERIC "3"
 // Retrieval info: PRIVATE: RegAddr NUMERIC "1"
@@ -168,8 +86,8 @@ endmodule
 // Retrieval info: PRIVATE: SingleClock NUMERIC "1"
 // Retrieval info: PRIVATE: UseDQRAM NUMERIC "1"
 // Retrieval info: PRIVATE: WRCONTROL_ACLR_A NUMERIC "0"
-// Retrieval info: PRIVATE: WidthAddr NUMERIC "5"
-// Retrieval info: PRIVATE: WidthData NUMERIC "4"
+// Retrieval info: PRIVATE: WidthAddr NUMERIC "6"
+// Retrieval info: PRIVATE: WidthData NUMERIC "8"
 // Retrieval info: PRIVATE: rden NUMERIC "0"
 // Retrieval info: LIBRARY: altera_mf altera_mf.altera_mf_components.all
 // Retrieval info: CONSTANT: CLOCK_ENABLE_INPUT_A STRING "BYPASS"
@@ -177,29 +95,29 @@ endmodule
 // Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone V"
 // Retrieval info: CONSTANT: LPM_HINT STRING "ENABLE_RUNTIME_MOD=NO"
 // Retrieval info: CONSTANT: LPM_TYPE STRING "altsyncram"
-// Retrieval info: CONSTANT: NUMWORDS_A NUMERIC "32"
+// Retrieval info: CONSTANT: NUMWORDS_A NUMERIC "64"
 // Retrieval info: CONSTANT: OPERATION_MODE STRING "SINGLE_PORT"
 // Retrieval info: CONSTANT: OUTDATA_ACLR_A STRING "NONE"
 // Retrieval info: CONSTANT: OUTDATA_REG_A STRING "UNREGISTERED"
 // Retrieval info: CONSTANT: POWER_UP_UNINITIALIZED STRING "FALSE"
 // Retrieval info: CONSTANT: READ_DURING_WRITE_MODE_PORT_A STRING "NEW_DATA_NO_NBE_READ"
-// Retrieval info: CONSTANT: WIDTHAD_A NUMERIC "5"
-// Retrieval info: CONSTANT: WIDTH_A NUMERIC "4"
+// Retrieval info: CONSTANT: WIDTHAD_A NUMERIC "6"
+// Retrieval info: CONSTANT: WIDTH_A NUMERIC "8"
 // Retrieval info: CONSTANT: WIDTH_BYTEENA_A NUMERIC "1"
-// Retrieval info: USED_PORT: address 0 0 5 0 INPUT NODEFVAL "address[4..0]"
+// Retrieval info: USED_PORT: address 0 0 6 0 INPUT NODEFVAL "address[5..0]"
 // Retrieval info: USED_PORT: clock 0 0 0 0 INPUT VCC "clock"
-// Retrieval info: USED_PORT: data 0 0 4 0 INPUT NODEFVAL "data[3..0]"
-// Retrieval info: USED_PORT: q 0 0 4 0 OUTPUT NODEFVAL "q[3..0]"
+// Retrieval info: USED_PORT: data 0 0 8 0 INPUT NODEFVAL "data[7..0]"
+// Retrieval info: USED_PORT: q 0 0 8 0 OUTPUT NODEFVAL "q[7..0]"
 // Retrieval info: USED_PORT: wren 0 0 0 0 INPUT NODEFVAL "wren"
-// Retrieval info: CONNECT: @address_a 0 0 5 0 address 0 0 5 0
+// Retrieval info: CONNECT: @address_a 0 0 6 0 address 0 0 6 0
 // Retrieval info: CONNECT: @clock0 0 0 0 0 clock 0 0 0 0
-// Retrieval info: CONNECT: @data_a 0 0 4 0 data 0 0 4 0
+// Retrieval info: CONNECT: @data_a 0 0 8 0 data 0 0 8 0
 // Retrieval info: CONNECT: @wren_a 0 0 0 0 wren 0 0 0 0
-// Retrieval info: CONNECT: q 0 0 4 0 @q_a 0 0 4 0
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram32x4.v TRUE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram32x4.inc FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram32x4.cmp FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram32x4.bsf FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram32x4_inst.v FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram32x4_bb.v TRUE
+// Retrieval info: CONNECT: q 0 0 8 0 @q_a 0 0 8 0
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram_unit.v TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram_unit.inc FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram_unit.cmp FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram_unit.bsf FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram_unit_inst.v FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram_unit_bb.v TRUE
 // Retrieval info: LIB_FILE: altera_mf
