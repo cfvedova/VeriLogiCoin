@@ -1,4 +1,4 @@
-module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, coord_x, coord_y);
+module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, x_coord, y_coord);
     input clk;
     input resetn;
 	input [9:0] start_x; // 0 -> 640
@@ -46,7 +46,7 @@ module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, co
 		if (!resetn)
 			offset_y <= 5'b0;
 		else if (enable && y_enable) begin
-			if (offset_y != 8b'11001000) // Height is at most 200 pixels
+			if (offset_y != 8'b11001000) // Height is at most 200 pixels
 				offset_y <= offset_y + 1'b1;
 			else 
 				offset_y <= 8'b00000000;
