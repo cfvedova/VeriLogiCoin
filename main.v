@@ -69,7 +69,7 @@ module main(SW, KEY);
 	ram_unit ram1(.clock(CLOCK_50), .access_p2(access_p2), .access_type(access_type), .data_in(data_in), .wren(wren), .result(result));
 	
 	//CAN ONLY WRITE TO MEMORY WHEN process == 100
-	access_values access_vals(.clock(CLOCK_50), .process(process), .access_p2(access_p2), .access_type(access_type), .data_in(data_in), .wren(wren));
+	access_values access_vals(.process(process), .access_p2(access_p2), .access_type(access_type), .data_in(data_in), .wren(wren));
 	
 	always @(CLOCK_50)
 	begin
@@ -81,7 +81,7 @@ module main(SW, KEY);
 					.clock(CLOCK_50), .load_amount(load_amount), .load_key(load_key), .load_screen(load_main_screen), .start_animation(start_animation));
 	
 	//Main Controller for Transaction
-	main_transaction_control mtc(.start_animation(start_animation), .done_step(done_process), .done_travel(done_travel), .return_signal(~KEY[0]),
+	main_transaction_control mtc(.start_transaction(start_animation), .done_step(done_process), .done_travel(done_travel), .return_signal(~KEY[0]),
 						.resetn(animations_reset), .clock(CLOCK_50), .finished_transaction(finished_transaction), .step(process), .travel(travel));
 	
 	//Datapath for verifying Info.
