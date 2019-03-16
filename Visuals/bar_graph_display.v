@@ -1,12 +1,12 @@
-module bar_graph_datapath(clk, resetn, start_x, start_y, graph_height, enable, coord_x, coord_y);
-    input clk
-    input resetn
-	input [9:0] start_x // 0 -> 640
-	input [8:0] start_y // 0 -> 480
-	input enable  
+module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, coord_x, coord_y);
+    input clk;
+    input resetn;
+	input [9:0] start_x; // 0 -> 640
+	input [8:0] start_y; // 0 -> 480
+	input enable;  
 	input [7:0] graph_height; // 0 -> 200
-    output [9:0] x_coord // X value to plot
-	output [8:0] y_coord // Y value to plot
+    output [9:0] x_coord; // X value to plot
+	output [8:0] y_coord; // Y value to plot
 
     
     // input registers
@@ -21,8 +21,8 @@ module bar_graph_datapath(clk, resetn, start_x, start_y, graph_height, enable, c
     // Registers x, y with respective input logic
     always @ (posedge clk) begin
         if (!resetn) begin
-            x <= 10'b0;
-			y <= 9'b0;
+            x <= start_x;
+			y <= start_y;
         end
     end
 
