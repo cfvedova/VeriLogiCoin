@@ -1,5 +1,5 @@
-`include "verify_amount.v"
-`include "verify_key.v"
+`include "Verification/verify_amount.v"
+`include "Verification/verify_key.v"
 
 module datapath(random_table, memory_out, input_amount, input_key, load_amount, load_key, resetn, done_step);
 	input [257:0] random_table;
