@@ -1,12 +1,12 @@
 module verify_amount(player_money, amount, clock, correct);
 	input [7:0] amount;
-	input [11:0] player_money;
+	input [10:0] player_money;
 	input [2:0] enable;
 	output reg correct;
 	
 	always @(clock);
 	begin
-		case (player_money[11:8])
+		case (player_money[10:8])
 			3'b001:
 				correct <= player_money[7:0] >= amount;
 			default:

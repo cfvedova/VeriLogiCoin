@@ -3,6 +3,7 @@
 `include "Controllers/main_control.v"
 `include "Controllers/main_transaction_control.v"
 `include "Datapath/datapath.v"
+`inlcude "Memory/RAM/ram_unit.v"
 
 module main(SW, KEY);
 	input [9:0] SW;
@@ -58,14 +59,31 @@ module main(SW, KEY);
 	//Create random 256 bit table form random chunks
 	reg [287:0] random_table = {chunk_1, chunk_2, chunk_3, chunk_4, chunk_5, chunk_6, chunk_7, chunk_8, buffer_chunk};
 	
-	//Create Memory and accesses
+	//Create Memory Connections
+	reg [10:0] memory_out = 10'b0;
+	wire access_p2, wren;
+	wire [1:0] access_type;
+	wire [7:0] data_in;
+	wire [7:0] result;
 	
+	ram_unit ram1(.clock(CLOCK_50), .access_p2(access_p2), .access_type(access_type), .data_in(data_in), .wren(wren), .result(result));
 	
+	//CAN ONLY WRITE TO MEMORY WHEN process == 100
+	access_values access_vals(.clock(CLOCK_50), .process(process), .access_p2(access_p2), .access_type(access_type), .data_in(data_in), .wren(wren));
+	
+	always @(CLOCK_50)
+	begin
+		memory_out <= {process, result};
+	end
+	
+	//Main Controller
 	main_control mc(.start_signal(~KEY[0]), .load_signal(~KEY[1]), .finished_transaction(finished_transaction), .resetn(main_control_reset),
 					.clock(CLOCK_50), .load_amount(load_amount), .load_key(load_key), .load_screen(load_main_screen), .start_animation(start_animation));
 	
-	main_transaction_control tc(.start_animation(start_animation), .done_step(done_process), .done_travel(done_travel), .return_signal(~KEY[0]),
+	//Main Controller for Transaction
+	main_transaction_control mtc(.start_animation(start_animation), .done_step(done_process), .done_travel(done_travel), .return_signal(~KEY[0]),
 						.resetn(animations_reset), .clock(CLOCK_50), .finished_transaction(finished_transaction), .step(process), .travel(travel));
 	
-	datapath data(.random_table(random_table), .memory_out(), .input_amount(SW[7:0]), .input_key(SW[7:0]), .load_amount(load_amount), .load_key(load_key), .resetn(data_reset), .done_step(done_process));
+	//Datapath for verifying Info.
+	verify_datapath verdata(.clock(CLOCK_50), .random_table(random_table), .memory_out(memory_out), .input_amount(SW[7:0]), .input_key(SW[7:0]), .load_amount(load_amount), .load_key(load_key), .resetn(data_reset), .done_step(done_process));
 endmodule

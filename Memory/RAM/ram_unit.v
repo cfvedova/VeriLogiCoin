@@ -36,11 +36,11 @@
 // synopsys translate_off
 `timescale 1 ps / 1 ps
 // synopsys translate_on
-module ram_unit(CLOCK_50, access_p2, access_type, data, result, wren);
-	input CLOCK_50;
+module ram_unit(clock, access_p2, access_type, data_in, wren, result);
+	input clock;
 	input access_p2; // 0: accessing p1 data, 1: accessing p2 data
 	input access_type [1:0]; //00: private_key, 01: public key, 10: net_money, 11: Blockchain
-	input [7:0] data;
+	input [7:0] data_in;
 	input wren; //Write or read
 	output [7:0] result;
 	
@@ -55,13 +55,13 @@ module ram_unit(CLOCK_50, access_p2, access_type, data, result, wren);
 
 	ram ram1(
 		.address(address_num), //First 4 bits
-		.clock(CLOCK_50),
-		.data(data[7:0]),
+		.clock(clock),
+		.data(data_in[7:0]),
 		.wren(wren),
 		.q(result[7:0])
 		);
-
 endmodule
+
 module ram (
 	address,
 	clock,

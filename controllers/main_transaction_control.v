@@ -2,7 +2,7 @@
 module animations_control(start_animation, done_step, done_travel, return_signal, resetn, clock, finished_transaction, step, travel);
 	input start_animation, done_step, done_travel, return_signal, resetn, clock;
     output reg finished_transaction;
-	output reg [1:0] step;
+	output reg [2:0] step;
 	output reg [2:0] travel; //The bit of travel tells which travel it is on. travel1 == 001, etc. And not travel == 000.
 	
     reg [2:0] y_Q, Y_D; // y_Q represents current state, Y_D represents next state
