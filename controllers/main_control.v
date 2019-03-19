@@ -1,9 +1,9 @@
 //load_signal and start_signal are active high; finished_transaction signifies end of the animations fsa
 //load_screen signifies accessing the memory for the money of p1 and p2 to display it.
 //finished_transaction 
-module main_control(start_signal, load_signal, finished_transaction, resetn, clock, load_amount, load_key, load_screen, initialize_done, start_animation);
+module main_control(start_signal, load_signal, finished_transaction, resetn, clock, load_amount, load_key, load_screen, start_animation);
 	input start_signal, load_signal, finished_transaction, resetn, clock;
-    output reg load_screen, load_amount, load_key, initialize_done, start_animation;
+    output reg load_screen, load_amount, load_key, start_animation;
 	
     reg [2:0] y_Q, Y_D; // y_Q represents current state, Y_D represents next state
 
@@ -48,7 +48,6 @@ module main_control(start_signal, load_signal, finished_transaction, resetn, clo
 		load_key = 1'b0;
 		load_screen = 1'b0;
 		start_animation = 1'b0;
-		initialize_done = 1'b0;
 		
         case (y_Q)
             start: begin
@@ -69,10 +68,8 @@ module main_control(start_signal, load_signal, finished_transaction, resetn, clo
 			end
             wait2: begin
                 load_key = 1'b0;
-				initialize_done = 1'b1;
             end
 			Animations: begin
-				initialize_done = 1'b0;
 				start_animation = 1'b1;
             end
         endcase

@@ -52,6 +52,7 @@ module ram(clock, access_type, data_in, wren, result);
 		.q(result[47:0])
 		);
 endmodule
+
 module ram_access (
 	address,
 	clock,

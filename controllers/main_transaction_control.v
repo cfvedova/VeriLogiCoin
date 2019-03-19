@@ -1,16 +1,18 @@
 //step == 001 if Verify_Amount; == 010 if Verify_Signature; == 011 if Mine_Block; 100 if Finish_Transaction (Make sure computation is complete); == 00 if no step
-module main_transaction_control(start_transaction, done_step, done_travel, return_signal, resetn, clock, finished_transaction, step, travel);
-	input start_transaction, done_step, done_travel, return_signal, resetn, clock;
-    output reg finished_transaction;
+module main_transaction_control(start_transaction, done_step, done_travel, resetn, clock, finished_transaction, step, travel);
+	input start_transaction, done_step, done_travel, resetn, clock;
+    output finished_transaction;
 	output reg [2:0] step;
 	output reg [2:0] travel; //The bit of travel tells which travel it is on. travel1 == 001, etc. And not travel == 000.
 	
-    reg [2:0] y_Q, Y_D; // y_Q represents current state, Y_D represents next state
+    reg [3:0] y_Q, Y_D; // y_Q represents current state, Y_D represents next state
 	
 	//start is a buffer
     localparam buffer = 4'b0000, travel1 = 4'b0001, Verify_Amount = 4'b0010, travel2 = 4'b0011, Verify_Signature = 4'b0100,
 			   travel3 = 4'b0101, Mine_Block = 4'b0110, travel4 = 4'b0111, Finish_Transaction = 4'b1000;
     
+	reg finished_transaction0, finished_transaction1;
+	
     always @(*)
     begin   // Start of state_table
         case (y_Q)
@@ -47,10 +49,13 @@ module main_transaction_control(start_transaction, done_step, done_travel, retur
 			    else Y_D = Finish_Transaction;
 			end
 			Finish_Transaction: begin
-			    if(!done_step) Y_D = Finish_Transaction;
-			    else begin
+			    if(!done_step) begin
+					Y_D = Finish_Transaction;
+					finished_transaction0 = 1'b0;
+				end
+				 else begin
+					finished_transaction0 = 1'b1;
 					Y_D = buffer;
-					finished_transaction = 1'b1;
 			    end
 			end
             default: Y_D = buffer;
@@ -63,17 +68,16 @@ module main_transaction_control(start_transaction, done_step, done_travel, retur
         // By default make all our signals 0
 		travel[2:0] = 3'b0;
 		step[2:0] = 3'b0;
-		finished_transaction = 1'b0;
 		
         case (y_Q)
             buffer: begin
 				travel[2:0] = 3'b0;
 				step[2:0] = 3'b0;
-				finished_transaction = 1'b0;
 			end
 			travel1: begin
-                travel[2:0] = 3'b001;
+            travel[2:0] = 3'b001;
 				step[2:0] = 3'b001;
+				finished_transaction1 = 1'b1;
 			end
 			Verify_Amount: begin
 				travel[2:0] = 3'b0;
@@ -96,11 +100,14 @@ module main_transaction_control(start_transaction, done_step, done_travel, retur
                 travel[2:0] = 3'b101;
 			end
 			Finish_Transaction: begin
+				finished_transaction1 = 1'b0;
 				step[2:0] = 3'b100;
 				travel[2:0] = 3'b0;
 			end
         endcase
     end // enable_signals
+	
+	assign finished_transaction = ~((~finished_transaction0) || finished_transaction1);
 	
     // State Register
     always @(posedge clock)
