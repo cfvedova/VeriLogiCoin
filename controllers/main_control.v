@@ -107,11 +107,13 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
     // State Register
     always @(posedge clock)
     begin   // Start of state_FFs (state register)
-        if(resetn == 1'b0)
+        if(resetn == 1'b0) begin
             y_Q <= start;
 			time_for_random_complete <= 9'b0;
-        else
+			end
+        else begin
             y_Q <= Y_D;
 			time_for_random_complete <= time_for_random_complete + 1'b1;
+			end
     end     // End of state_FFs (state register)
 endmodule
