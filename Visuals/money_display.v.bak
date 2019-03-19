@@ -2,7 +2,6 @@
 `include "vga_adapter/vga_address_translator.v"
 `include "vga_adapter/vga_controller.v"
 `include "vga_adapter/vga_pll.v"
-`include "bar_graph_display.v"
 module money_display(CLOCK_50, memory_out, load_memory, resetn, 
 		VGA_CLK,   						//	VGA Clock
 		VGA_HS,							//	VGA H_SYNC
