@@ -48,12 +48,12 @@ module money_display(CLOCK_50, memory_out, load_memory,
 	
 	// Put your code here. Your code should produce signals x,y,colour and writeEn/plot
 	// for the VGA controller, in addition to any other functionality your design may require.	
-	wire p1_x_plot;
-	wire p1_y_plot;
+	wire [9:0] p1_x_plot;
+	wire [8:0] p1_y_plot;
 	wire p1_done;
 	
-	wire p2_x_plot;
-	wire p2_y_plot;
+	wire [9:0] p2_x_plot;
+	wire [8:0] p2_y_plot;
 	wire p2_done;
 	
 	bar_graph_display p1_money(
