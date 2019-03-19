@@ -2,23 +2,27 @@
 `include "Verification/verify_key.v"
 `include "Verification/complete_transaction.v"
 
-module datapath(process, clock, random_table, memory_out, input_amount, input_key, load_amount, load_key, resetn, done_step, p1_amount_out, p2_amount_out);
+module datapath(process, clock, random_table, memory_values, player_in, input_amount, input_key, load_amount, load_key, load_player, load_memory, resetn, done_step, result_out);
 	input [257:0] random_table;
-	input [10:0] memory_out;
-	input clock, load_amount, load_key, resetn;
+	input [47:0] memory_values;
+	input clock, load_amount, load_key, load_player, load_memory, resetn;
 	input [2:0] process;
 	input [7:0] input_amount, input_key;
+	input player_in;
 	
-	output [10:0] p1_amount_out, p2_amount_out;
 	output reg done_step;
+	output [47:0] result_out;
 	
 	wire verify_amount_signal, verify_key_signal, complete_transaction_signal;
 	
 	reg [7:0] amount;
 	reg [7:0] key;
+	reg [7:0] p1_private_key;
+	reg [7:0] p2_private_key;
+	reg [7:0] p1_public_key;
+	reg [7:0] p2_public_key;
 	reg [7:0] p1_amount;
 	reg [7:0] p2_amount;
-	reg [7:0] real_public_key;
 	reg player;
 	
 	//Input Amount Register
@@ -39,32 +43,6 @@ module datapath(process, clock, random_table, memory_out, input_amount, input_ke
 			key <= input_key;
 	end
 	
-	//Real Public Key
-	always @(*)
-	begin
-		if(resetn == 1'b0)
-			real_public_key <= 8'b0;
-		else if (load_public_key)
-			real_public_key <= memory_out;
-	end
-	
-	//Player Money
-	always @(*)
-	begin
-		if (resetn == 1'b0)
-			p1_amount <= 8'b0;
-		else if (load_p1_amount)
-			p1_amount <= memory_out;
-	end
-	
-	always @(*)
-	begin
-		if (resetn == 1'b0)
-			p2_amount <= 8'b0;
-		else if (load_p2_amount)
-			p2_amount <= memory_out;
-	end
-	
 	//Player Choice
 	always @(*)
 	begin
@@ -74,20 +52,77 @@ module datapath(process, clock, random_table, memory_out, input_amount, input_ke
 			player <= player_in;
 	end
 	
-	wire player_amount = (player) ? p2_amount: p1_amount;
+	//P1 Private Key
+	always @(*)
+	begin
+		if (resetn == 1'b0)
+			p1_private_key <= 8'b0;
+		else if (load_memory)
+			p1_private_key <= memory_values[7:0];
+	end
+	
+	//P2 Private Key
+	always @(*)
+	begin
+		if (resetn == 1'b0)
+			p2_private_key <= 8'b0;
+		else if (load_memory)
+			p2_private_key <= memory_values[31:24];
+	end
+	
+	//P1 Public Key
+	always @(*)
+	begin
+		if (resetn == 1'b0)
+			p1_public_key <= 8'b0;
+		else if (load_memory)
+			p1_public_key <= memory_values[15:8];
+	end
+	
+	//P2 Public Key
+	always @(*)
+	begin
+		if (resetn == 1'b0)
+			p2_public_key <= 8'b0;
+		else if (load_memory)
+			p2_public_key <= memory_values[39:32];
+	end
+	
+	//P1 Money
+	always @(*)
+	begin
+		if (resetn == 1'b0)
+			p1_amount <= 8'b0;
+		else if (load_memory)
+			p1_amount <= memory_values[23:16];
+	end
+	
+	//P2 Money
+	always @(*)
+	begin
+		if (resetn == 1'b0)
+			p2_amount <= 8'b0;
+		else if (load_memory)
+			p2_amount <= memory_values[47:40];
+	end
+	
+	wire [7:0] player_amount = (player) ? p2_amount: p1_amount;
 	verify_amount va(.amount(amount), .player_money(player_amount), .clock(clock), .correct(verify_amount_signal));
 	
+	wire [7:0] real_public_key = (player) ? p2_public_key : p1_public_key;
 	verify_key vk(.public_key(real_public_key), .input_key(key), .random_table(random_table), .clock(clock), .correct(verify_key_signal));
 	
-	complete_transaction ct(.process(), .p1_amount(p1_amount), .p2_amount(p2_amount), .amount_change(amount), .clock(clock), .p1_amount_out(p1_amount_out), .p2_amount_out(p2_amount_out), .complete_transaction_signal(complete_transaction_signal));
+	wire [7:0] p1_amount_out, p2_amount_out;
+	complete_transaction ct(.p1_amount(p1_amount), .p2_amount(p2_amount), .player(player), .amount_change(amount), .clock(clock), .p1_amount_out(p1_amount_out), .p2_amount_out(p2_amount_out));
 	
 	always @(clock)
 	begin
-		case (memory_out[10:8])
+		case (process)
 			3'b001: done_step <= verify_amount_signal;
-			3'b010: done_step <= verify_key_signal;
-			3'b100: done_step <= complete_transaction_signal;
+			3'b010: done_step <= verify_key_signal; //Will be zero until the hash is complete
 			default: done_step <= 1'b0;
 		endcase
 	end
+	
+	assign result_out = {p1_private_key, p1_public_key, p1_amount_out, p2_private_key, p2_public_key, p2_amount_out};
 endmodule
