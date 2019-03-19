@@ -2,7 +2,7 @@
 //Needs to be tested
 
 module verify_key(public_key, input_key, random_table, clock, correct);
-	input [10:0] public_key;
+	input [7:0] public_key;
 	input [7:0] input_key;
 	input [257:0] random_table;
 	input clock;
@@ -15,17 +15,17 @@ module verify_key(public_key, input_key, random_table, clock, correct);
 	
 	pearson_hash8 ph(.message(input_key), .reset_n(resetn), .random_table(random_table), .hash(input_public_key), .counter(counter));
 	
-	always @(clock)
+	always @(*)
 	begin
-		case (public_key[10:8])
-			3'b010: begin
-				resetn <= 1'b1;
-				if (counter == 3'b111)
-					correct <= public_key[7:0] == input_public_key;
+		case (public_key)
+			8'b0: begin
+				correct <= 1'b0;
+				resetn <= 1'b0;
 			end
 			default: begin
-				resetn <= 1'b0;
-				correct <= 1'b0;
+				resetn <= 1'b1;
+				if (counter == 3'b111)
+					correct <= public_key == input_public_key;
 			end
 		endcase
 	end
