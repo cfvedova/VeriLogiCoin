@@ -1,8 +1,7 @@
 `include "../Hash/pearson_hash8.v"
 
-module make_starting_memory(random_table, reset_n, starting_memory);
+module make_starting_memory(random_table, starting_memory);
 	input [287:0] random_table;
-	input reset_n;
 	
 	output [47:0] starting_memory;
 	

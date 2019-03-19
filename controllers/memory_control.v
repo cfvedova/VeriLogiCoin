@@ -8,11 +8,13 @@ module memory_control(clock, resetn, load_memory, process, write_enable, access_
 	reg [2:0] next_state;
 	
 	//States
-	localparam 	Buffer_1 = 3'd0,
-				Load_data = 3'd1,
-				Wait1 = 3'd2,
-				Buffer_2 = 3'd3,
-				Write_data = 3'd4;
+	localparam 	Init_memory = 3'd0,
+				Buffer_1 = 3'd1,
+				Load_data = 3'd2,
+				Wait1 = 3'd3,
+				Buffer_2 = 3'd4,
+				Write_data = 3'd5;
+				
 				
 	
 	//Wait signals to give buffer time to memory access
@@ -46,6 +48,10 @@ module memory_control(clock, resetn, load_memory, process, write_enable, access_
 	// State Table
 	always @(*) begin
 		case (current_state)
+			Init_memory: begin
+				if (waited == 3'b111) next_state = Buffer_1;
+				else next_state = Init_memory;
+			end
             Buffer_1: begin
                    if (load_memory) next_state = Load_data;
                    else next_state = Buffer_1;
@@ -66,7 +72,7 @@ module memory_control(clock, resetn, load_memory, process, write_enable, access_
                    if(waited_3 == 3'b111) next_state = Buffer_1;
                    else next_state = Write_data;
 		    end
-          default: next_state = Buffer_1;
+          default: next_state = Init_memory;
         endcase
 	end
 	
@@ -78,9 +84,21 @@ module memory_control(clock, resetn, load_memory, process, write_enable, access_
 		write_enable = 1'b0;
 		done = 1'b0;
 		access_type = 1'b0;
+		finished_init <= 1'b0;
 		
 		case (current_state)
+			Init_memory: begin
+				finished_init <= 1'b0;
+				start_wait1 <= 1'b0;
+				start_wait2 <= 1'b0;
+				start_wait3 <= 1'b0;
+				load_registers <= 1'b0;
+				write_enable <= 1'b1;
+				done <= 1'b0;
+				access_type = 1'b0;
+			end
 			Buffer_1: begin
+				finished_init <= 1'b1;
 				start_wait1 <= 1'b0;
 				start_wait2 <= 1'b0;
 				start_wait3 <= 1'b0;
