@@ -68,9 +68,9 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	ram ram1(.clock(CLOCK_50), .access_type(access_type), .data_in(data_in), .wren(wren), .result(memory_values));
 	
 	//Memory Controller
-	memory_control mem_control(.clock(CLOCK_50), .resetn(reset_others), .load_memory(load_memory), .process(process), .datapath_out(result_out), 
-							   .starting_memory(starting_memory), .write_enable(wren), .access_type(access_type), .data_in(data_in),
-							   .load_registers(load_registers), .done(done_memory_store));
+	memory_control mem_control(.clock(CLOCK_50), .resetn(reset_others), .load_memory(load_memory), .init_memory(init_memory), .process(process),
+							   .datapath_out(result_out), .starting_memory(starting_memory), .write_enable(wren), .access_type(access_type),
+							   .data_in(data_in), .load_registers(load_registers), .done(done_memory_store), .finished_init(finished_init));
 	
 	//Main Controller
 	main_control main_control(.start_signal(~KEY[0]), .load_signal(~KEY[1]), .finished_init(finished_init), .finished_transaction(done_memory_store),
