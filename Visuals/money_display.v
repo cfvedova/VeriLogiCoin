@@ -1,4 +1,4 @@
-module money_display(CLOCK_50, memory_out, load_memory, 
+module money_display(CLOCK_50, memory_out, load_memory, resetn, 
 		VGA_CLK,   						//	VGA Clock
 		VGA_HS,							//	VGA H_SYNC
 		VGA_VS,							//	VGA V_SYNC
@@ -11,6 +11,7 @@ module money_display(CLOCK_50, memory_out, load_memory,
 	input CLOCK_50;
 	input [47:0] memory_out;
 	input load_memory;
+	input resetn;
 	
 	// Do not change the following outputs
 	output			VGA_CLK;   				//	VGA Clock
@@ -28,7 +29,7 @@ module money_display(CLOCK_50, memory_out, load_memory,
 	vga_adapter VGA(
 			.resetn(resetn),
 			.clock(CLOCK_50),
-			.colour(3'b100),
+			.colour(3'b010),
 			.x(x_plot),
 			.y(y_plot),
 			.plot(!p2_done),
