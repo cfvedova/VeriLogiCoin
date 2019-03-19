@@ -47,7 +47,6 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	wire [47:0] memory_values;
 
 	//VGA output for display. Do not change
-	wire display_reset;
 	output VGA_CLK;   				//	VGA Clock
 	output VGA_HS;					//	VGA H_SYNC
 	output VGA_VS;					//	VGA V_SYNC
@@ -55,7 +54,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	output VGA_SYNC_N;				//	VGA SYNC
 	output VGA_R;   				//	VGA Red[9:0]
 	output [9:0] VGA_G;	 				//	VGA Green[9:0]
-	output [9:0]VGA_B;   				//	VGA Blue[9:0]
+	output [9:0] VGA_B;   				//	VGA Blue[9:0]
 
 	//Memory RAM
 	ram ram1(.clock(CLOCK_50), .access_type(access_type), .data_in(result_out), .wren(wren), .result(memory_values));
@@ -79,7 +78,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	
 	
 	//Money_display
-	money_display display(.CLOCK_50(CLOCK_50), .memory_out(memory_values), .load_memory(???), .resetn(), 
+	money_display display(.CLOCK_50(CLOCK_50), .memory_out(memory_values), .load_memory(load_memory), .resetn(reset_others), 
 		.VGA_CLK(VGA_CLK),   						
 		.VGA_HS(VGA_HS),							
 		.VGA_VS(VGA_VS),							

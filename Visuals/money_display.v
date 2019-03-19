@@ -29,7 +29,7 @@ module money_display(CLOCK_50, memory_out, load_memory, resetn,
 	vga_adapter VGA(
 			.resetn(resetn),
 			.clock(CLOCK_50),
-			.colour(3'b100),
+			.colour(3'b010),
 			.x(x_plot),
 			.y(y_plot),
 			.plot(!p2_done),
