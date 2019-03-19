@@ -1,7 +1,7 @@
-module memory_control(clk, resetn, load_memory, process, write_enable, access_type, done);
-	input clk, resetn, load_memory;
+module memory_control(clock, resetn, load_memory, process, write_enable, access_type, done);
+	input clock, resetn, load_memory;
 	input [2:0] process;
-	output reg write_enable, done, access_type;
+	output reg write_enable, access_type, done;
 
 	
 	reg [2:0] current_state;
@@ -20,7 +20,7 @@ module memory_control(clk, resetn, load_memory, process, write_enable, access_ty
 	reg [2:0] waited = 3'b0;
 	reg [2:0] waited_2 = 3'b0;
 	
-	always @(posedge clk) begin
+	always @(posedge clock) begin
 		if (!resetn) begin
 			waited <= 3'b0;
 			waited_2 <= 3'b0;
@@ -96,7 +96,7 @@ module memory_control(clk, resetn, load_memory, process, write_enable, access_ty
 	end
 	
 	//State Register
-	always @(posedge clk) begin
+	always @(posedge clock) begin
 		if (!resetn)
 			current_state <= Buffer_1;
 		else
