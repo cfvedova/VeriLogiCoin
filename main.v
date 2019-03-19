@@ -5,7 +5,7 @@
 `include "Datapath/datapath.v"
 `include "Controllers/memory_control.v"
 
-module main(SW, KEY, CLOCK_50);
+module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N, VGA_R, VGA_G, VGA_B);
 	input [9:0] SW;
 	input [3:0] KEY;
 	input CLOCK_50;
@@ -29,7 +29,6 @@ module main(SW, KEY, CLOCK_50);
 	
 	//Wires for Memory Control
 	wire load_register; //Loads registers in datapath
-	wire 
 	
 	//Wires for Datapath
 	wire data_reset;
@@ -42,7 +41,16 @@ module main(SW, KEY, CLOCK_50);
 	//Wires for Memory
 	wire [47:0] memory_values;
 	
-	//Memory Controller
+	//VGA output for display. Do not change
+	wire display_reset;
+	output VGA_CLK;   				//	VGA Clock
+	output VGA_HS;					//	VGA H_SYNC
+	output VGA_VS;					//	VGA V_SYNC
+	output VGA_BLANK_N;				//	VGA BLANK
+	output VGA_SYNC_N;				//	VGA SYNC
+	output VGA_R;   				//	VGA Red[9:0]
+	output [9:0] VGA_G;	 				//	VGA Green[9:0]
+	output [9:0]VGA_B;   				//	VGA Blue[9:0]
 	
 	
 	//Main Controller
@@ -57,6 +65,19 @@ module main(SW, KEY, CLOCK_50);
 	datapath verdata(.process(process), .clock(CLOCK_50), .random_table(random_table), .memory_values(memory_values), .player_in(1'b0),
 					.input_amount(SW[7:0]), .input_key(SW[7:0]), .load_amount(load_amount), .load_key(load_key), .load_player(1'b1),
 					.load_register(load_register), .resetn(data_reset), .done_step(done_data_process), .result_out(result_out));
+	
+	
+	//Money_display
+	money_display display(.CLOCK_50(CLOCK_50), .memory_out(memory_values), .load_memory(???), .resetn(), 
+		.VGA_CLK(VGA_CLK),   						
+		.VGA_HS(VGA_HS),							
+		.VGA_VS(VGA_VS),							
+		.VGA_BLANK_N(VGA_BLANK_N),						
+		.VGA_SYNC_N(VGA_SYNC_N),						
+		.VGA_R(VGA_R),   						
+		.VGA_G(VGA_G),	 						
+		.VGA_B(VGA_B)   						
+	);
 	
 	always @(*)
 	begin
