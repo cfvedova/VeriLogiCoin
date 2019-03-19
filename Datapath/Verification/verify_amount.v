@@ -4,7 +4,7 @@ module verify_amount(player_money, amount, clock, correct);
 	input [2:0] enable;
 	output reg correct;
 	
-	always @(clock);
+	always @(clock)
 	begin
 		case (player_money[10:8])
 			3'b001:
