@@ -1,7 +1,8 @@
 module verify_amount(player_money, amount, clock, correct);
-	input [7:0] amount;
 	input [10:0] player_money;
-	input [2:0] enable;
+	input [7:0] amount;
+	input clock;
+	
 	output reg correct;
 	
 	always @(clock)

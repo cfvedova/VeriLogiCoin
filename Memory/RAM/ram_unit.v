@@ -39,22 +39,28 @@
 module ram_unit(clock, access_p2, access_type, data_in, wren, result);
 	input clock;
 	input access_p2; // 0: accessing p1 data, 1: accessing p2 data
-	input access_type [1:0]; //00: private_key, 01: public key, 10: net_money, 11: Blockchain
+	input [1:0] access_type; //00: private_key, 01: public key, 10: net_money, 11: Blockchain
 	input [7:0] data_in;
 	input wren; //Write or read
 	output [7:0] result;
 	
 	//Get memory address
-	wire [4:0] address_num = 5'b0;
-	if access_type == 2'b11 // Blockchain
-		//TODO
-	else
-		address_num += access_type; //Memory stored as: (Private_key) (Public_key) (Net_money)
-		if (access_p2) 
-			address_num += 3; //P2 memory starts from register 7
-
+	reg [4:0] address_num;
+	always @(*)
+	begin
+		if (access_type == 2'b11) begin
+			address_num <= 5'b0;
+		end
+		else begin
+			address_num <= {2'b0, access_type}; //Memory stored as: (Private_key) (Public_key) (Net_money)
+			if (access_p2 == 1'b1) begin
+				address_num <= address_num + 2'b11; //P2 memory starts from register 7
+			end
+		end
+	end
+	
 	ram ram1(
-		.address(address_num), //First 4 bits
+		.address(address_num[4:0]), //First 4 bits
 		.clock(clock),
 		.data(data_in[7:0]),
 		.wren(wren),

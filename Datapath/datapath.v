@@ -2,7 +2,7 @@
 `include "Verification/verify_key.v"
 `include "Verification/complete_transaction.v"
 
-module datapath(clock, random_table, memory_out, input_amount, input_key, load_amount, load_key, resetn, done_step, p1_amount_out, p2_amount_out);
+module datapath(process, clock, random_table, memory_out, input_amount, input_key, load_amount, load_key, resetn, done_step, p1_amount_out, p2_amount_out);
 	input [257:0] random_table;
 	input [10:0] memory_out;
 	input clock, load_amount, load_key, resetn;
@@ -43,6 +43,8 @@ module datapath(clock, random_table, memory_out, input_amount, input_key, load_a
 			p1_amount <= 11'b0;
 		else if (memory_out[10:8] == 3'b101)
 			p1_amount <= memory_out;
+		else if (process != 3'b100)
+			p1_amount <= 11'b0;
 	end
 	
 	always @(*)
@@ -51,13 +53,15 @@ module datapath(clock, random_table, memory_out, input_amount, input_key, load_a
 			p2_amount <= 11'b0;
 		else if (memory_out[10:8] == 3'b110)
 			p2_amount <= memory_out;
+		else if (process != 3'b100)
+			p2_amount <= 11'b0;
 	end
 	
 	verify_amount va(.amount(amount), .player_money(memory_out), .clock(clock), .correct(verify_amount_signal));
 	
 	verify_key vk(.public_key(memory_out), .input_key(key), .random_table(random_table), .clock(clock), .correct(verify_key_signal));
 	
-	complete_transaction ct(.p1_amount(p1_amount), p2_amount(p2_amount), .amount_change(amount), .clock(clock), .p1_amount_out(p1_amount_out), .p2_amount_out(p2_amount_out), .complete_transaction_signal(complete_transaction_signal));
+	complete_transaction ct(.process(), .p1_amount(p1_amount), .p2_amount(p2_amount), .amount_change(amount), .clock(clock), .p1_amount_out(p1_amount_out), .p2_amount_out(p2_amount_out), .complete_transaction_signal(complete_transaction_signal));
 	
 	always @(clock)
 	begin
