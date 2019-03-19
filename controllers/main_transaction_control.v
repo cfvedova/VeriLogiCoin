@@ -1,6 +1,6 @@
 //step == 001 if Verify_Amount; == 010 if Verify_Signature; == 011 if Mine_Block; 100 if Finish_Transaction (Make sure computation is complete); == 00 if no step
-module main_transaction_control(start_animation, done_step, done_travel, return_signal, resetn, clock, finished_transaction, step, travel);
-	input start_animation, done_step, done_travel, return_signal, resetn, clock;
+module main_transaction_control(start_transaction, done_step, done_travel, return_signal, resetn, clock, finished_transaction, step, travel);
+	input start_transaction, done_step, done_travel, return_signal, resetn, clock;
     output reg finished_transaction;
 	output reg [2:0] step;
 	output reg [2:0] travel; //The bit of travel tells which travel it is on. travel1 == 001, etc. And not travel == 000.
@@ -8,14 +8,14 @@ module main_transaction_control(start_animation, done_step, done_travel, return_
     reg [2:0] y_Q, Y_D; // y_Q represents current state, Y_D represents next state
 	
 	//start is a buffer
-   localparam buffer = 4'b0000, travel1 = 4'b0001, Verify_Amount = 4'b0010, travel2 = 4'b0011, Verify_Signature = 4'b0100;
-	localparam travel3 = 4'b0101, Mine_Block = 4'b0110, travel4 = 4'b0111, Finish_Transaction = 4'b1000;
+    localparam buffer = 4'b0000, travel1 = 4'b0001, Verify_Amount = 4'b0010, travel2 = 4'b0011, Verify_Signature = 4'b0100,
+			   travel3 = 4'b0101, Mine_Block = 4'b0110, travel4 = 4'b0111, Finish_Transaction = 4'b1000;
     
     always @(*)
     begin   // Start of state_table
         case (y_Q)
             buffer: begin
-				if (!start_animation) Y_D = buffer;
+				if (!start_transaction) Y_D = buffer;
 				else Y_D = travel1;
 			end
             travel1: begin
@@ -65,7 +65,7 @@ module main_transaction_control(start_animation, done_step, done_travel, return_
 		step[2:0] = 3'b0;
 		finished_transaction = 1'b0;
 		
-        case (Y_Q)
+        case (y_Q)
             buffer: begin
 				travel[2:0] = 3'b0;
 				step[2:0] = 3'b0;
@@ -96,7 +96,11 @@ module main_transaction_control(start_animation, done_step, done_travel, return_
                 travel[2:0] = 3'b101;
 			end
 			Finish_Transaction: begin
+<<<<<<< HEAD
 				step[2:0] = 3'b100;
+=======
+                step[2:0] = 3'b100;
+>>>>>>> 8dff70459e15e12af66dd5d82d09776f8f4063ca
 				travel[2:0] = 3'b0;
 			end
         endcase
