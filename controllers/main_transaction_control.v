@@ -96,7 +96,7 @@ module main_transaction_control(start_transaction, done_step, done_travel, retur
                 travel[2:0] = 3'b101;
 			end
 			Finish_Transaction: begin
-                step[2:0] = 3'b100;
+				step[2:0] = 3'b100;
 				travel[2:0] = 3'b0;
 			end
         endcase

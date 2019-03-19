@@ -1,4 +1,4 @@
-`include "../Hash/pearson_hash8.v"
+`include "../../Hash/pearson_hash8.v"
 //Needs to be tested
 
 module verify_key(public_key, input_key, random_table, clock, correct);
@@ -13,7 +13,7 @@ module verify_key(public_key, input_key, random_table, clock, correct);
 	
 	pearson_hash8 ph(.message(input_key), .resetn(resetn), .random_table(random_table), .hash(input_public_key), .counter(counter));
 	
-	always @(clock);
+	always @(clock)
 	begin
 		case (public_key[10:8])
 			3'b010: begin
@@ -23,7 +23,6 @@ module verify_key(public_key, input_key, random_table, clock, correct);
 			end
 			default:
 				resetn <= 1'b0;
-				input_public_key = 1'b0;
 		endcase
 	end
 endmodule
