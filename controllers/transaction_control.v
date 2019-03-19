@@ -1,5 +1,5 @@
 //step == 001 if Verify_Amount; == 010 if Verify_Signature; == 011 if Mine_Block; 100 if Finish_Transaction (Make sure computation is complete); == 00 if no step
-module transaction_control(start_transaction, done_step, done_travel, resetn, clock, finished_transaction, step, travel);
+module transaction_control(start_transaction, done_step, done_travel, resetn, clock, step, travel);
 	input start_transaction, done_step, done_travel, resetn, clock;
 	output reg [2:0] step;
 	output reg [2:0] travel; //The bit of travel tells which travel it is on. travel1 == 001, etc. And not travel == 000.
