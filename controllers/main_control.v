@@ -1,20 +1,19 @@
 //load_signal and start_signal are active high; finished_transaction signifies end of the animations fsa
 //load_memory signifies accessing the memory for the money of p1 and p2 to display it.
 //finished_transaction 
-module main_control(start_signal, load_signal, finished_init, finished_transaction, resetn, clock, reset_others, load_amount, load_key, load_memory, init_memory, start_transaction, random_init);
-	input start_signal, load_signal, finished_init, finished_transaction, resetn, clock;
+module main_control(start_signal, load_signal, finished_init, finished_transaction, resetn, clock, done_table_init, reset_others, load_amount, load_key, load_memory, init_memory, start_transaction, random_init);
+	input start_signal, load_signal, finished_init, finished_transaction, resetn, clock, done_table_init;
     output reg init_memory, load_memory, load_amount, load_key, start_transaction, reset_others, random_init;
 	
     reg [2:0] y_Q, Y_D; // y_Q represents current state, Y_D represents next state
 
     localparam start = 4'b0000, Load_Amount = 4'b0001, wait1 = 4'b0010, Load_Key = 4'b0011, wait2 = 4'b0100, Transaction = 4'b0101, Reset_Others = 4'b0110, INIT1 = 4'b0111, INIT2 = 3'b1000;
-    
 	
     always @(*)
     begin   // Start of state_table
         case (y_Q)
 			INIT1: begin
-				if (time_for_random_complete != 9'b111111111) Y_D = INIT1;
+				if (done_table_init) Y_D = INIT1;
 				else Y_D = INIT2;
 			end
 			INIT2: begin
@@ -103,17 +102,14 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
         endcase
     end // enable_signals
 	
-	reg [8:0] time_for_random_complete;
     // State Register
     always @(posedge clock)
     begin   // Start of state_FFs (state register)
         if(resetn == 1'b0) begin
             y_Q <= start;
-			time_for_random_complete <= 9'b0;
 			end
         else begin
             y_Q <= Y_D;
-			time_for_random_complete <= time_for_random_complete + 1'b1;
 			end
     end     // End of state_FFs (state register)
 endmodule

@@ -17,10 +17,10 @@ module lfsr_bit(data, clk, reset);
 	assign data = data_next;	
 endmodule
 
-module lfsr(random_sequence, clk, reset, done_creating_sequence);
-	output [255:0] random_sequence;
+module lfsr(random_sequence, clk, reset, done_creating_sequence, enable);
+	output reg [255:0] random_sequence;
 	output done_creating_sequence;
-	input clk, reset;
+	input clk, reset, enable;
 	
 	//Connect to random bit initializer	
 	wire [31:0] seq;
@@ -33,14 +33,18 @@ module lfsr(random_sequence, clk, reset, done_creating_sequence);
 	reg [6:0] counter = 7'b1111111;
 	always @(posedge clk)
 	begin
-		if (reset)
+		if (reset) begin
 			counter <= 7'b1111111;
+		end
 		else 
-			if (counter != 7'b0000000)
-				generated_seq <= {generated_seq[254:0], rand_bit};
-				counter <= counter - 1'b1;
+			if (enable) begin
+				if (counter != 7'b0000000) begin
+					generated_seq <= {generated_seq[254:0], rand_bit};
+					counter <= counter - 1'b1;
+				end
+			end
 	end
 	assign done_creating_sequence = (counter == 0) ? 1 : 0;
-	assign random_sequence = (counter == 0) ? generated_seq : 8'b0;
+	assign random_sequence = (counter == 0) ? {generated_seq, 32'b0} : 288'b0;
 	
 endmodule
