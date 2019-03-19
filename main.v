@@ -53,8 +53,8 @@ module main(SW, KEY, CLOCK_50);
 	memory_control mem_control(.clock(CLOCK_50), .resetn(reset_others), .load_memory(load_memory), .process(process), .write_enable(wren), .access_type(access_type), .load_registers(load_registers), .done(done_memory_store));
 	
 	//Main Controller
-	main_control main_control(.init_memory(init_memory), .start_signal(~KEY[0]), .load_signal(~KEY[1]), .finished_transaction(done_memory_store),
-					.resetn(main_control_reset),.clock(CLOCK_50), .reset_others(reset_others), .load_amount(load_amount), .load_key(load_key),
+	main_control main_control(.start_signal(~KEY[0]), .load_signal(~KEY[1]), .finished_transaction(done_memory_store), .resetn(main_control_reset),
+					.clock(CLOCK_50), .reset_others(reset_others), .init_memory(init_memory), .load_amount(load_amount), .load_key(load_key),
 					.load_memory(load_memory), .start_transaction(start_transaction));
 	
 	//Main Controller for Transaction
