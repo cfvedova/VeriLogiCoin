@@ -17,8 +17,9 @@ module lfsr_bit(data, clk, reset);
 	assign data = data_next;	
 endmodule
 
-module lfsr(random_sequence, clk, reset);
+module lfsr(random_sequence, clk, reset, done_creating_sequence);
 	output [255:0] random_sequence;
+	output done_creating_sequence;
 	input clk, reset;
 	
 	//Connect to random bit initializer	
@@ -37,8 +38,9 @@ module lfsr(random_sequence, clk, reset);
 		else 
 			if (counter != 7'b0000000)
 				generated_seq <= {generated_seq[254:0], rand_bit};
+				counter <= counter - 1'b1;
 	end
-	
+	assign done_creating_sequence = (counter == 0) ? 1 : 0;
 	assign random_sequence = (counter == 0) ? generated_seq : 8'b0;
 	
 endmodule
