@@ -4,7 +4,7 @@
 // MODULE: altsyncram 
 
 // ============================================================
-// File Name: ram_unit.v
+// File Name: ram__onego.v
 // Megafunction Name(s):
 // 			altsyncram
 //
@@ -36,44 +36,34 @@
 // synopsys translate_off
 `timescale 1 ps / 1 ps
 // synopsys translate_on
-module ram_unit(clock, access_p2, access_type, data_in, wren, result);
-	input clock;
-	input access_p2; // 0: accessing p1 data, 1: accessing p2 data
-	input access_type [1:0]; //00: private_key, 01: public key, 10: net_money, 11: Blockchain
-	input [7:0] data_in;
-	input wren; //Write or read
-	output [7:0] result;
-	
-	//Get memory address
-	wire [4:0] address_num = 5'b0;
-	if access_type == 2'b11 // Blockchain
-		//TODO
-	else
-		address_num += access_type; //Memory stored as: (Private_key) (Public_key) (Net_money)
-		if (access_p2) 
-			address_num += 3; //P2 memory starts from register 7
 
-	ram ram1(
-		.address(address_num), //First 4 bits
+module ram(clock, access_type, data_in, wren, result);
+	input clock;
+	input [0:0] access_type; //0: player values, 1: blockchain
+	input [47:0] data_in;
+	input wren; //Write or read
+	output [47:0] result;
+
+	ram_access ram_access(
+		.address(access_type), 
 		.clock(clock),
-		.data(data_in[7:0]),
+		.data(data_in[47:0]),
 		.wren(wren),
-		.q(result[7:0])
+		.q(result[47:0])
 		);
 endmodule
-
-module ram (
+module ram_access (
 	address,
 	clock,
 	data,
 	wren,
 	q);
 
-	input	[5:0]  address;
+	input	[0:0]  address;
 	input	  clock;
-	input	[7:0]  data;
+	input	[47:0]  data;
 	input	  wren;
-	output	[7:0]  q;
+	output	[47:0]  q;
 `ifndef ALTERA_RESERVED_QIS
 // synopsys translate_off
 `endif
@@ -82,8 +72,8 @@ module ram (
 // synopsys translate_on
 `endif
 
-	wire [7:0] sub_wire0;
-	wire [7:0] q = sub_wire0[7:0];
+	wire [47:0] sub_wire0;
+	wire [47:0] q = sub_wire0[47:0];
 
 	altsyncram	altsyncram_component (
 				.address_a (address),
@@ -115,14 +105,14 @@ module ram (
 		altsyncram_component.intended_device_family = "Cyclone V",
 		altsyncram_component.lpm_hint = "ENABLE_RUNTIME_MOD=NO",
 		altsyncram_component.lpm_type = "altsyncram",
-		altsyncram_component.numwords_a = 64,
+		altsyncram_component.numwords_a = 2,
 		altsyncram_component.operation_mode = "SINGLE_PORT",
 		altsyncram_component.outdata_aclr_a = "NONE",
 		altsyncram_component.outdata_reg_a = "UNREGISTERED",
 		altsyncram_component.power_up_uninitialized = "FALSE",
 		altsyncram_component.read_during_write_mode_port_a = "NEW_DATA_NO_NBE_READ",
-		altsyncram_component.widthad_a = 6,
-		altsyncram_component.width_a = 8,
+		altsyncram_component.widthad_a = 1,
+		altsyncram_component.width_a = 48,
 		altsyncram_component.width_byteena_a = 1;
 
 
@@ -151,7 +141,7 @@ endmodule
 // Retrieval info: PRIVATE: JTAG_ID STRING "NONE"
 // Retrieval info: PRIVATE: MAXIMUM_DEPTH NUMERIC "0"
 // Retrieval info: PRIVATE: MIFfilename STRING ""
-// Retrieval info: PRIVATE: NUMWORDS_A NUMERIC "64"
+// Retrieval info: PRIVATE: NUMWORDS_A NUMERIC "2"
 // Retrieval info: PRIVATE: RAM_BLOCK_TYPE NUMERIC "0"
 // Retrieval info: PRIVATE: READ_DURING_WRITE_MODE_PORT_A NUMERIC "3"
 // Retrieval info: PRIVATE: RegAddr NUMERIC "1"
@@ -161,8 +151,8 @@ endmodule
 // Retrieval info: PRIVATE: SingleClock NUMERIC "1"
 // Retrieval info: PRIVATE: UseDQRAM NUMERIC "1"
 // Retrieval info: PRIVATE: WRCONTROL_ACLR_A NUMERIC "0"
-// Retrieval info: PRIVATE: WidthAddr NUMERIC "6"
-// Retrieval info: PRIVATE: WidthData NUMERIC "8"
+// Retrieval info: PRIVATE: WidthAddr NUMERIC "1"
+// Retrieval info: PRIVATE: WidthData NUMERIC "48"
 // Retrieval info: PRIVATE: rden NUMERIC "0"
 // Retrieval info: LIBRARY: altera_mf altera_mf.altera_mf_components.all
 // Retrieval info: CONSTANT: CLOCK_ENABLE_INPUT_A STRING "BYPASS"
@@ -170,29 +160,29 @@ endmodule
 // Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone V"
 // Retrieval info: CONSTANT: LPM_HINT STRING "ENABLE_RUNTIME_MOD=NO"
 // Retrieval info: CONSTANT: LPM_TYPE STRING "altsyncram"
-// Retrieval info: CONSTANT: NUMWORDS_A NUMERIC "64"
+// Retrieval info: CONSTANT: NUMWORDS_A NUMERIC "2"
 // Retrieval info: CONSTANT: OPERATION_MODE STRING "SINGLE_PORT"
 // Retrieval info: CONSTANT: OUTDATA_ACLR_A STRING "NONE"
 // Retrieval info: CONSTANT: OUTDATA_REG_A STRING "UNREGISTERED"
 // Retrieval info: CONSTANT: POWER_UP_UNINITIALIZED STRING "FALSE"
 // Retrieval info: CONSTANT: READ_DURING_WRITE_MODE_PORT_A STRING "NEW_DATA_NO_NBE_READ"
-// Retrieval info: CONSTANT: WIDTHAD_A NUMERIC "6"
-// Retrieval info: CONSTANT: WIDTH_A NUMERIC "8"
+// Retrieval info: CONSTANT: WIDTHAD_A NUMERIC "1"
+// Retrieval info: CONSTANT: WIDTH_A NUMERIC "48"
 // Retrieval info: CONSTANT: WIDTH_BYTEENA_A NUMERIC "1"
-// Retrieval info: USED_PORT: address 0 0 6 0 INPUT NODEFVAL "address[5..0]"
+// Retrieval info: USED_PORT: address 0 0 1 0 INPUT NODEFVAL "address[0..0]"
 // Retrieval info: USED_PORT: clock 0 0 0 0 INPUT VCC "clock"
-// Retrieval info: USED_PORT: data 0 0 8 0 INPUT NODEFVAL "data[7..0]"
-// Retrieval info: USED_PORT: q 0 0 8 0 OUTPUT NODEFVAL "q[7..0]"
+// Retrieval info: USED_PORT: data 0 0 48 0 INPUT NODEFVAL "data[47..0]"
+// Retrieval info: USED_PORT: q 0 0 48 0 OUTPUT NODEFVAL "q[47..0]"
 // Retrieval info: USED_PORT: wren 0 0 0 0 INPUT NODEFVAL "wren"
-// Retrieval info: CONNECT: @address_a 0 0 6 0 address 0 0 6 0
+// Retrieval info: CONNECT: @address_a 0 0 1 0 address 0 0 1 0
 // Retrieval info: CONNECT: @clock0 0 0 0 0 clock 0 0 0 0
-// Retrieval info: CONNECT: @data_a 0 0 8 0 data 0 0 8 0
+// Retrieval info: CONNECT: @data_a 0 0 48 0 data 0 0 48 0
 // Retrieval info: CONNECT: @wren_a 0 0 0 0 wren 0 0 0 0
-// Retrieval info: CONNECT: q 0 0 8 0 @q_a 0 0 8 0
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram_unit.v TRUE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram_unit.inc FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram_unit.cmp FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram_unit.bsf FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram_unit_inst.v FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram_unit_bb.v TRUE
+// Retrieval info: CONNECT: q 0 0 48 0 @q_a 0 0 48 0
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram__onego.v TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram__onego.inc FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram__onego.cmp FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram__onego.bsf FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram__onego_inst.v FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram__onego_bb.v TRUE
 // Retrieval info: LIB_FILE: altera_mf
