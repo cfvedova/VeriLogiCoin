@@ -1,4 +1,4 @@
-module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, x_coord, y_coord);
+module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, x_coord, y_coord, done);
     input clk;
     input resetn;
 	input [9:0] start_x; // 0 -> 640
@@ -7,6 +7,7 @@ module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, x_
 	input [7:0] graph_height; // 0 -> 200
     output [9:0] x_coord; // X value to plot
 	output [8:0] y_coord; // Y value to plot
+	output done;
 
     
     // input registers
@@ -44,15 +45,16 @@ module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, x_
 	// counter for y
 	always @(posedge clk) begin
 		if (!resetn)
-			offset_y <= 5'b0;
+			offset_y <= 8'b0;
 		else if (enable && y_enable) begin
-			if (offset_y != 8'b11001000) // Height is at most 200 pixels
+			if (offset_y != graph_height) // Height is at most 200 pixels
 				offset_y <= offset_y + 1'b1;
 			else 
-				offset_y <= 8'b00000000;
+				offset_y <= 8'b0;
 		end
 	end
 
 	assign x_coord = x + offset_x;
 	assign y_coord = y + offset_y; 
+	assign done = (offset_x == 5'b11111 && offset_y == graph_height) ? 1: 0;
 endmodule
