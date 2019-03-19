@@ -36,7 +36,7 @@ module lfsr(random_sequence, clk, reset);
 			counter <= 7'b1111111;
 		else 
 			if (counter != 7'b0000000)
-				generated_seq <= {generated_seq << 1, rand_bit};
+				generated_seq <= {generated_seq[254:0], rand_bit};
 	end
 	
 	assign random_sequence = (counter == 0) ? generated_seq : 8'b0;
