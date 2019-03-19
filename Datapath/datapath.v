@@ -2,10 +2,10 @@
 `include "Verification/verify_key.v"
 `include "Verification/complete_transaction.v"
 
-module datapath(process, clock, random_table, memory_values, player_in, input_amount, input_key, load_amount, load_key, load_player, load_memory, resetn, done_step, result_out);
+module datapath(process, clock, random_table, memory_values, player_in, input_amount, input_key, load_amount, load_key, load_player, load_register, resetn, done_step, result_out);
 	input [257:0] random_table;
 	input [47:0] memory_values;
-	input clock, load_amount, load_key, load_player, load_memory, resetn;
+	input clock, load_amount, load_key, load_player, load_register, resetn;
 	input [2:0] process;
 	input [7:0] input_amount, input_key;
 	input player_in;
@@ -57,8 +57,8 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 	begin
 		if (resetn == 1'b0)
 			p1_private_key <= 8'b0;
-		else if (load_memory)
-			p1_private_key <= memory_values[7:0];
+		else if (load_register)
+			p1_private_key <= memory_values[31:24];
 	end
 	
 	//P2 Private Key
@@ -66,8 +66,8 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 	begin
 		if (resetn == 1'b0)
 			p2_private_key <= 8'b0;
-		else if (load_memory)
-			p2_private_key <= memory_values[31:24];
+		else if (load_register)
+			p2_private_key <= memory_values[7:0];
 	end
 	
 	//P1 Public Key
@@ -75,8 +75,8 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 	begin
 		if (resetn == 1'b0)
 			p1_public_key <= 8'b0;
-		else if (load_memory)
-			p1_public_key <= memory_values[15:8];
+		else if (load_register)
+			p1_public_key <= memory_values[39:32];
 	end
 	
 	//P2 Public Key
@@ -84,8 +84,8 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 	begin
 		if (resetn == 1'b0)
 			p2_public_key <= 8'b0;
-		else if (load_memory)
-			p2_public_key <= memory_values[39:32];
+		else if (load_register)
+			p2_public_key <= memory_values[15:8];
 	end
 	
 	//P1 Money
@@ -93,8 +93,8 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 	begin
 		if (resetn == 1'b0)
 			p1_amount <= 8'b0;
-		else if (load_memory)
-			p1_amount <= memory_values[23:16];
+		else if (load_register)
+			p1_amount <= memory_values[47:40];
 	end
 	
 	//P2 Money
@@ -102,8 +102,8 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 	begin
 		if (resetn == 1'b0)
 			p2_amount <= 8'b0;
-		else if (load_memory)
-			p2_amount <= memory_values[47:40];
+		else if (load_register)
+			p2_amount <= memory_values[23:16];
 	end
 	
 	wire [7:0] player_amount = (player) ? p2_amount: p1_amount;
@@ -113,7 +113,7 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 	verify_key vk(.public_key(real_public_key), .input_key(key), .random_table(random_table), .clock(clock), .correct(verify_key_signal));
 	
 	wire [7:0] p1_amount_out, p2_amount_out;
-	complete_transaction ct(.p1_amount(p1_amount), .p2_amount(p2_amount), .player(player), .amount_change(amount), .clock(clock), .p1_amount_out(p1_amount_out), .p2_amount_out(p2_amount_out));
+	complete_transaction ct(.p1_amount(p1_amount), .p2_amount(p2_amount), .amount_change(amount), .person(player), .clock(clock), .p1_amount_out(p1_amount_out), .p2_amount_out(p2_amount_out));
 	
 	always @(clock)
 	begin

@@ -1,9 +1,10 @@
 //Main will connect the keyboard to the actual program
 
 `include "Controllers/main_control.v"
-`include "Controllers/main_transaction_control.v"
+`include "Controllers/transaction_control.v"
 `include "Datapath/datapath.v"
 `include "Controllers/memory_control.v"
+`include "Memory/RAM/ram.v"
 
 module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N, VGA_R, VGA_G, VGA_B);
 	input [9:0] SW;
@@ -14,11 +15,13 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	wire main_control_reset;
 	wire load_amount;
 	wire load_key;
-	wire load_main_screen;
+	wire load_memory;
+	wire init_memory;
 	
 	//Connections between controls
 	wire finished_transaction;
 	wire start_transaction;
+	wire reset_others;
 	
 	//Wires for transaction_control
 	reg done_process;
@@ -28,10 +31,12 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	wire [2:0] travel;
 	
 	//Wires for Memory Control
-	wire load_register; //Loads registers in datapath
+	wire load_registers; //Loads registers in datapath
+	wire wren;
+	wire access_type;
+	wire done_memory_store;
 	
 	//Wires for Datapath
-	wire data_reset;
 	wire [47:0] result_out;
 	wire done_data_process;
 	
@@ -40,7 +45,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	
 	//Wires for Memory
 	wire [47:0] memory_values;
-	
+
 	//VGA output for display. Do not change
 	wire display_reset;
 	output VGA_CLK;   				//	VGA Clock
@@ -51,11 +56,17 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	output VGA_R;   				//	VGA Red[9:0]
 	output [9:0] VGA_G;	 				//	VGA Green[9:0]
 	output [9:0]VGA_B;   				//	VGA Blue[9:0]
+
+	//Memory RAM
+	ram ram1(.clock(CLOCK_50), .access_type(access_type), .data_in(result_out), .wren(wren), .result(memory_values));
 	
+	//Memory Controller
+	memory_control mem_control(.clock(CLOCK_50), .resetn(reset_others), .load_memory(load_memory), .process(process), .write_enable(wren), .access_type(access_type), .load_registers(load_registers), .done(done_memory_store));
 	
 	//Main Controller
-	main_control main_control(.start_signal(~KEY[0]), .load_signal(~KEY[1]), .finished_transaction(done_memory_store), .resetn(main_control_reset),
-					.clock(CLOCK_50), .reset_data(data_reset), .load_amount(load_amount), .load_key(load_key), .load_screen(load_main_screen), .start_transaction(start_transaction));
+	main_control main_control(.init_memory(init_memory), .start_signal(~KEY[0]), .load_signal(~KEY[1]), .finished_transaction(done_memory_store),
+					.resetn(main_control_reset),.clock(CLOCK_50), .reset_others(reset_others), .load_amount(load_amount), .load_key(load_key),
+					.load_memory(load_memory), .start_transaction(start_transaction));
 	
 	//Main Controller for Transaction
 	transaction_control transac_control(.start_transaction(start_transaction), .done_step(done_process), .done_travel(done_travel),
@@ -64,7 +75,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	//Datapath for verifying Info.
 	datapath verdata(.process(process), .clock(CLOCK_50), .random_table(random_table), .memory_values(memory_values), .player_in(1'b0),
 					.input_amount(SW[7:0]), .input_key(SW[7:0]), .load_amount(load_amount), .load_key(load_key), .load_player(1'b1),
-					.load_register(load_register), .resetn(data_reset), .done_step(done_data_process), .result_out(result_out));
+					.load_register(load_registers), .resetn(reset_others), .done_step(done_data_process), .result_out(result_out));
 	
 	
 	//Money_display
