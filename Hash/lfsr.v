@@ -18,7 +18,7 @@ module lfsr_bit(data, clk, reset);
 endmodule
 
 module lfsr(random_sequence, clk, reset, done_creating_sequence, enable);
-	output reg [255:0] random_sequence;
+	output [287:0] random_sequence;
 	output done_creating_sequence;
 	input clk, reset, enable;
 	
@@ -29,7 +29,7 @@ module lfsr(random_sequence, clk, reset, done_creating_sequence, enable);
 	
 	
 	//Sample 256 clock cycles, with a new random bit every clock cycle
-	reg [255:0] generated_seq = 8'b0;
+	reg [255:0] generated_seq;
 	reg [6:0] counter = 7'b1111111;
 	always @(posedge clk)
 	begin
