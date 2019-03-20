@@ -1,5 +1,3 @@
-`include "../Hash/pearson_hash8.v"
-
 module make_starting_memory(random_table, starting_memory);
 	input [287:0] random_table;
 	
@@ -14,9 +12,9 @@ module make_starting_memory(random_table, starting_memory);
 	wire [2:0] counter1;
 	wire [2:0] counter2;
 	
-	pearson_hash8 ph(.message(p1_private), .reset_n(resetn), .random_table(random_table), .hash(p1_public), .counter(counter1));
+	pearson_hash8 ph1(.message(p1_private), .reset_n(resetn), .random_table(random_table), .hash(p1_public), .counter(counter1));
 	
-	pearson_hash8 ph(.message(p2_private), .reset_n(resetn), .random_table(random_table), .hash(p2_public), .counter(counter2));
+	pearson_hash8 ph2(.message(p2_private), .reset_n(resetn), .random_table(random_table), .hash(p2_public), .counter(counter2));
 	
 	assign starting_memory = {p1_private, p1_public, p1_money, p2_private, p2_public, p2_money};
 	
