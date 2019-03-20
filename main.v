@@ -7,6 +7,7 @@
 `include "Memory/RAM/ram.v"
 `include "Memory/make_starting_memory.v"
 `include "Visuals/money_display.v"
+`include "Hash/lfsr.v"
 
 module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N, VGA_R, VGA_G, VGA_B);
 	input [9:0] SW;
@@ -64,6 +65,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	
 	//Init random table
 	lfsr lfsr(.random_sequence(random_table), .clk(CLOCK_50), .reset(1'b1), .done_creating_sequence(done_creating_sequence), .enable(random_init));
+	
 	//INIT Memory
 	make_starting_memory starting_mem(.random_table(random_table), .starting_memory(starting_memory));
 	

@@ -1,4 +1,4 @@
-module memory_control(clock, resetn, load_memory, init_memory, datapath_out, process, write_enable, access_type, load_registers, data_in, done, finished_init);
+module memory_control(clock, resetn, load_memory, starting_memory, init_memory, datapath_out, process, write_enable, access_type, load_registers, data_in, done, finished_init);
 	input clock, resetn, load_memory, init_memory;
 	input [47:0] datapath_out;
 	input [2:0] process;
