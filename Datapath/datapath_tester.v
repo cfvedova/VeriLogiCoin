@@ -6,7 +6,7 @@ module datapath_tester(SW, KEY, LEDR, HEX0, HEX1, HEX3, HEX4);
 	output [5:0] HEX0, HEX1, HEX3, HEX4;
 	
 	wire [47:0] result_out;
-	module datapath(.process(KEY[3:1]), .clock(KEY[0]), .random_table(258'b0), .memory_values(48'b0000001010000000001000000000000100100000000000000),
+	datapath data(.process(KEY[3:1]), .clock(KEY[0]), .random_table(258'b0), .memory_values(48'b0000001010000000001000000000000100100000000000000),
 	.player_in(1'b0), .input_amount(SW[7:0]]), .input_key(SW[7:0]), .load_amount(SW[8]), .load_key(SW[8]), .load_player(SW[8]), .load_register(SW[8]), .resetn(1'b1), .done_step(LEDR[9]), .result_out(result_out));
 	
 	hex_decoder H0(
