@@ -1,11 +1,11 @@
 module transaction_display(clk, resetn, start_x, start_y, enable, x_coord, y_coord, done_drawing);
 	input clk;
 	input resetn;
-	input [9:0] start_x; //640 pixels wide
-	input [8:0] start_y; //480 pixels tall
+	input [8:0] start_x; //320 pixels wide
+	input [7:0] start_y; //240 pixels tall
 	input enable;  
-    output reg [9:0] x_coord; // X value to plot
-	output reg [8:0] y_coord; // Y value to plot
+    output reg [8:0] x_coord; // X value to plot
+	output reg [7:0] y_coord; // Y value to plot
 	output done_drawing;
 	
 	// Connection between each drawing component
@@ -27,29 +27,29 @@ module transaction_display(clk, resetn, start_x, start_y, enable, x_coord, y_coo
 
 	
 	//Outputs from each step
-	wire [9:0] step1_x;
-	wire [8:0] step1_y;
-	wire [9:0] step2_x;
-	wire [8:0] step2_y;
-	wire [9:0] step3_x;
-	wire [8:0] step3_y;
-	wire [9:0] step4_x;
-	wire [8:0] step4_y;
-	wire [9:0] step5_x;
-	wire [8:0] step5_y;
-	wire [9:0] step6_x;
-	wire [8:0] step6_y;
-	wire [9:0] step7_x;
-	wire [8:0] step7_y;
+	wire [8:0] step1_x;
+	wire [7:0] step1_y;
+	wire [8:0] step2_x;
+	wire [7:0] step2_y;
+	wire [8:0] step3_x;
+	wire [7:0] step3_y;
+	wire [8:0] step4_x;
+	wire [7:0] step4_y;
+	wire [8:0] step5_x;
+	wire [7:0] step5_y;
+	wire [8:0] step6_x;
+	wire [7:0] step6_y;
+	wire [8:0] step7_x;
+	wire [7:0] step7_y;
 	
 	//Drawing
 	verification_connection_display step1(.clk(clk), .resetn(resetn), .start_x(start_x), .start_y(start_y), .enable(enable), .x_coord(step1_x), .y_coord(step1_y), .complete(start_two));
-	verification_process_display step2(.clk(clk), .resetn(resetn), .start_x(start_x + 32), .start_y(start_y - 16), .enable(start_two), .x_coord(step2_x), .y_coord(step2_y), .complete(start_three));
-	verification_connection_display step3(.clk(clk), .resetn(resetn), .start_x(start_x + 64), .start_y(start_y), .enable(start_three), .x_coord(step3_x), .y_coord(step3_y), .complete(start_four));
-	verification_process_display step4(.clk(clk), .resetn(resetn), .start_x(start_x + 96), .start_y(start_y - 16), .enable(start_four), .x_coord(step4_x), .y_coord(step4_y), .complete(start_five));
-	verification_connection_display step5(.clk(clk), .resetn(resetn), .start_x(start_x + 128), .start_y(start_y), .enable(start_five), .x_coord(step5_x), .y_coord(step5_y), .complete(start_six));
-	verification_process_display step6(.clk(clk), .resetn(resetn), .start_x(start_x + 160), .start_y(start_y - 16), .enable(start_six), .x_coord(step6_x), .y_coord(step6_y), .complete(start_seven));
-	verification_connection_display step7(.clk(clk), .resetn(resetn), .start_x(start_x + 192), .start_y(start_y), .enable(start_seven), .x_coord(step7_x), .y_coord(step7_y), .complete(done));
+	verification_process_display step2(.clk(clk), .resetn(resetn), .start_x(start_x + 16), .start_y(start_y - 8), .enable(start_two), .x_coord(step2_x), .y_coord(step2_y), .complete(start_three));
+	verification_connection_display step3(.clk(clk), .resetn(resetn), .start_x(start_x + 32), .start_y(start_y), .enable(start_three), .x_coord(step3_x), .y_coord(step3_y), .complete(start_four));
+	verification_process_display step4(.clk(clk), .resetn(resetn), .start_x(start_x + 48), .start_y(start_y - 8), .enable(start_four), .x_coord(step4_x), .y_coord(step4_y), .complete(start_five));
+	verification_connection_display step5(.clk(clk), .resetn(resetn), .start_x(start_x + 64), .start_y(start_y), .enable(start_five), .x_coord(step5_x), .y_coord(step5_y), .complete(start_six));
+	verification_process_display step6(.clk(clk), .resetn(resetn), .start_x(start_x + 80), .start_y(start_y - 8), .enable(start_six), .x_coord(step6_x), .y_coord(step6_y), .complete(start_seven));
+	verification_connection_display step7(.clk(clk), .resetn(resetn), .start_x(start_x + 96), .start_y(start_y), .enable(start_seven), .x_coord(step7_x), .y_coord(step7_y), .complete(done));
 	
 
 	//Assign plotting points to the current display block
@@ -96,17 +96,17 @@ endmodule
 module verification_connection_display(clk, resetn, start_x, start_y, enable, x_coord, y_coord, complete);
     input clk;
     input resetn;
-	input [9:0] start_x; // 0 -> 640
-	input [8:0] start_y; // 0 -> 480
+	input [8:0] start_x; // 0 -> 320
+	input [7:0] start_y; // 0 -> 240
 	input enable;  
-    output [9:0] x_coord; // X value to plot
-	output [8:0] y_coord; // Y value to plot
+    output [8:0] x_coord; // X value to plot
+	output [7:0] y_coord; // Y value to plot
 	output complete; 
 
      
     // input registers
-    reg [9:0] x;
-	reg [8:0] y;
+    reg [8:0] x;
+	reg [7:0] y;
 
     // store iteration count
 	reg [4:0] offset_x; //Connection signal is 32 pixels wide
@@ -156,17 +156,17 @@ endmodule
 module verification_process_display(clk, resetn, start_x, start_y, enable, x_coord, y_coord, complete);
     input clk;
     input resetn;
-	input [9:0] start_x; // 0 -> 640
-	input [8:0] start_y; // 0 -> 480
+	input [8:0] start_x; // 0 -> 320
+	input [7:0] start_y; // 0 -> 240
 	input enable;  
-    output [9:0] x_coord; // X value to plot
-	output [8:0] y_coord; // Y value to plot
+    output [8:0] x_coord; // X value to plot
+	output [7:0] y_coord; // Y value to plot
 	output complete;
 
      
     // input registers
-    reg [9:0] x;
-	reg [8:0] y;
+    reg [8:0] x;
+	reg [7:0] y;
 
     // store iteration count
 	reg [4:0] offset_x; //Connection signal is 32 pixels wide
