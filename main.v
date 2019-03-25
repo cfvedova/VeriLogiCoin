@@ -23,6 +23,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	wire finished_init;
 	wire random_init;
 	wire done_creating_sequence;
+	wire global_reset;
 	
 	//Connections between controls
 	wire finished_transaction;
@@ -65,23 +66,23 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	output [9:0] VGA_B;   				//	VGA Blue[9:0]
 	
 	//Init random table
-	lfsr lfsr(.random_sequence(random_table), .clk(CLOCK_50), .reset(1'b1), .done_creating_sequence(done_creating_sequence), .enable(random_init));
+	lfsr lfsr(.random_sequence(random_table), .clk(CLOCK_50), .reset(global_reset), .done_creating_sequence(done_creating_sequence), .enable(random_init));
 	
 	//INIT Memory
-	make_starting_memory starting_mem(.random_table(random_table), .starting_memory(starting_memory));
+	make_starting_memory starting_mem(.resetn(global_reset), .random_table(random_table), .starting_memory(starting_memory));
 	
 	//Memory RAM
 	ram ram1(.clock(CLOCK_50), .access_type(access_type), .data_in(data_in), .wren(wren), .result(memory_values));
 	
 	//Memory Controller
-	memory_control mem_control(.clock(CLOCK_50), .resetn(reset_others), .load_memory(load_memory), .init_memory(init_memory), .process(process),
+	memory_control mem_control(.clock(CLOCK_50), .global_reset(global_reset), .resetn(reset_others), .load_memory(load_memory), .init_memory(init_memory), .process(process),
 							   .datapath_out(result_out), .starting_memory(starting_memory), .write_enable(wren), .access_type(access_type),
 							   .data_in(data_in), .load_registers(load_registers), .done(done_memory_store), .finished_init(finished_init));
 	
 	//Main Controller
 	main_control main_control(.start_signal(~KEY[0]), .load_signal(~KEY[1]), .finished_init(finished_init), .finished_transaction(done_memory_store),
 							  .resetn(main_control_reset), .clock(CLOCK_50), .done_table_init(done_creating_sequence), .reset_others(reset_others), .init_memory(init_memory),
-							  .load_amount(load_amount), .load_key(load_key), .load_memory(load_memory), .start_transaction(start_transaction), .random_init(random_init));
+							  .load_amount(load_amount), .load_key(load_key), .load_memory(load_memory), .start_transaction(start_transaction), .random_init(random_init), .global_reset(global_reset));
 	
 	//Main Controller for Transaction
 	transaction_control transac_control(.start_transaction(start_transaction), .done_step(done_process), .done_travel(done_travel),

@@ -1,6 +1,6 @@
-module make_starting_memory(random_table, starting_memory);
+module make_starting_memory(resetn, random_table, starting_memory);
 	input [287:0] random_table;
-	
+	input resetn;
 	output [47:0] starting_memory;
 	
 	wire [7:0] p1_money = 8'b01100100;
