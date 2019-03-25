@@ -9,7 +9,7 @@ module lfsr_bit(data, clk, reset);
 	always @ (posedge clk or posedge reset)
 	begin
 		if (reset)
-			data_next <= 31'hFFFFFFFF; //An LFSR cannot have an all 0 state, thus reset to all 1's
+			data_next <= 32'hFFFFFFFF; //An LFSR cannot have an all 0 state, thus reset to all 1's
 		else
 			data_next <= {data_next[30:0], feedback}; //shift left the xor'd every posedge clockgit 
 	end

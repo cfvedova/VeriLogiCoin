@@ -1,5 +1,5 @@
-module memory_control(clock, resetn, load_memory, starting_memory, init_memory, datapath_out, process, write_enable, access_type, load_registers, data_in, done, finished_init);
-	input clock, resetn, load_memory, init_memory;
+module memory_control(clock, global_reset, resetn, load_memory, starting_memory, init_memory, datapath_out, process, write_enable, access_type, load_registers, data_in, done, finished_init);
+	input clock, global_reset, resetn, load_memory, init_memory;
 	input [47:0] datapath_out;
 	input [2:0] process;
 	input [47:0] starting_memory;
@@ -32,11 +32,17 @@ module memory_control(clock, resetn, load_memory, starting_memory, init_memory, 
 	
 	always @(posedge clock) begin
 		if (!resetn) begin
-			waited <= 4'b0;
 			waited_1 <= 3'b0;
 			waited_2 <= 3'b0;
 			waited_3 <= 3'b0;
+			waited <= 4'b0;
 		end
+		
+		else begin
+			if (!global_reset)
+				waited <= 4'b0;
+		end
+		
 		else 
 		begin
 			if (start_wait) begin
