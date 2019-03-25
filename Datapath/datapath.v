@@ -124,5 +124,5 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 		endcase
 	end
 	
-	assign result_out = {p1_private_key, p1_public_key, p1_amount_out, p2_private_key, p2_public_key, p2_amount_out};
+	assign result_out = {p1_amount_out, p1_public_key, p1_private_key, p2_amount_out, p2_public_key, p2_private_key};
 endmodule
