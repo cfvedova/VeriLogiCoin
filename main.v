@@ -42,6 +42,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	wire access_type;
 	wire done_memory_store;
 	wire [47:0] data_in;
+	wire [47:0] starting_memory;
 	
 	//Wires for Datapath
 	wire [47:0] result_out;
