@@ -15,7 +15,7 @@ module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, x_
 	reg [7:0] y;
 
     // store iteration count
-	reg [4:0] offset_x; //Bar graph is 32 pixels wide
+	reg [2:0] offset_x; //Bar graph is 8 pixels wide
 	reg [6:0] offset_y; // Bar graph is at most 100 pixels tall
 	wire y_enable;
     
@@ -31,16 +31,16 @@ module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, x_
     // counter for x
 	always @(posedge clk) begin
 		if (!resetn)
-			offset_x <= 5'b0;
+			offset_x <= 3'b0;
 		else if (enable) begin
-			if (offset_x != 5'b11111) //Width is at most 32 pixels
+			if (offset_x != 3'b111) //Width is at most 8 pixels
 				offset_x <= offset_x + 1'b1;
 			else 
-				offset_x <= 5'b0;
+				offset_x <= 3'b0;
 		end
 	end
 	
-	assign y_enable = (offset_x == 5'b11111) ? 1 : 0;
+	assign y_enable = (offset_x == 3'b111) ? 1 : 0;
 	
 	// counter for y
 	always @(posedge clk) begin
@@ -56,5 +56,5 @@ module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, x_
 
 	assign x_coord = x + offset_x;
 	assign y_coord = y + offset_y; 
-	assign done = (offset_x == 5'b11111 && offset_y == graph_height) ? 1: 0;
+	assign done = (offset_x == 3'b111 && offset_y == graph_height) ? 1: 0;
 endmodule

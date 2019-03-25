@@ -18,7 +18,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 			end
 			INIT2: begin
 				if (!finished_init) Y_D = INIT2;
-				else Y_D = start;
+				else Y_D = Reset_Others;
 			end
 			
             start: begin

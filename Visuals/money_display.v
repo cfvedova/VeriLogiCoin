@@ -62,8 +62,8 @@ module money_display(CLOCK_50, memory_out, load_memory, resetn,
 	wire [7:0] p2_y_plot;
 	wire p2_done;
 	
-	wire p1_bar_height = (memory_out[31:24] >> 1)[6:0];
-	wire p2_bar_height = (memory_out[7:0] >> 1)[6:0];
+	wire [6:0] p1_bar_height = memory_out[31:24] >> 1;
+	wire [6:0] p2_bar_height = memory_out[7:0] >> 1;
 	
 	bar_graph_display p1_money(
 		.clk(CLOCK_50),

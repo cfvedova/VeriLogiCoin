@@ -59,7 +59,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	output VGA_VS;					//	VGA V_SYNC
 	output VGA_BLANK_N;				//	VGA BLANK
 	output VGA_SYNC_N;				//	VGA SYNC
-	output VGA_R;   				//	VGA Red[9:0]
+	output [9:0] VGA_R;   				//	VGA Red[9:0]
 	output [9:0] VGA_G;	 				//	VGA Green[9:0]
 	output [9:0] VGA_B;   				//	VGA Blue[9:0]
 	
