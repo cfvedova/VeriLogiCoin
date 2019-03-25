@@ -3,8 +3,8 @@ module make_starting_memory(random_table, starting_memory);
 	
 	output [47:0] starting_memory;
 	
-	wire [7:0] p1_money = 8'b00110010;
-	wire [7:0] p2_money = 8'b00110010;
+	wire [7:0] p1_money = 8'b01100100;
+	wire [7:0] p2_money = 8'b01100100;
 	wire [7:0] p1_private = 8'b01110101;
 	wire [7:0] p2_private = 8'b00011011;
 	wire [7:0] p1_public;

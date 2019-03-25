@@ -28,11 +28,11 @@ module memory_control(clock, resetn, load_memory, starting_memory, init_memory, 
 	reg [2:0] waited_1;
 	reg [2:0] waited_2;
 	reg [2:0] waited_3;
-	reg [2:0] waited;
+	reg [3:0] waited;
 	
 	always @(posedge clock) begin
 		if (!resetn) begin
-			waited <= 3'b0;
+			waited <= 4'b0;
 			waited_1 <= 3'b0;
 			waited_2 <= 3'b0;
 			waited_3 <= 3'b0;
@@ -58,7 +58,7 @@ module memory_control(clock, resetn, load_memory, starting_memory, init_memory, 
 	always @(*) begin
 		case (current_state)
 			Init_memory: begin
-				if (waited == 3'b111) next_state = Buffer_1;
+				if (waited == 4'b1111) next_state = Buffer_1;
 				else next_state = Init_memory;
 			end
             Buffer_1: begin
