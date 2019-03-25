@@ -58,7 +58,7 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 		if (resetn == 1'b0)
 			p1_private_key <= 8'b0;
 		else if (load_register)
-			p1_private_key <= memory_values[31:24];
+			p1_private_key <= memory_values[47:40];
 	end
 	
 	//P2 Private Key
@@ -67,7 +67,7 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 		if (resetn == 1'b0)
 			p2_private_key <= 8'b0;
 		else if (load_register)
-			p2_private_key <= memory_values[7:0];
+			p2_private_key <= memory_values[23:16];
 	end
 	
 	//P1 Public Key
@@ -94,7 +94,7 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 		if (resetn == 1'b0)
 			p1_amount <= 8'b0;
 		else if (load_register)
-			p1_amount <= memory_values[47:40];
+			p1_amount <= memory_values[31:24];
 	end
 	
 	//P2 Money
@@ -103,7 +103,7 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 		if (resetn == 1'b0)
 			p2_amount <= 8'b0;
 		else if (load_register)
-			p2_amount <= memory_values[23:16];
+			p2_amount <= memory_values[7:0];
 	end
 	
 	wire [7:0] player_amount = (player) ? p2_amount: p1_amount;
