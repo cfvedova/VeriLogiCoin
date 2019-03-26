@@ -4,7 +4,7 @@
 module verify_key(public_key, input_key, random_table, clock, correct);
 	input [7:0] public_key;
 	input [7:0] input_key;
-	input [257:0] random_table;
+	input [287:0] random_table;
 	input clock;
 	
 	output reg correct;

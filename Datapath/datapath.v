@@ -3,7 +3,7 @@
 `include "Verification/complete_transaction.v"
 
 module datapath(process, clock, random_table, memory_values, player_in, input_amount, input_key, load_amount, load_key, load_player, load_register, resetn, done_step, result_out);
-	input [257:0] random_table;
+	input [287:0] random_table;
 	input [47:0] memory_values;
 	input clock, load_amount, load_key, load_player, load_register, resetn;
 	input [2:0] process;
