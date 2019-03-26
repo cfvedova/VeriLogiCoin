@@ -18,7 +18,7 @@ add wave {/*}
 
 #Check Case 1
 force {random_table[287:0]} 2#0
-force {memory_values[47:0]} 2#000000100000001001100100000000100000001001100100
+force {memory_values[47:0]} 2#000000100000000001100100000000100000000001100100
 force {clock} 2#0
 force {load_amount} 2#0
 force {load_key} 2#0

@@ -1,5 +1,4 @@
 `include "../../Hash/pearson_hash8.v"
-//Needs to be tested
 
 module verify_key(public_key, input_key, random_table, clock, correct);
 	input [7:0] public_key;
