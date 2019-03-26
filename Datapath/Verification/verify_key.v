@@ -1,5 +1,4 @@
 `include "../../Hash/pearson_hash8.v"
-//Needs to be tested
 
 module verify_key(public_key, input_key, random_table, clock, correct);
 	input [7:0] public_key;
@@ -10,7 +9,7 @@ module verify_key(public_key, input_key, random_table, clock, correct);
 	output reg correct;
 	
 	reg resetn;
-	wire input_public_key;
+	wire [7:0] input_public_key;
 	wire [2:0] counter;
 	
 	pearson_hash8 ph(.clock(clock), .message(input_key), .reset_n(resetn), .random_table(random_table), .hash(input_public_key), .counter(counter));

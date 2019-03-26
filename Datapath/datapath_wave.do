@@ -17,149 +17,150 @@ log {/*}
 add wave {/*}
 
 #Check Case 1
-force {random_table[287:0]} 288#0
-force {memory_values[47:0]} 48#000000100000001001100100000000100000001001100100
-force {clock} 1'b0
-force {load_amount} 1'b0
-force {load_key} 1'b0
-force {load_player} 1'b0
-force {load_register} 1'b0
-force {resetn} 1'b0
-force {process[2:0]} 3'b000
-force {input_amount[7:0]} 8'b00000000
-force {input_key[7:0]} 8'b00000000
-force {player_in} 1'b0
+force {random_table[287:0]} 2#0
+force {memory_values[47:0]} 2#000000100000000001100100000000100000000001100100
+force {clock} 2#0
+force {load_amount} 2#0
+force {load_key} 2#0
+force {load_player} 2#0
+force {load_register} 2#0
+force {resetn} 2#0
+force {process[2:0]} 2#000
+force {input_amount[7:0]} 2#00000000
+force {input_key[7:0]} 2#00000000
+force {player_in} 2#0
 run 40ns
 #Check Case 2
-force {clock} 1'b1
-force {load_amount} 1'b0
-force {load_key} 1'b0
-force {load_player} 1'b0
-force {load_register} 1'b1
-force {resetn} 1'b1
-force {process[2:0]} 3'b000
-force {input_amount[7:0]} 8'b00000000
-force {input_key[7:0]} 8'b00000000
-force {player_in} 1'b0
+force {clock} 2#1
+force {load_amount} 2#0
+force {load_key} 2#0
+force {load_player} 2#0
+force {load_register} 2#1
+force {resetn} 2#1
+force {process[2:0]} 2#000
+force {input_amount[7:0]} 2#00000000
+force {input_key[7:0]} 2#00000000
+force {player_in} 2#0
 run 40ns
 
-force {clock} 1'b0
-force {load_amount} 1'b1
-force {load_key} 1'b0
-force {load_player} 1'b0
-force {load_register} 1'b0
-force {resetn} 1'b1
-force {process[2:0]} 3'b000
-force {input_amount[7:0]} 8'b00000010
-force {input_key[7:0]} 8'b00000000
-force {player_in} 1'b0
+force {clock} 2#0
+force {load_amount} 2#1
+force {load_key} 2#0
+force {load_player} 2#0
+force {load_register} 2#0
+force {resetn} 2#1
+force {process[2:0]} 2#000
+force {input_amount[7:0]} 2#00000010
+force {input_key[7:0]} 2#00000000
+force {player_in} 2#0
 run 40ns
 
-force {clock} 1'b1
-force {load_amount} 1'b0
-force {load_key} 1'b1
-force {load_player} 1'b0
-force {load_register} 1'b0
-force {resetn} 1'b1
-force {process[2:0]} 3'b000
-force {input_amount[7:0]} 8'b00000000
-force {input_key[7:0]} 8'b00000010
-force {player_in} 1'b0
+force {clock} 2#1
+force {load_amount} 2#0
+force {load_key} 2#1
+force {load_player} 2#0
+force {load_register} 2#0
+force {resetn} 2#1
+force {process[2:0]} 2#000
+force {input_amount[7:0]} 2#00000000
+force {input_key[7:0]} 2#00000010
+force {player_in} 2#0
 run 40ns
 
-force {clock} 1'b1
-force {load_amount} 1'b0
-force {load_key} 1'b0
-force {load_player} 1'b1
-force {load_register} 1'b0
-force {resetn} 1'b1
-force {process[2:0]} 3'b000
-force {input_amount[7:0]} 8'b00000000
-force {input_key[7:0]} 8'b00000000
-force {player_in} 1'b0
+force {clock} 2#1
+force {load_amount} 2#0
+force {load_key} 2#0
+force {load_player} 2#1
+force {load_register} 2#0
+force {resetn} 2#1
+force {process[2:0]} 2#000
+force {input_amount[7:0]} 2#00000000
+force {input_key[7:0]} 2#00000000
+force {player_in} 2#0
 run 40ns
 
-force {clock} 1'b0
-force {load_amount} 1'b0
-force {load_key} 1'b0
-force {load_player} 1'b0
-force {load_register} 1'b0
-force {resetn} 1'b1
-force {process[2:0]} 3'b001
-force {input_amount[7:0]} 8'b00000000
-force {input_key[7:0]} 8'b00000000
-force {player_in} 1'b0
+force {clock} 2#0
+force {load_amount} 2#0
+force {load_key} 2#0
+force {load_player} 2#0
+force {load_register} 2#0
+force {resetn} 2#1
+force {process[2:0]} 2#001
+force {input_amount[7:0]} 2#00000000
+force {input_key[7:0]} 2#00000000
+force {player_in} 2#0
 run 40ns
 
-force {clock} 1'b0
-force {process[2:0]} 3'b001
+force {clock} 2#0
+force {process[2:0]} 2#001
 run 40ns
 
-force {clock} 1'b1
-force {process[2:0]} 3'b001
+force {clock} 2#1
+force {process[2:0]} 2#001
 run 40ns
 
-force {clock} 1'b0
-force {process[2:0]} 3'b001
+force {clock} 2#0
+force {process[2:0]} 2#001
 run 40ns
 
-force {clock} 1'b1
-force {process[2:0]} 3'b001
+force {clock} 2#1
+force {process[2:0]} 2#001
 run 40ns
 
 #Verify Key
-force {clock} 1'b0
-force {process[2:0]} 3'b010
+force {clock} 2#0
+force {process[2:0]} 2#010
 run 40ns
 
-force {clock} 1'b1
-force {process[2:0]} 3'b010
+force {clock} 2#1
+force {process[2:0]} 2#010
 run 40ns
 
-force {clock} 1'b0
-force {process[2:0]} 3'b010
+force {clock} 2#0
+force {process[2:0]} 2#010
 run 40ns
 
-force {clock} 1'b1
-force {process[2:0]} 3'b010
+force {clock} 2#1
+force {process[2:0]} 2#010
 run 40ns
 
-force {clock} 1'b0
-force {process[2:0]} 3'b010
+force {clock} 2#0
+force {process[2:0]} 2#010
 run 40ns
 
-force {clock} 1'b1
-force {process[2:0]} 3'b010
+force {clock} 2#1
+force {process[2:0]} 2#010
 run 40ns
 
-force {clock} 1'b0
-force {process[2:0]} 3'b010
+force {clock} 2#0
+force {process[2:0]} 2#010
 run 40ns
 
-force {clock} 1'b1
-force {process[2:0]} 3'b010
+force {clock} 2#1
+force {process[2:0]} 2#010
 run 40ns
 
-force {clock} 1'b0
-force {process[2:0]} 3'b010
+force {clock} 2#0
+force {memory_values[47:0]} 2#0
+force {process[2:0]} 2#010
 run 40ns
 
-force {clock} 1'b1
-force {process[2:0]} 3'b010
+force {clock} 2#1
+force {process[2:0]} 2#010
 run 40ns
 
-force {clock} 1'b0
-force {process[2:0]} 3'b010
+force {clock} 2#0
+force {process[2:0]} 2#010
 run 40ns
 
-force {clock} 1'b1
-force {process[2:0]} 3'b010
+force {clock} 2#1
+force {process[2:0]} 2#010
 run 40ns
 
-force {clock} 1'b0
-force {process[2:0]} 3'b010
+force {clock} 2#0
+force {process[2:0]} 2#010
 run 40ns
 
-force {clock} 1'b1
-force {process[2:0]} 3'b001
+force {clock} 2#1
+force {process[2:0]} 2#010
 run 40ns
