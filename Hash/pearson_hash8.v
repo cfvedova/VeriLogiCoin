@@ -1,7 +1,7 @@
 module pearson_hash8(clock, message, reset_n, random_table, hash, counter);
 	//Assume 8 bit wide sequencing
 	input [7:0] message;
-	input reset_n;
+	input reset_n, clock;
 	input [287:0] random_table;
 	output [7:0] hash;
 	output reg [2:0] counter;

@@ -13,7 +13,7 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 	output reg done_step;
 	output [47:0] result_out;
 	
-	wire verify_amount_signal, verify_key_signal, complete_transaction_signal;
+	wire verify_amount_signal, verify_key_signal;
 	
 	reg [7:0] amount;
 	reg [7:0] key;
