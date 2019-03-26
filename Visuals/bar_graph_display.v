@@ -7,7 +7,7 @@ module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, x_
 	input [6:0] graph_height; // 0 -> 100
     output [8:0] x_coord; // X value to plot
 	output [7:0] y_coord; // Y value to plot
-	output done;
+	output reg done;
 
     
     // input registers
@@ -24,6 +24,7 @@ module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, x_
         if (!resetn) begin
             x <= start_x;
 			y <= start_y;
+			done <= 1'b0;
         end
     end
 
@@ -53,7 +54,11 @@ module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, x_
 		end
 	end
 
+	always @(posedge clk) begin
+		if (offset_x == 3'b111 && offset_y == graph_height) begin
+			done <= 1'b1
+		end
+	end
 	assign x_coord = x + offset_x;
 	assign y_coord = y + offset_y; 
-	assign done = (offset_x == 3'b111 && offset_y == graph_height) ? 1'b1: 1'b0;
 endmodule

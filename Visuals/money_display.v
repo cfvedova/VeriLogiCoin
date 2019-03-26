@@ -77,7 +77,7 @@ module money_display(clock, memory_out, load_memory, resetn,
 		.done(p1_done));
 	
 	bar_graph_display p2_money(
-		.clk(CLOCK_50),
+		.clk(clock),
 		.resetn(resetn),
 		.start_x(9'b100011000),
 		.start_y(8'b00101000),
@@ -95,9 +95,11 @@ module money_display(clock, memory_out, load_memory, resetn,
 			x_plot <= p1_x_plot;
 			y_plot <= p1_y_plot;
 		end
-		else begin
-			x_plot <= p2_x_plot;
-			x_plot <= p2_y_plot;
+		else begin 
+			if (!p2_done) begin
+				x_plot <= p2_x_plot;
+				x_plot <= p2_y_plot;
+			end
 		end
 	end
 endmodule
