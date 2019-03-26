@@ -7,16 +7,16 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 	
     reg [3:0] y_Q, Y_D; // y_Q represents current state, Y_D represents next state
 
-    localparam start = 4'b0000, Load_Amount = 4'b0001, wait1 = 4'b0010, Load_Key = 4'b0011, wait2 = 4'b0100, Transaction = 4'b0101, Reset_Others = 4'b0110, INIT1 = 4'b0111, INIT2 = 4'b1000, Startup = 4'b1001;
+    localparam start = 4'b0000, Load_Amount_State = 4'b0001, wait1 = 4'b0010, Load_Key = 4'b0011, wait2 = 4'b0100, Transaction = 4'b0101, Reset_Others = 4'b0110, INIT1 = 4'b0111, INIT2 = 4'b1000, Startup = 4'b1001;
 	
 	reg [1:0] reset_others_counter;
 	reg start_reset_others_counter;
 	
 	always @(posedge clock) begin
-		if ((!global_reset) || (reset_others)) begin
+		if ((!global_reset) || (!start_reset_others_counter)) begin
 			reset_others_counter <= 2'b0;
 		end
-		else 
+		if (global_reset)
 		begin
 			if (start_reset_others_counter && reset_others_counter != 2'b11) begin
 				reset_others_counter <= reset_others_counter + 1'b1;
@@ -42,10 +42,10 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 			
             start: begin
                    if (!load_signal) Y_D = start;
-                   else Y_D = Load_Amount;
+                   else Y_D = Load_Amount_State;
 		    end
-            Load_Amount: begin
-                   if(load_signal) Y_D = Load_Amount;
+            Load_Amount_State: begin
+                   if(load_signal) Y_D = Load_Amount_State;
                    else Y_D = wait1;
 		    end
             wait1: begin
@@ -73,64 +73,141 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
     end     // End of state_table
 	
 	// Output logic aka all of our datapath control signals
-    always @(*)
-    begin: enable_signals
-        // By default make all our signals 0
-        load_amount = 1'b0;
-		load_key = 1'b0;
-		load_memory = 1'b0;
-		start_transaction = 1'b0;
-		reset_others = 1'b1;
-		init_memory = 1'b0;
-		random_init = 1'b0;
-		global_reset = 1'b1;
-		start_reset_others_counter = 1'b0;
+    always @(*) begin
+        load_amount <= 1'b0;
+		load_key <= 1'b0;
+		load_memory <= 1'b0;
+		start_transaction <= 1'b0;
+		reset_others <= 1'b1;
+		init_memory <= 1'b0;
+		random_init <= 1'b0;
+		global_reset <= 1'b1;
+		start_reset_others_counter <= 1'b0;
 		
         case (y_Q)
 			Startup: begin
-				global_reset = 1'b0;
+				load_amount <= 1'b0;
+				load_key <= 1'b0;
+				load_memory <= 1'b0;
+				start_transaction <= 1'b0;
+				reset_others <= 1'b1;
+				init_memory <= 1'b0;
+				random_init <= 1'b0;
+				global_reset <= 1'b0;
+				start_reset_others_counter <= 1'b0;
 			end
             start: begin
-				load_amount = 1'b0;
-				load_key = 1'b0;
-				start_transaction = 1'b0;
-				load_memory = 1'b1;
-				reset_others = 1'b1;
-				init_memory = 1'b0;
-				start_reset_others_counter = 1'b0;
+				load_amount <= 1'b0;
+				load_key <= 1'b0;
+				load_memory <= 1'b1;
+				start_transaction <= 1'b0;
+				reset_others <= 1'b1;
+				init_memory <= 1'b0;
+				random_init <= 1'b0;
+				global_reset <= 1'b1;
+				start_reset_others_counter <= 1'b0;
 			end
-            Load_Amount: begin
-                load_amount = 1'b1;
-				load_memory = 1'b0;
-				start_reset_others_counter = 1'b0;
+            Load_Amount_State: begin
+				load_amount <= 1'b1;
+				load_key <= 1'b0;
+				load_memory <= 1'b0;
+				start_transaction <= 1'b0;
+				reset_others <= 1'b1;
+				init_memory <= 1'b0;
+				random_init <= 1'b0;
+				global_reset <= 1'b1;
+				start_reset_others_counter <= 1'b0;
 			end
             wait1: begin
-                load_amount = 1'b0;
+				load_amount <= 1'b0;
+				load_key <= 1'b0;
+				load_memory <= 1'b0;
+				start_transaction <= 1'b0;
+				reset_others <= 1'b1;
+				init_memory <= 1'b0;
+				random_init <= 1'b0;
+				global_reset <= 1'b1;
+				start_reset_others_counter <= 1'b0;
 			end
             Load_Key: begin
-                load_key = 1'b1;
+				load_amount <= 1'b0;
+				load_key <= 1'b1;
+				load_memory <= 1'b0;
+				start_transaction <= 1'b0;
+				reset_others <= 1'b1;
+				init_memory <= 1'b0;
+				random_init <= 1'b0;
+				global_reset <= 1'b1;
+				start_reset_others_counter <= 1'b0;
 			end
             wait2: begin
-                load_key = 1'b0;
+				load_amount <= 1'b0;
+				load_key <= 1'b0;
+				load_memory <= 1'b0;
+				start_transaction <= 1'b0;
+				reset_others <= 1'b1;
+				init_memory <= 1'b0;
+				random_init <= 1'b0;
+				global_reset <= 1'b1;
+				start_reset_others_counter <= 1'b0;
             end
 			Transaction: begin
-				start_transaction = 1'b1;
-				start_reset_others_counter = 1'b0;
+				load_amount <= 1'b0;
+				load_key <= 1'b0;
+				load_memory <= 1'b0;
+				start_transaction <= 1'b1;
+				reset_others <= 1'b1;
+				init_memory <= 1'b0;
+				random_init <= 1'b0;
+				global_reset <= 1'b1;
+				start_reset_others_counter <= 1'b0;
 			end
 			Reset_Others: begin
-				reset_others = 1'b0;
-				start_reset_others_counter = 1'b1;
+				load_amount <= 1'b0;
+				load_key <= 1'b0;
+				load_memory <= 1'b0;
+				start_transaction <= 1'b0;
+				reset_others <= 1'b0;
+				init_memory <= 1'b0;
+				random_init <= 1'b0;
+				global_reset <= 1'b1;
+				start_reset_others_counter <= 1'b1;
             end
 			INIT1: begin
-				global_reset = 1'b1;
-				random_init = 1'b1;
+				load_amount <= 1'b0;
+				load_key <= 1'b0;
+				load_memory <= 1'b0;
+				start_transaction <= 1'b0;
+				reset_others <= 1'b1;
+				init_memory <= 1'b0;
+				random_init <= 1'b1;
+				global_reset <= 1'b1;
+				start_reset_others_counter <= 1'b0;
 			end
 			INIT2: begin
-				init_memory = 1'b1;
-				start_reset_others_counter = 1'b0;
+				load_amount <= 1'b0;
+				load_key <= 1'b0;
+				load_memory <= 1'b0;
+				start_transaction <= 1'b0;
+				reset_others <= 1'b1;
+				init_memory <= 1'b1;
+				random_init <= 1'b0;
+				global_reset <= 1'b1;
+				start_reset_others_counter <= 1'b0;
+			end
+			default: begin
+				load_amount <= 1'b0;
+				load_key <= 1'b0;
+				load_memory <= 1'b0;
+				start_transaction <= 1'b0;
+				reset_others <= 1'b1;
+				init_memory <= 1'b0;
+				random_init <= 1'b0;
+				global_reset <= 1'b1;
+				start_reset_others_counter <= 1'b0;
 			end
         endcase
-    end // enable_signals
+    end
 	
     // State Register
     always @(posedge clock)

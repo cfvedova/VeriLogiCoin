@@ -7,25 +7,67 @@ z2
 !i10e 25
 !i10f 100
 cModel Technology
-Z0 dC:/USers/conor/desktop/school/csc258/project/testing
+dC:/USers/conor/desktop/school/csc258/project/testing
 vmain_control
-!s110 1553570124
+!s110 1553630081
 !i10b 1
-!s100 <HDoYjGea7W=mYFhV>8oR1
-I38QTlb;CF`0fTeLd:YT:R1
-VDg1SIo80bB@j0V0VzS_@n1
-R0
-w1553569288
+!s100 8jAU7Z@4fj;@X@iXPJJIW2
+I>XnQI]^Nfa9HcQOiZCQLP2
+Z0 VDg1SIo80bB@j0V0VzS_@n1
+Z1 dC:/users/conor/desktop/school/csc258/project/testing
+w1553629708
 8../Controllers/main_control.v
 F../Controllers/main_control.v
 L0 4
-OV;L;10.5b;63
+Z2 OV;L;10.5b;63
 r1
 !s85 0
 31
-!s108 1553570124.000000
+!s108 1553630081.000000
 !s107 ../Controllers/main_control.v|
 !s90 -reportprogress|300|-timescale|1ns/1ns|../Controllers/main_control.v|
 !i113 1
-o-timescale 1ns/1ns
-tCvgOpt 0
+Z3 o-timescale 1ns/1ns
+Z4 tCvgOpt 0
+vmemory_control
+!s110 1553630506
+!i10b 1
+!s100 [ZzVB<=FU=]ojjgX8m<<O3
+IW_mFakc0AB;jMki`VJUOo0
+R0
+R1
+w1553630496
+8../Controllers/memory_control.v
+F../Controllers/memory_control.v
+L0 1
+R2
+r1
+!s85 0
+31
+!s108 1553630505.000000
+!s107 ../Controllers/memory_control.v|
+!s90 -reportprogress|300|-timescale|1ns/1ns|../Controllers/memory_control.v|
+!i113 1
+R3
+R4
+vtransaction_control
+!s110 1553630114
+!i10b 1
+!s100 e2B4n@;<SZP[S9dO>Lo:@3
+Inbfol?2]FBbnn9b]nzeLW3
+R0
+R1
+w1553629666
+8../Controllers/transaction_control.v
+F../Controllers/transaction_control.v
+L0 2
+R2
+r1
+!s85 0
+31
+!s108 1553630113.000000
+!s107 ../Controllers/transaction_control.v|
+!s90 -reportprogress|300|-timescale|1ns/1ns|../Controllers/transaction_control.v|
+!i113 1
+R3
+R4

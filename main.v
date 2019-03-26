@@ -32,7 +32,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	
 	//Wires for transaction_control
 	reg done_process;
-	wire done_travel;
+	wire done_travel = 1'b1;
 	wire transaction_reset;
 	wire [2:0] process;
 	wire [2:0] travel;

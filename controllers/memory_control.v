@@ -7,8 +7,6 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 	output reg write_enable, access_type, load_registers, done, finished_init;
 	output reg [47:0] data_in;
 	
-
-	
 	reg [2:0] current_state;
 	reg [2:0] next_state;
 	
@@ -18,32 +16,46 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				Load_data = 3'b010,
 				Wait1 = 3'b011,
 				Buffer_2 = 3'b100,
-				Write_data = 3'b101;
+				Write_data = 3'b101,
+				Init_memory_Buffer = 3'b110;
 	
 	//Wait signals to give buffer time to memory access
 	reg start_wait;
 	reg start_wait1;
 	reg start_wait2;
 	reg start_wait3;
+	reg start_waited_init_buffer;
 	reg [2:0] waited_1;
 	reg [2:0] waited_2;
 	reg [2:0] waited_3;
+	reg [2:0] waited_init_buffer;
 	reg [3:0] waited;
 	
 	always @(posedge clock) begin
-		if (!resetn) begin
-			waited_1 <= 3'b0;
-			waited_2 <= 3'b0;
-			waited_3 <= 3'b0;
+		if (!resetn || !start_wait) begin
 			waited <= 4'b0;
 		end
-		
-		else begin
+		if (!resetn || !start_waited_init_buffer) begin
+			waited_init_buffer <= 3'b0;
+		end
+		if (!resetn || !start_wait1) begin
+			waited_1 <= 3'b0;
+		end
+		if (!resetn || !start_wait2) begin
+			waited_2 <= 3'b0;
+		end
+		if (!resetn || !start_wait3) begin
+			waited_3 <= 3'b0;
+		end
+		if (resetn) begin
 			if (!global_reset) begin
 				waited <= 4'b0;
 			end 
 			if (start_wait && waited != 4'b1111) begin
 				waited <= waited + 1'b1;
+			end
+			if (start_waited_init_buffer && waited_init_buffer != 3'b111) begin
+				waited_init_buffer <= waited_init_buffer + 1'b1;
 			end
 			if (start_wait1 && waited_1 != 3'b111) begin
 			waited_1 <= waited_1 + 1'b1;
@@ -61,8 +73,12 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 	always @(*) begin
 		case (current_state)
 			Init_memory: begin
-				if (waited == 4'b1111) next_state = Buffer_1;
+				if (waited == 4'b1111) next_state = Init_memory_Buffer;
 				else next_state = Init_memory;
+			end
+			Init_memory_Buffer: begin //This state allows the main controller to switch states so as to stop a race condition between finished_init and init_memory
+				if (waited_init_buffer == 3'b111) next_state = Buffer_1;
+				else next_state = Init_memory_Buffer;
 			end
             Buffer_1: begin
 				   if (init_memory) next_state = Init_memory;
@@ -73,7 +89,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
                    if(waited_1 == 3'b111) next_state = Wait1;
                    else next_state = Load_data;
 		    end
-			Wait1: begin 
+			Wait1: begin
 				   if(waited_2 == 3'b111) next_state = Buffer_2;
 				   else next_state = Wait1;
 			end
@@ -95,10 +111,13 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 		start_wait1 <= 1'b0;
 		start_wait2 <= 1'b0;
 		start_wait3 <= 1'b0;
+		load_registers <= 1'b0;
 		write_enable <= 1'b0;
 		done <= 1'b0;
 		access_type <= 1'b0;
 		finished_init <= 1'b0;
+		start_waited_init_buffer <= 1'b0;
+		data_in <= starting_memory;
 		
 		case (current_state)
 			Init_memory: begin
@@ -107,18 +126,33 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				start_wait1 <= 1'b0;
 				start_wait2 <= 1'b0;
 				start_wait3 <= 1'b0;
+				start_waited_init_buffer <= 1'b0;
 				load_registers <= 1'b0;
 				write_enable <= 1'b1;
 				done <= 1'b0;
 				access_type <= 1'b0;
 				data_in <= starting_memory;
 			end
-			Buffer_1: begin
+			Init_memory_Buffer: begin
 				finished_init <= 1'b1;
 				start_wait <= 1'b0;
 				start_wait1 <= 1'b0;
 				start_wait2 <= 1'b0;
 				start_wait3 <= 1'b0;
+				start_waited_init_buffer <= 1'b1;
+				load_registers <= 1'b0;
+				write_enable <= 1'b0;
+				done <= 1'b0;
+				access_type <= 1'b0;
+				data_in <= starting_memory;
+			end
+			Buffer_1: begin
+				finished_init <= 1'b0;
+				start_wait <= 1'b0;
+				start_wait1 <= 1'b0;
+				start_wait2 <= 1'b0;
+				start_wait3 <= 1'b0;
+				start_waited_init_buffer <= 1'b0;
 				load_registers <= 1'b0;
 				write_enable <= 1'b0;
 				done <= 1'b1;
@@ -130,6 +164,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				start_wait1 <= 1'b1;
 				start_wait2 <= 1'b0;
 				start_wait3 <= 1'b0;
+				start_waited_init_buffer <= 1'b0;
 				load_registers <= 1'b0;
 				write_enable <= 1'b0;
 				done <= 1'b0;
@@ -141,6 +176,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				start_wait1 <= 1'b0;
 				start_wait2 <= 1'b1;
 				start_wait3 <= 1'b0;
+				start_waited_init_buffer <= 1'b0;
 				load_registers <= 1'b1;
 				write_enable <= 1'b0;
 				done <= 1'b0;
@@ -152,6 +188,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				start_wait1 <= 1'b0;
 				start_wait2 <= 1'b0;
 				start_wait3 <= 1'b0;
+				start_waited_init_buffer <= 1'b0;
 				load_registers <= 1'b0;
 				write_enable <= 1'b0;
 				done <= 1'b0;
@@ -163,6 +200,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				start_wait1 <= 1'b0;
 				start_wait2 <= 1'b0;
 				start_wait3 <= 1'b1;
+				start_waited_init_buffer <= 1'b0;
 				load_registers <= 1'b0;
 				write_enable <= 1'b1;
 				done <= 1'b0;

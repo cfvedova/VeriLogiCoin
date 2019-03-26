@@ -1,6 +1,7 @@
-//step == 001 if Verify_Amount; == 010 if Verify_Signature; == 011 if Mine_Block; 100 if Finish_Transaction (Make sure computation is complete); == 00 if no step
+//step == 001 if Verify_Amount; == 010 if Verify_Signature; == 011 if Mine_Block; 100 if Finish_Transaction (Make sure computation is complete); == 000 if no step
 module transaction_control(start_transaction, done_step, done_travel, resetn, clock, step, travel);
 	input start_transaction, done_step, done_travel, resetn, clock;
+	
 	output reg [2:0] step;
 	output reg [2:0] travel; //The bit of travel tells which travel it is on. travel1 == 001, etc. And not travel == 000.
 	
@@ -58,44 +59,46 @@ module transaction_control(start_transaction, done_step, done_travel, resetn, cl
     end     // End of state_table
 	
 	// Output logic aka all of our datapath control signals
-    always @(*)
-    begin: enable_signals
-        // By default make all our signals 0
-		travel[2:0] = 3'b0;
-		step[2:0] = 3'b0;
+    always @(*) begin
+		travel[2:0] <= 3'b0;
+		step[2:0] <= 3'b0;
 		
         case (y_Q)
             buffer: begin
-				travel[2:0] = 3'b0;
-				step[2:0] = 3'b0;
+				travel[2:0] <= 3'b0;
+				step[2:0] <= 3'b0;
 			end
 			travel1: begin
-            travel[2:0] = 3'b001;
-				step[2:0] = 3'b001;
+				travel[2:0] <= 3'b001;
+				step[2:0] <= 3'b001;
 			end
 			Verify_Amount: begin
-				travel[2:0] = 3'b0;
+				travel[2:0] <= 3'b0;
+				step[2:0] <= 3'b001;
 			end
 			travel2: begin
-                travel[2:0] = 3'b010;
-				step[2:0] = 3'b010;
+                travel[2:0] <= 3'b010;
+				step[2:0] <= 3'b010;
 			end
 			Verify_Signature: begin
-				travel[2:0] = 3'b0;
+				travel[2:0] <= 3'b0;
+				step[2:0] <= 3'b010;
 			end
 			travel3: begin
-                travel[2:0] = 3'b011;
-				step[2:0] = 3'b011;
+                travel[2:0] <= 3'b011;
+				step[2:0] <= 3'b011;
 			end
 			Mine_Block: begin
-				travel[2:0] = 3'b000;
+				travel[2:0] <= 3'b000;
+				step[2:0] <= 3'b011;
 			end
 			travel4: begin
-                travel[2:0] = 3'b101;
+                travel[2:0] <= 3'b101;
+				step[2:0] <= 3'b0;
 			end
 			Finish_Transaction: begin
-				step[2:0] = 3'b100;
-				travel[2:0] = 3'b0;
+				step[2:0] <= 3'b100;
+				travel[2:0] <= 3'b0;
 			end
         endcase
     end // enable_signals
