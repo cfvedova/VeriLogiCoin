@@ -4,12 +4,12 @@ module lfsr_bit(data, clk, reset);
 	reg [31:0] data_next;
 	
 	//Initialize polynomial function for 32 bits
-	wire feedback = data[31] ^ data[29] ^ data[25] ^ data[24]; 
+	wire feedback = data_next[31] ^ data_next[29] ^ data_next[25] ^ data_next[2]; 
 	
-	always @ (posedge clk or posedge reset)
+	always @ (posedge clk)
 	begin
-		if (reset)
-			data_next <= 32'hFFFFFFFF; //An LFSR cannot have an all 0 state, thus reset to all 1's
+		if (!reset)
+			data_next <= 32'h60BCd9BE ; //An LFSR cannot have an all 0 state, thus reset to all 1's
 		else
 			data_next <= {data_next[30:0], feedback}; //shift left the xor'd every posedge clockgit 
 	end
@@ -30,16 +30,17 @@ module lfsr(random_sequence, clk, reset, done_creating_sequence, enable);
 	
 	//Sample 256 clock cycles, with a new random bit every clock cycle
 
-	reg [255:0] generated_seq = 256'b0;
-	reg [6:0] counter = 7'b1111111;
+	reg [255:0] generated_seq;
+	reg [8:0] counter;
 	always @(posedge clk)
 	begin
-		if (reset) begin
-			counter <= 7'b1111111;
+		if (!reset) begin
+			counter <= 9'b111111111;
+			generated_seq <= 256'b0;
 		end
 		else 
 			if (enable) begin
-				if (counter != 7'b0000000) begin
+				if (counter != 9'b000000000) begin
 					generated_seq <= {generated_seq[254:0], rand_bit};
 					counter <= counter - 1'b1;
 				end
