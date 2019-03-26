@@ -45,7 +45,7 @@ module lfsr(random_sequence, clk, reset, done_creating_sequence, enable);
 				end
 			end
 	end
-	assign done_creating_sequence = (counter == 0) ? 1 : 0;
+	assign done_creating_sequence = (counter == 0) ? 1'b1 : 1'b0;
 	assign random_sequence = (counter == 0) ? {generated_seq, 32'b0} : 288'b0;
 	
 endmodule

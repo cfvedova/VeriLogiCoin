@@ -13,12 +13,12 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 	reg [2:0] next_state;
 	
 	//States
-	localparam 	Init_memory = 3'd0,
-				Buffer_1 = 3'd1,
-				Load_data = 3'd2,
-				Wait1 = 3'd3,
-				Buffer_2 = 3'd4,
-				Write_data = 3'd5;
+	localparam 	Init_memory = 3'b000,
+				Buffer_1 = 3'b001,
+				Load_data = 3'b010,
+				Wait1 = 3'b011,
+				Buffer_2 = 3'b100,
+				Write_data = 3'b101;
 	
 	//Wait signals to give buffer time to memory access
 	reg start_wait;
@@ -41,7 +41,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 		else begin
 			if (!global_reset) begin
 				waited <= 4'b0;
-			end
+			end 
 			if (start_wait) begin
 				waited <= waited + 1'b1;
 			end
@@ -92,12 +92,12 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 	// Output Logic
 	always @(*) begin
 		start_wait <= 1'b0;
-		start_wait1 = 1'b0;
-		start_wait2 = 1'b0;
+		start_wait1 <= 1'b0;
+		start_wait2 <= 1'b0;
 		start_wait3 <= 1'b0;
-		write_enable = 1'b0;
-		done = 1'b0;
-		access_type = 1'b0;
+		write_enable <= 1'b0;
+		done <= 1'b0;
+		access_type <= 1'b0;
 		finished_init <= 1'b0;
 		
 		case (current_state)
@@ -110,7 +110,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				load_registers <= 1'b0;
 				write_enable <= 1'b1;
 				done <= 1'b0;
-				access_type = 1'b0;
+				access_type <= 1'b0;
 				data_in <= starting_memory;
 			end
 			Buffer_1: begin
@@ -122,7 +122,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				load_registers <= 1'b0;
 				write_enable <= 1'b0;
 				done <= 1'b1;
-				access_type = 1'b0;
+				access_type <= 1'b0;
 				data_in <= datapath_out;
 			end
 			Load_data: begin
@@ -133,7 +133,8 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				load_registers <= 1'b0;
 				write_enable <= 1'b0;
 				done <= 1'b0;
-				access_type = 1'b0;
+				access_type <= 1'b0;
+				data_in <= datapath_out;
 			end
 			Wait1: begin
 				start_wait <= 1'b0;
@@ -143,7 +144,8 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				load_registers <= 1'b1;
 				write_enable <= 1'b0;
 				done <= 1'b0;
-				access_type = 1'b0;
+				access_type <= 1'b0;
+				data_in <= datapath_out;
 			end
 			Buffer_2: begin
 				start_wait <= 1'b0;
@@ -153,7 +155,8 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				load_registers <= 1'b0;
 				write_enable <= 1'b0;
 				done <= 1'b0;
-				access_type = 1'b0;
+				access_type <= 1'b0;
+				data_in <= datapath_out;
 			end
 			Write_data: begin
 				start_wait <= 1'b0;
@@ -163,7 +166,8 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				load_registers <= 1'b0;
 				write_enable <= 1'b1;
 				done <= 1'b0;
-				access_type = 1'b0;
+				access_type <= 1'b0;
+				data_in <= datapath_out;
 			end
 		endcase
 	end

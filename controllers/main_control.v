@@ -5,7 +5,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 	input start_signal, load_signal, finished_init, finished_transaction, resetn, clock, done_table_init;
     output reg init_memory, load_memory, load_amount, load_key, start_transaction, reset_others, random_init, global_reset;
 	
-    reg [2:0] y_Q, Y_D; // y_Q represents current state, Y_D represents next state
+    reg [3:0] y_Q, Y_D; // y_Q represents current state, Y_D represents next state
 
     localparam start = 4'b0000, Load_Amount = 4'b0001, wait1 = 4'b0010, Load_Key = 4'b0011, wait2 = 4'b0100, Transaction = 4'b0101, Reset_Others = 4'b0110, INIT1 = 4'b0111, INIT2 = 4'b1000, Startup = 4'b1001;
 	
@@ -14,7 +14,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 	
 	always @(posedge clock) begin
 		if ((!global_reset) || (reset_others)) begin
-			reset_others_counter = 2'b0;
+			reset_others_counter <= 2'b0;
 		end
 		else 
 		begin
@@ -28,7 +28,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
     begin   // Start of state_table
         case (y_Q)
 			Startup: begin
-				if (!load_signal) Y_D = INIT1;
+				if (!load_signal) Y_D = Startup;
 				else Y_D = INIT1;
 			end
 			INIT1: begin

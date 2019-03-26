@@ -27,7 +27,6 @@ module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, x_
         end
     end
 
-
     // counter for x
 	always @(posedge clk) begin
 		if (!resetn)
@@ -40,7 +39,7 @@ module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, x_
 		end
 	end
 	
-	assign y_enable = (offset_x == 3'b111) ? 1 : 0;
+	assign y_enable = (offset_x == 3'b111) ? 1'b1 : 1'b0;
 	
 	// counter for y
 	always @(posedge clk) begin
@@ -56,5 +55,5 @@ module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, x_
 
 	assign x_coord = x + offset_x;
 	assign y_coord = y + offset_y; 
-	assign done = (offset_x == 3'b111 && offset_y == graph_height) ? 1: 0;
+	assign done = (offset_x == 3'b111 && offset_y == graph_height) ? 1'b1: 1'b0;
 endmodule
