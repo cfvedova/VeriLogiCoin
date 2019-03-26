@@ -39,12 +39,9 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 		end
 		
 		else begin
-			if (!global_reset)
+			if (!global_reset) begin
 				waited <= 4'b0;
-		end
-		
-		else 
-		begin
+			end
 			if (start_wait) begin
 				waited <= waited + 1'b1;
 			end

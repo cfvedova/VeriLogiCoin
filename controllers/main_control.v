@@ -66,7 +66,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 			end
 			Reset_Others: begin
 				if(reset_others_counter != 2'b11) Y_D = Reset_Others;
-				else Y_D = Start;
+				else Y_D = start;
 			end
             default: Y_D = Startup;
         endcase
