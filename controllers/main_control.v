@@ -18,7 +18,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 		end
 		else 
 		begin
-			if (start_reset_others_counter) begin
+			if (start_reset_others_counter && reset_others_counter != 2'b11) begin
 				reset_others_counter <= reset_others_counter + 1'b1;
 			end
 		end		
@@ -32,7 +32,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				else Y_D = INIT1;
 			end
 			INIT1: begin
-				if (done_table_init) Y_D = INIT1;
+				if (!done_table_init) Y_D = INIT1;
 				else Y_D = INIT2;
 			end
 			INIT2: begin

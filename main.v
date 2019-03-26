@@ -15,7 +15,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	input CLOCK_50;
 	
 	//Wires for main_control
-	wire main_control_reset;
+	wire main_control_reset = 1'b1;
 	wire load_amount;
 	wire load_key;
 	wire load_memory;

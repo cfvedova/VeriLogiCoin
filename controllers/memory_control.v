@@ -42,16 +42,16 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 			if (!global_reset) begin
 				waited <= 4'b0;
 			end 
-			if (start_wait) begin
+			if (start_wait && waited != 4'b1111) begin
 				waited <= waited + 1'b1;
 			end
-			if (start_wait1) begin
+			if (start_wait1 && waited_1 != 3'b111) begin
 			waited_1 <= waited_1 + 1'b1;
 			end
-			if (start_wait2) begin
+			if (start_wait2 && waited_2 != 3'b111) begin
 			waited_2 <= waited_2 + 1'b1;
 			end
-			if (start_wait3) begin
+			if (start_wait3 && waited_3 != 3'b111) begin
 			waited_3 <= waited_3 + 1'b1;
 			end
 		end		
