@@ -5,11 +5,11 @@ module verify_amount(player_money, amount, clock, correct);
 	
 	output reg correct;
 	
-	always @(clock)
+	always @(posedge clock)
 	begin
 		case (player_money)
 			8'b0:
-				correct <= 2'b0;
+				correct <= 1'b0;
 			default:
 				correct <=  player_money >= amount;
 		endcase

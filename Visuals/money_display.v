@@ -3,7 +3,7 @@
 `include "vga_adapter/vga_controller.v"
 `include "vga_adapter/vga_pll.v"
 `include "bar_graph_display.v"
-module money_display(CLOCK_50, memory_out, load_memory, resetn, 
+module money_display(clock, memory_out, load_memory, resetn, 
 		VGA_CLK,   						//	VGA Clock
 		VGA_HS,							//	VGA H_SYNC
 		VGA_VS,							//	VGA V_SYNC
@@ -13,7 +13,7 @@ module money_display(CLOCK_50, memory_out, load_memory, resetn,
 		VGA_G,	 						//	VGA Green[9:0]
 		VGA_B   						//	VGA Blue[9:0]
 	);
-	input CLOCK_50;
+	input clock;
 	input [47:0] memory_out;
 	input load_memory;
 	input resetn;
@@ -33,7 +33,7 @@ module money_display(CLOCK_50, memory_out, load_memory, resetn,
 	// image file (.MIF) for the controller.
 	vga_adapter VGA(
 			.resetn(resetn),
-			.clock(CLOCK_50),
+			.clock(clock),
 			.colour(3'b010),
 			.x(x_plot),
 			.y(y_plot),
@@ -62,11 +62,11 @@ module money_display(CLOCK_50, memory_out, load_memory, resetn,
 	wire [7:0] p2_y_plot;
 	wire p2_done;
 	
-	wire [6:0] p1_bar_height = memory_out[31:24] >> 1;
-	wire [6:0] p2_bar_height = memory_out[7:0] >> 1;
+	wire [6:0] p1_bar_height = memory_out[31:25];
+	wire [6:0] p2_bar_height = memory_out[7:1];
 	
 	bar_graph_display p1_money(
-		.clk(CLOCK_50),
+		.clk(clock),
 		.resetn(resetn),
 		.start_x(9'b000101000),
 		.start_y(8'b00101000),
@@ -90,7 +90,7 @@ module money_display(CLOCK_50, memory_out, load_memory, resetn,
 	reg [8:0] x_plot;
 	reg [7:0] y_plot;
 	
-	always @(*) begin
+	always @(posedge clock) begin
 		if (!p1_done) begin
 			x_plot <= p1_x_plot;
 			y_plot <= p1_y_plot;

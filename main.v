@@ -69,7 +69,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	lfsr lfsr(.random_sequence(random_table), .clk(CLOCK_50), .reset(global_reset), .done_creating_sequence(done_creating_sequence), .enable(random_init));
 	
 	//INIT Memory
-	make_starting_memory starting_mem(.resetn(global_reset), .random_table(random_table), .starting_memory(starting_memory));
+	make_starting_memory starting_mem(.clock(CLOCK_50), .resetn(global_reset), .random_table(random_table), .starting_memory(starting_memory));
 	
 	//Memory RAM
 	ram ram1(.clock(CLOCK_50), .access_type(access_type), .data_in(data_in), .wren(wren), .result(memory_values));
@@ -95,7 +95,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	
 	
 	//Money_display
-	money_display display(.CLOCK_50(CLOCK_50), .memory_out(memory_values), .load_memory(load_memory), .resetn(reset_others), 
+	money_display display(.clock(CLOCK_50), .memory_out(memory_values), .load_memory(load_memory), .resetn(reset_others), 
 		.VGA_CLK(VGA_CLK),   						
 		.VGA_HS(VGA_HS),							
 		.VGA_VS(VGA_VS),							

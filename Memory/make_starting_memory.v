@@ -1,6 +1,6 @@
-module make_starting_memory(resetn, random_table, starting_memory);
+module make_starting_memory(clock, resetn, random_table, starting_memory);
 	input [287:0] random_table;
-	input resetn;
+	input resetn, clock;
 	output [47:0] starting_memory;
 	
 	wire [7:0] p1_money = 8'b01100100;
@@ -12,9 +12,9 @@ module make_starting_memory(resetn, random_table, starting_memory);
 	wire [2:0] counter1;
 	wire [2:0] counter2;
 	
-	pearson_hash8 ph1(.message(p1_private), .reset_n(resetn), .random_table(random_table), .hash(p1_public), .counter(counter1));
+	pearson_hash8 ph1(.clock(clock), .message(p1_private), .reset_n(resetn), .random_table(random_table), .hash(p1_public), .counter(counter1));
 	
-	pearson_hash8 ph2(.message(p2_private), .reset_n(resetn), .random_table(random_table), .hash(p2_public), .counter(counter2));
+	pearson_hash8 ph2(.clock(clock), .message(p2_private), .reset_n(resetn), .random_table(random_table), .hash(p2_public), .counter(counter2));
 	
 	assign starting_memory = {p1_private, p1_public, p1_money, p2_private, p2_public, p2_money};
 	
