@@ -70,7 +70,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 	end
 	
 	// State Table
-	always @(*) begin
+	always @* begin
 		case (current_state)
 			Init_memory: begin
 				if (waited == 4'b1111) next_state = Init_memory_Buffer;

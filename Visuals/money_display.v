@@ -2,7 +2,7 @@
 `include "vga_adapter/vga_address_translator.v"
 `include "vga_adapter/vga_controller.v"
 `include "vga_adapter/vga_pll.v"
-`include "bar_graph_display.v"
+`include "bar_graph_display_one_counter.v"
 module money_display(clock, memory_out, load_memory, resetn, 
 		VGA_CLK,   						//	VGA Clock
 		VGA_HS,							//	VGA H_SYNC
@@ -28,6 +28,19 @@ module money_display(clock, memory_out, load_memory, resetn,
 	output	[9:0]	VGA_G;	 				//	VGA Green[9:0]
 	output	[9:0]	VGA_B;   				//	VGA Blue[9:0]
 	
+	wire [8:0] p1_x_plot;
+	wire [7:0] p1_y_plot;
+	wire p1_done;
+	
+	wire [8:0] p2_x_plot;
+	wire [7:0] p2_y_plot;
+	wire p2_done;
+	
+	wire [6:0] p1_bar_height = memory_out[31:25];
+	wire [6:0] p2_bar_height = memory_out[7:1];
+	
+	reg [8:0] x_plot;
+	reg [7:0] y_plot;
 	// Create an Instance of a VGA controller - there can be only one!
 	// Define the number of colours as well as the initial background
 	// image file (.MIF) for the controller.
@@ -54,51 +67,38 @@ module money_display(clock, memory_out, load_memory, resetn,
 	
 	// Put your code here. Your code should produce signals x,y,colour and writeEn/plot
 	// for the VGA controller, in addition to any other functionality your design may require.	
-	wire [8:0] p1_x_plot;
-	wire [7:0] p1_y_plot;
-	wire p1_done;
 	
-	wire [8:0] p2_x_plot;
-	wire [7:0] p2_y_plot;
-	wire p2_done;
-	
-	wire [6:0] p1_bar_height = memory_out[31:25];
-	wire [6:0] p2_bar_height = memory_out[7:1];
-	
-	bar_graph_display p1_money(
+	bar_graph_display_one_counter p1_money(
 		.clk(clock),
 		.resetn(resetn),
-		.start_x(9'b000101000),
-		.start_y(8'b00101000),
+		.start_x(9'b000001010),
+		.start_y(8'b00001010),
 		.graph_height(p1_bar_height),
 		.enable(load_memory),
 		.x_coord(p1_x_plot),
 		.y_coord(p1_y_plot),
 		.done(p1_done));
 	
-	bar_graph_display p2_money(
+	bar_graph_display_one_counter p2_money(
 		.clk(clock),
 		.resetn(resetn),
-		.start_x(9'b100011000),
-		.start_y(8'b00101000),
+		.start_x(9'b100101110),
+		.start_y(8'b00001010),
 		.graph_height(p2_bar_height),
 		.enable(p1_done && load_memory),
 		.x_coord(p2_x_plot),
 		.y_coord(p2_y_plot),
 		.done(p2_done));
-		
-	reg [8:0] x_plot;
-	reg [7:0] y_plot;
 	
 	always @(posedge clock) begin
 		if (!p1_done) begin
 			x_plot <= p1_x_plot;
 			y_plot <= p1_y_plot;
 		end
-		else begin 
+		else begin
 			if (!p2_done) begin
 				x_plot <= p2_x_plot;
-				x_plot <= p2_y_plot;
+				y_plot <= p2_y_plot;
 			end
 		end
 	end

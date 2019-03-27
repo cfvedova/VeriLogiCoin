@@ -4,12 +4,12 @@
 `include "Controllers/transaction_control.v"
 `include "Controllers/memory_control.v"
 `include "Datapath/datapath.v"
-`include "Memory/RAM/ram_real.v"
+`include "Memory/RAM/ram.v"
 `include "Memory/make_starting_memory.v"
-//`include "Visuals/money_display.v"
+`include "Visuals/money_display.v"
 `include "Hash/lfsr.v"
 
-//`default_nettype none
+`default_nettype none
 module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N, VGA_R, VGA_G, VGA_B);
 	input [9:0] SW;
 	input [3:0] KEY;
@@ -64,7 +64,6 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	output [9:0] VGA_G;	 				//	VGA Green[9:0]
 	output [9:0] VGA_B;   				//	VGA Blue[9:0]
 	
-	wire overall_reset = reset_others && global_reset;
 	//Init random table
 	lfsr lfsr(.random_sequence(random_table), .clk(CLOCK_50), .reset(global_reset), .done_creating_sequence(done_creating_sequence), .enable(random_init));
 	
@@ -72,10 +71,10 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	make_starting_memory starting_mem(.clock(CLOCK_50), .resetn(global_reset), .random_table(random_table), .starting_memory(starting_memory));
 	
 	//Memory RAM
-	ram ram1(.clock(CLOCK_50), .access_type(access_type), .data_in(data_in), .wren(wren), .result(memory_values), .resetn(global_reset));
+	ram ram1(.clock(CLOCK_50), .access_type(access_type), .data_in(data_in), .wren(wren), .result(memory_values));
 	
 	//Memory Controller
-	memory_control mem_control(.clock(CLOCK_50), .global_reset(global_reset), .resetn(overall_reset), .load_memory(load_memory), .init_memory(init_memory), .process(process),
+	memory_control mem_control(.clock(CLOCK_50), .global_reset(global_reset), .resetn(reset_others), .load_memory(load_memory), .init_memory(init_memory), .process(process),
 							   .datapath_out(result_out), .starting_memory(starting_memory), .write_enable(wren), .access_type(access_type),
 							   .data_in(data_in), .load_registers(load_registers), .done(done_memory_store), .finished_init(finished_init));
 	
@@ -86,16 +85,16 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	
 	//Main Controller for Transaction
 	transaction_control transac_control(.start_transaction(start_transaction), .done_step(done_process), .done_travel(done_travel),
-										.resetn(overall_reset), .clock(CLOCK_50), .step(process), .travel(travel));
+										.resetn(reset_others), .clock(CLOCK_50), .step(process), .travel(travel));
 	
 	//Datapath for verifying Info.
 	datapath verdata(.process(process), .clock(CLOCK_50), .random_table(random_table), .memory_values(memory_values), .player_in(1'b0),
 					 .input_amount(SW[7:0]), .input_key(SW[7:0]), .load_amount(load_amount), .load_key(load_key), .load_player(1'b1),
-					 .load_register(load_registers), .resetn(overall_reset), .done_step(done_data_process), .result_out(result_out));
+					 .load_register(load_registers), .resetn(reset_others), .done_step(done_data_process), .result_out(result_out));
 	
 	
 	//Money_display
-	/*money_display display(.clock(CLOCK_50), .memory_out(memory_values), .load_memory(load_memory), .resetn(overall_reset), 
+	money_display display(.clock(CLOCK_50), .memory_out(memory_values), .load_memory(load_memory), .resetn(reset_others), 
 		.VGA_CLK(VGA_CLK),   						
 		.VGA_HS(VGA_HS),							
 		.VGA_VS(VGA_VS),							
@@ -104,7 +103,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 		.VGA_R(VGA_R),   						
 		.VGA_G(VGA_G),	 						
 		.VGA_B(VGA_B)   						
-	);*/
+	);
 	
 	always @(*)
 	begin

@@ -24,7 +24,7 @@ module pearson_hash8(clock, message, reset_n, random_table, hash, finished);
 				counter <= counter + 1'b1;	
 			end
 			if (counter != 3'b111) begin
-			 case(access_point[7:3])
+			 case(access_point[7:5])
 				0:
 					temp_hash <= random_table[7:0];
 				1:
@@ -58,9 +58,9 @@ module pearson_hash8(clock, message, reset_n, random_table, hash, finished);
 				15:
 					temp_hash <= random_table[142:135];
 				16:
-					temp_hash <= random_table[151:144];
+					temp_hash <= random_table[153:144];
 				17:
-					temp_hash <= random_table[161:155];
+					temp_hash <= random_table[163:155];
 				18:
 					temp_hash <= random_table[172:165];
 				19:

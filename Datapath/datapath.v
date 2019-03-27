@@ -26,7 +26,7 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 	reg player;
 	
 	//Input Amount Register
-	always @(*)
+	always @(posedge clock)
 	begin
 		if(resetn == 1'b0)
 			amount <= 8'b00000000;
@@ -35,7 +35,7 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 	end
 	
 	//Input Key Register
-	always @(*)
+	always @(posedge clock)
 	begin
 		if(resetn == 1'b0)
 			key <= 8'b00000000;
@@ -44,7 +44,7 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 	end
 	
 	//Player Choice
-	always @(*)
+	always @(posedge clock)
 	begin
 		if (resetn == 1'b0)
 			player <= 1'b0;
@@ -53,57 +53,24 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 	end
 	
 	//P1 Private Key
-	always @(*)
+	always @(posedge clock)
 	begin
-		if (resetn == 1'b0)
+		if (resetn == 1'b0) begin
 			p1_private_key <= 8'b0;
-		else if (load_register)
-			p1_private_key <= memory_values[47:40];
-	end
-	
-	//P2 Private Key
-	always @(*)
-	begin
-		if (resetn == 1'b0)
 			p2_private_key <= 8'b0;
-		else if (load_register)
-			p2_private_key <= memory_values[23:16];
-	end
-	
-	//P1 Public Key
-	always @(*)
-	begin
-		if (resetn == 1'b0)
 			p1_public_key <= 8'b0;
-		else if (load_register)
-			p1_public_key <= memory_values[39:32];
-	end
-	
-	//P2 Public Key
-	always @(*)
-	begin
-		if (resetn == 1'b0)
 			p2_public_key <= 8'b0;
-		else if (load_register)
-			p2_public_key <= memory_values[15:8];
-	end
-	
-	//P1 Money
-	always @(*)
-	begin
-		if (resetn == 1'b0)
 			p1_amount <= 8'b0;
-		else if (load_register)
-			p1_amount <= memory_values[31:24];
-	end
-	
-	//P2 Money
-	always @(*)
-	begin
-		if (resetn == 1'b0)
 			p2_amount <= 8'b0;
-		else if (load_register)
+		end
+		else if (load_register) begin
+			p1_private_key <= memory_values[47:40];
+			p2_private_key <= memory_values[23:16];
+			p1_public_key <= memory_values[39:32];
+			p2_public_key <= memory_values[15:8];
+			p1_amount <= memory_values[31:24];
 			p2_amount <= memory_values[7:0];
+		end
 	end
 	
 	wire [7:0] player_amount = (player) ? p2_amount: p1_amount;
@@ -115,7 +82,7 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 	wire [7:0] p1_amount_out, p2_amount_out;
 	complete_transaction ct(.p1_amount(p1_amount), .p2_amount(p2_amount), .amount_change(amount), .person(player), .clock(clock), .p1_amount_out(p1_amount_out), .p2_amount_out(p2_amount_out));
 	
-	always @(clock)
+	always @(posedge clock)
 	begin
 		case (process)
 			3'b001: done_step <= verify_amount_signal;

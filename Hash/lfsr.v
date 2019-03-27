@@ -35,7 +35,7 @@ module lfsr(random_sequence, clk, reset, done_creating_sequence, enable);
 	always @(posedge clk)
 	begin
 		if (!reset) begin
-			counter <= 9'b111111111;
+			counter <= 9'b000000111;
 			generated_seq <= 256'b0;
 		end
 		else 

@@ -1,4 +1,4 @@
-module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, x_coord, y_coord, done);
+module bar_graph_display_one_counter(clk, resetn, start_x, start_y, graph_height, enable, x_coord, y_coord, done);
     input clk;
     input resetn;
 	input [8:0] start_x; // 0 -> 320
@@ -21,7 +21,7 @@ module bar_graph_display(clk, resetn, start_x, start_y, graph_height, enable, x_
         end
 		else begin
 			if (enable) begin
-				if (counter[9:3] != graph_height[6:0] && counter[2:0] != 3'b111) begin
+				if (counter[9:3] != graph_height[6:0] || counter[2:0] != 3'b111) begin
 					counter <= counter + 1'b1;
 				end
 				else begin

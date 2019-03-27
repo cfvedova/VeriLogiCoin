@@ -25,7 +25,7 @@ module test_money_visuals(SW, KEY,
 	output	[9:0]	VGA_B;   				//	VGA Blue[9:0]
 	
 	wire [47:0] memory_out = {16'b0, SW[7:0], 16'b0, 8'b01000000};
-	money_display m1(.CLOCK_50(KEY[0]), .memory_out(memory_out), .load_memory(KEY[1]), .resetn(KEY[2]), 
+	money_display m1(.clock(KEY[0]), .memory_out(memory_out), .load_memory(KEY[1]), .resetn(KEY[2]), 
 		.VGA_CLK(VGA_CLK),   						//	VGA Clock
 		.VGA_HS(VGA_HS),							//	VGA H_SYNC
 		.VGA_VS(VGA_VS),							//	VGA V_SYNC

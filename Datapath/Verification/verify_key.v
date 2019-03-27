@@ -10,11 +10,11 @@ module verify_key(public_key, input_key, random_table, clock, correct);
 	
 	reg resetn;
 	wire [7:0] input_public_key;
-	wire [2:0] counter;
+	wire finished;
 	
-	pearson_hash8 ph(.clock(clock), .message(input_key), .reset_n(resetn), .random_table(random_table), .hash(input_public_key), .counter(counter));
+	pearson_hash8 ph(.clock(clock), .message(input_key), .reset_n(resetn), .random_table(random_table), .hash(input_public_key), .finished(finished));
 	
-	always @(*)
+	always @(posedge clock)
 	begin
 		case (public_key)
 			8'b0: begin
@@ -23,7 +23,7 @@ module verify_key(public_key, input_key, random_table, clock, correct);
 			end
 			default: begin
 				resetn <= 1'b1;
-				if (counter == 3'b111)
+				if (finished == 1'b1)
 					correct <= public_key == input_public_key;
 			end
 		endcase

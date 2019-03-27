@@ -8,66 +8,444 @@ z2
 !i10f 100
 cModel Technology
 dC:/USers/conor/desktop/school/csc258/project/testing
-vmain_control
-!s110 1553630081
+vbar_graph_display
+!s110 1553646851
 !i10b 1
-!s100 8jAU7Z@4fj;@X@iXPJJIW2
-I>XnQI]^Nfa9HcQOiZCQLP2
+!s100 KKKV>Qjloijk9AJ>XCXBT0
+IWIL[VA4=gaVK;3dCKZn9=1
 Z0 VDg1SIo80bB@j0V0VzS_@n1
 Z1 dC:/users/conor/desktop/school/csc258/project/testing
-w1553629708
-8../Controllers/main_control.v
-F../Controllers/main_control.v
-L0 4
-Z2 OV;L;10.5b;63
-r1
-!s85 0
-31
-!s108 1553630081.000000
-!s107 ../Controllers/main_control.v|
-!s90 -reportprogress|300|-timescale|1ns/1ns|../Controllers/main_control.v|
-!i113 1
-Z3 o-timescale 1ns/1ns
-Z4 tCvgOpt 0
-vmemory_control
-!s110 1553630506
-!i10b 1
-!s100 [ZzVB<=FU=]ojjgX8m<<O3
-IW_mFakc0AB;jMki`VJUOo0
-R0
-R1
-w1553630496
-8../Controllers/memory_control.v
-F../Controllers/memory_control.v
+w1553640643
+Z2 8..\Visuals\bar_graph_display_one_counter.v
+Z3 F..\Visuals\bar_graph_display_one_counter.v
 L0 1
-R2
+Z4 OV;L;10.5b;63
 r1
 !s85 0
 31
-!s108 1553630505.000000
-!s107 ../Controllers/memory_control.v|
-!s90 -reportprogress|300|-timescale|1ns/1ns|../Controllers/memory_control.v|
+!s108 1553646851.000000
+Z5 !s107 ..\Hash\lfsr.v|..\Visuals\bar_graph_display_one_counter.v|..\Visuals\vga_adapter\vga_pll.v|..\Visuals\vga_adapter\vga_controller.v|..\Visuals\vga_adapter\vga_address_translator.v|..\Visuals\vga_adapter\vga_adapter.v|..\Visuals\money_display.v|..\Memory\make_starting_memory.v|..\Memory\RAM\ram_real.v|..\Datapath\Verification\complete_transaction.v|..\Datapath\Verification\..\..\Hash\pearson_hash8.v|..\Datapath\Verification\verify_key.v|..\Datapath\Verification\verify_amount.v|..\Datapath\datapath.v|..\Controllers\memory_control.v|..\Controllers\transaction_control.v|..\Controllers\main_control.v|../main.v|
+Z6 !s90 -reportprogress|300|-timescale|1ns/1ns|../main.v|
 !i113 1
-R3
-R4
-vtransaction_control
-!s110 1553630114
+Z7 o-timescale 1ns/1ns
+Z8 tCvgOpt 0
+vbar_graph_display_one_counter
+Z9 !s110 1553650347
 !i10b 1
-!s100 e2B4n@;<SZP[S9dO>Lo:@3
-Inbfol?2]FBbnn9b]nzeLW3
+!s100 ]]4g?e[HzUDZRPZgE5Vl_0
+Io9LOhj4H_f0>nQ`Gf9Rjk2
 R0
 R1
-w1553629666
-8../Controllers/transaction_control.v
-F../Controllers/transaction_control.v
-L0 2
+w1553647424
 R2
+R3
+L0 1
+R4
 r1
 !s85 0
 31
-!s108 1553630113.000000
-!s107 ../Controllers/transaction_control.v|
-!s90 -reportprogress|300|-timescale|1ns/1ns|../Controllers/transaction_control.v|
+Z10 !s108 1553650346.000000
+R5
+R6
 !i113 1
-R3
+R7
+R8
+vcomplete_transaction
+Z11 !s110 1553652165
+!i10b 1
+!s100 gzh<5G68mhcVB@5T2kZ<h1
+IQG[3mC5o8bY6mD5M=nz4E3
+R0
+R1
+w1553029400
+8..\Datapath\Verification\complete_transaction.v
+F..\Datapath\Verification\complete_transaction.v
+L0 1
 R4
+r1
+!s85 0
+31
+Z12 !s108 1553652165.000000
+Z13 !s107 ..\Hash\lfsr.v|..\Memory\make_starting_memory.v|..\Memory\RAM\ram_real.v|..\Datapath\Verification\complete_transaction.v|..\Datapath\Verification\..\..\Hash\pearson_hash8.v|..\Datapath\Verification\verify_key.v|..\Datapath\Verification\verify_amount.v|..\Datapath\datapath.v|..\Controllers\memory_control.v|..\Controllers\transaction_control.v|..\Controllers\main_control.v|../main.v|
+R6
+!i113 1
+R7
+R8
+vdatapath
+R11
+!i10b 1
+!s100 jiFQBSPl6oh[9?<oWnlf[3
+Ic39f56Whk6]SIMNAahSEB0
+R0
+R1
+w1553650437
+8..\Datapath\datapath.v
+F..\Datapath\datapath.v
+L0 5
+R4
+r1
+!s85 0
+31
+R12
+R13
+R6
+!i113 1
+R7
+R8
+vlfsr
+R11
+!i10b 1
+!s100 2V6ADKCz42e;:aael_8R`0
+I5m@;78gEfc^HN?92TX29b1
+R0
+R1
+Z14 w1553644634
+Z15 8..\Hash\lfsr.v
+Z16 F..\Hash\lfsr.v
+L0 20
+R4
+r1
+!s85 0
+31
+R12
+R13
+R6
+!i113 1
+R7
+R8
+vlfsr_bit
+R11
+!i10b 1
+!s100 ]YT4WAPE=TL3>S<>mU_T40
+I7Sad<_a;e]n1H2aA;^<@M1
+R0
+R1
+R14
+R15
+R16
+L0 1
+R4
+r1
+!s85 0
+31
+R12
+R13
+R6
+!i113 1
+R7
+R8
+vmain
+R11
+!i10b 1
+!s100 UeI=fRKbDYO2VX_`=eIkk3
+ID_9;0S[cJ56N;lFDC4=Ai0
+R0
+R1
+w1553650722
+8../main.v
+F../main.v
+L0 13
+R4
+r1
+!s85 0
+31
+R12
+R13
+R6
+!i113 1
+R7
+R8
+vmain_control
+R11
+!i10b 1
+!s100 _S]dMI8jRL<a8^liH1Kd43
+Ih`QBCJ?]JY@=CaQSz_JF<3
+R0
+R1
+w1553638350
+8..\Controllers\main_control.v
+F..\Controllers\main_control.v
+L0 4
+R4
+r1
+!s85 0
+31
+R12
+R13
+R6
+!i113 1
+R7
+R8
+vmake_starting_memory
+R11
+!i10b 1
+!s100 O2PcO[KD1Q>0A<oM572CD2
+II1QCK4fj^bmC]<;6XMPaU1
+R0
+R1
+w1553643994
+8..\Memory\make_starting_memory.v
+F..\Memory\make_starting_memory.v
+L0 1
+R4
+r1
+!s85 0
+31
+R12
+R13
+R6
+!i113 1
+R7
+R8
+vmemory_control
+R11
+!i10b 1
+!s100 TVI71o>PX6kT1=A6XlX350
+IWX9_k=O0LON26b4RCVD1f0
+R0
+R1
+w1553642497
+8..\Controllers\memory_control.v
+F..\Controllers\memory_control.v
+L0 1
+R4
+r1
+!s85 0
+31
+R12
+R13
+R6
+!i113 1
+R7
+R8
+vmoney_display
+R9
+!i10b 1
+!s100 OGf[?`<?ffb61J0IhaKCX1
+IZBYMn7^SUWP;UJ4TW<]Lc3
+R0
+R1
+w1553643552
+8..\Visuals\money_display.v
+F..\Visuals\money_display.v
+L0 6
+R4
+r1
+!s85 0
+31
+R10
+R5
+R6
+!i113 1
+R7
+R8
+vpearson_hash8
+R11
+!i10b 1
+!s100 AhnM1UF6N8aEcBJ2EAVUD2
+IG369^;4Y6E=f`nKd_:e[<2
+R0
+R1
+w1553652123
+8..\Datapath\Verification\..\..\Hash\pearson_hash8.v
+F..\Datapath\Verification\..\..\Hash\pearson_hash8.v
+L0 1
+R4
+r1
+!s85 0
+31
+R12
+R13
+R6
+!i113 1
+R7
+R8
+vram
+R11
+!i10b 1
+!s100 a:H3g82i@djXX3bh90Phb0
+I73o?20fii>FC1bL3=YA8W0
+R0
+R1
+w1553650786
+8..\Memory\RAM\ram_real.v
+F..\Memory\RAM\ram_real.v
+L0 1
+R4
+r1
+!s85 0
+31
+R12
+R13
+R6
+!i113 1
+R7
+R8
+vram_access
+!s110 1553646768
+!i10b 1
+!s100 A`z>Jz2PR>ER?=N_OW@942
+IUd`b6H1fIUIN4fO6O1>R>3
+R0
+R1
+w1553026308
+8..\Memory\RAM\ram.v
+F..\Memory\RAM\ram.v
+L0 56
+R4
+r1
+!s85 0
+31
+!s108 1553646768.000000
+!s107 ..\Hash\lfsr.v|..\Visuals\bar_graph_display_one_counter.v|..\Visuals\vga_adapter\vga_pll.v|..\Visuals\vga_adapter\vga_controller.v|..\Visuals\vga_adapter\vga_address_translator.v|..\Visuals\vga_adapter\vga_adapter.v|..\Visuals\money_display.v|..\Memory\make_starting_memory.v|..\Memory\RAM\ram.v|..\Datapath\Verification\complete_transaction.v|..\Datapath\Verification\..\..\Hash\pearson_hash8.v|..\Datapath\Verification\verify_key.v|..\Datapath\Verification\verify_amount.v|..\Datapath\datapath.v|..\Controllers\memory_control.v|..\Controllers\transaction_control.v|..\Controllers\main_control.v|../main.v|
+R6
+!i113 1
+R7
+R8
+vtransaction_control
+R11
+!i10b 1
+!s100 H^]KiP;B:LSG7ncNUP`1<2
+I0P60?oMRmobZ00`?DMaR<2
+R0
+R1
+w1553630596
+8..\Controllers\transaction_control.v
+F..\Controllers\transaction_control.v
+L0 2
+R4
+r1
+!s85 0
+31
+R12
+R13
+R6
+!i113 1
+R7
+R8
+vverify_amount
+R11
+!i10b 1
+!s100 nf^l:b=^>aBG1Mi=HLLcg2
+IFkXS2hXT7YGFI9F?H=>AX3
+R0
+R1
+w1553566732
+8..\Datapath\Verification\verify_amount.v
+F..\Datapath\Verification\verify_amount.v
+L0 1
+R4
+r1
+!s85 0
+31
+R12
+R13
+R6
+!i113 1
+R7
+R8
+vverify_key
+R11
+!i10b 1
+!s100 _`6ZgVCMKPNLC3GAj?5JY2
+Ig81mZgacLjlC_0lQH>Jm83
+R0
+R1
+w1553651164
+8..\Datapath\Verification\verify_key.v
+F..\Datapath\Verification\verify_key.v
+L0 3
+R4
+r1
+!s85 0
+31
+R12
+R13
+R6
+!i113 1
+R7
+R8
+vvga_adapter
+R9
+!i10b 1
+!s100 hkUB>b^KO=L]9S>>Mk8nj1
+I09jcU2R1b]a5Rho6z0AQn2
+R0
+R1
+Z17 w1553035064
+8..\Visuals\vga_adapter\vga_adapter.v
+F..\Visuals\vga_adapter\vga_adapter.v
+L0 78
+R4
+r1
+!s85 0
+31
+R10
+R5
+R6
+!i113 1
+R7
+R8
+vvga_address_translator
+R9
+!i10b 1
+!s100 3:mV5[e>gggL@b>hDoKk>3
+IM^8b^87jAU11fG2g]XAXE2
+R0
+R1
+R17
+8..\Visuals\vga_adapter\vga_address_translator.v
+F..\Visuals\vga_adapter\vga_address_translator.v
+L0 4
+R4
+r1
+!s85 0
+31
+R10
+R5
+R6
+!i113 1
+R7
+R8
+vvga_controller
+R9
+!i10b 1
+!s100 cVLRelV0U7V5APo3<>Q0P3
+IZ=<SK;<[WM1ViOD9^oaoK3
+R0
+R1
+R17
+8..\Visuals\vga_adapter\vga_controller.v
+F..\Visuals\vga_adapter\vga_controller.v
+L0 9
+R4
+r1
+!s85 0
+31
+R10
+R5
+R6
+!i113 1
+R7
+R8
+vvga_pll
+R9
+!i10b 1
+!s100 4XSTjD`VEiamX^n1@5J`b3
+I5a`oX2EQKd;dnRi:iz@bM3
+R0
+R1
+R17
+8..\Visuals\vga_adapter\vga_pll.v
+F..\Visuals\vga_adapter\vga_pll.v
+L0 36
+R4
+r1
+!s85 0
+31
+R10
+R5
+R6
+!i113 1
+R7
+R8
