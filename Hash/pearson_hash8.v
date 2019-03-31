@@ -10,16 +10,17 @@ module pearson_hash8(clock, message, reset_n, random_table, hash, finished, enab
 	reg [7:0] temp_hash;
 	reg [7:0] access_point;
 	reg [2:0] counter;
+	reg enable_counter;
 
 	//Loop over 8 bits of input
 	always @(posedge clock) begin
 		if (!reset_n) begin
-			access_point <= 8'b10101010;
-			counter <= 3'b000;
 			temp_hash <= 8'b0;
+			enable_counter <= 1'b0;
 		end
 		else if (enable) begin						
 			if (counter != 3'b111) begin
+			 enable_counter <= 1'b1;
 			 case(access_point[7:3])
 				0:
 					temp_hash <= random_table[7:0];
@@ -95,9 +96,8 @@ module pearson_hash8(clock, message, reset_n, random_table, hash, finished, enab
 		if (!reset_n) begin
 			access_point <= 8'b10101010;
 			counter <= 3'b000;
-			temp_hash <= 8'b0;
 		end
-		else  begin		
+		else if (enable_counter) begin		
 			if (counter != 3'b111) begin
 				access_point <= temp_hash ^ message; 
 				counter <= counter + 1'b1;	
