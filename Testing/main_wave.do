@@ -16,367 +16,47 @@ log {/*}
 # add wave {/*} would add all items in top level simulation module.
 add wave {/*}
 
+force {CLOCK_50} 1 0, 0 {10 ns} -repeat 20
 #Check Case 1
 force {SW} 2#0
 force {KEY} 2#1111
-force {CLOCK_50} 2#0
 run 40ns
 
-force {CLOCK_50} 2#1
-run 40ns
+#INIT MEMORY
+force {KEY[0]} 2#0
+run 800ns
 
-force {CLOCK_50} 2#0
-run 40ns
+force {KEY[0]} 2#1
+run 40000ns
 
-force {CLOCK_50} 2#1
-run 40ns
+force {SW[7:0]} 2#00000100
+run 20ns
 
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
+#LOAD AMOUNT
 force {KEY[1]} 2#0
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
+run 800ns
 
 force {KEY[1]} 2#1
-force {CLOCK_50} 2#0
-run 40ns
+run 800ns
 
-force {CLOCK_50} 2#1
-run 40ns
+force {SW[7:0]} 2#01110101
+run 20ns
 
-force {CLOCK_50} 2#0
-run 40ns
+#LOAD KEY
+force {KEY[1]} 2#0
+run 800ns
 
-force {CLOCK_50} 2#1
-run 40ns
+force {KEY[1]} 2#1
+run 800ns
 
-force {CLOCK_50} 2#0
-run 40ns
+force {SW[7:0]} 2#0
+run 20ns
 
-force {CLOCK_50} 2#1
-run 40ns
+#START TRANSACTION
+force {KEY[0]} 2#0
+run 800ns
 
-force {CLOCK_50} 2#0
-run 40ns
+force {KEY[0]} 2#1
+run 800ns
 
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
-
-force {CLOCK_50} 2#0
-run 40ns
-
-force {CLOCK_50} 2#1
-run 40ns
+run 40000ns
