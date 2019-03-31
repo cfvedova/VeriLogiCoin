@@ -6,7 +6,7 @@
 `include "Datapath/datapath.v"
 `include "Memory/RAM/ram_real.v"
 `include "Memory/make_starting_memory.v"
-//`include "Visuals/money_display.v"
+`include "Visuals/money_display.v"
 `include "Hash/lfsr.v"
 
 //`default_nettype none
@@ -16,7 +16,6 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	input CLOCK_50;
 	
 	//Wires for main_control
-	wire main_control_reset = 1'b1;
 	wire load_amount;
 	wire load_key;
 	wire load_memory;
@@ -81,7 +80,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	
 	//Main Controller
 	main_control main_control(.start_signal(~KEY[0]), .load_signal(~KEY[1]), .finished_init(finished_init), .finished_transaction(done_memory_store),
-							  .resetn(main_control_reset), .clock(CLOCK_50), .done_table_init(done_creating_sequence), .reset_others(reset_others), .init_memory(init_memory),
+							  .resetn(KEY[0]), .clock(CLOCK_50), .done_table_init(done_creating_sequence), .reset_others(reset_others), .init_memory(init_memory),
 							  .load_amount(load_amount), .load_key(load_key), .load_memory(load_memory), .start_transaction(start_transaction), .random_init(random_init), .global_reset(global_reset));
 	
 	//Main Controller for Transaction
@@ -95,7 +94,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	
 	
 	//Money_display
-	/*money_display display(.clock(CLOCK_50), .memory_out(memory_values), .load_memory(load_memory), .resetn(overall_reset), 
+	money_display display(.clock(CLOCK_50), .memory_out(memory_values), .load_memory(load_memory), .resetn(overall_reset), 
 		.VGA_CLK(VGA_CLK),   						
 		.VGA_HS(VGA_HS),							
 		.VGA_VS(VGA_VS),							
@@ -104,7 +103,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 		.VGA_R(VGA_R),   						
 		.VGA_G(VGA_G),	 						
 		.VGA_B(VGA_B)   						
-	);*/
+	);
 	
 	always @(*)
 	begin

@@ -77,7 +77,7 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 	verify_amount va(.amount(amount), .player_money(player_amount), .clock(clock), .correct(verify_amount_signal));
 	
 	wire [7:0] real_public_key = (player) ? p2_public_key : p1_public_key;
-	verify_key vk(.public_key(real_public_key), .input_key(key), .random_table(random_table), .clock(clock), .correct(verify_key_signal));
+	verify_key vk(.process(process), .resetn(resetn), .public_key(real_public_key), .input_key(key), .random_table(random_table), .clock(clock), .correct(verify_key_signal));
 	
 	wire [7:0] p1_amount_out, p2_amount_out;
 	complete_transaction ct(.p1_amount(p1_amount), .p2_amount(p2_amount), .amount_change(amount), .person(player), .clock(clock), .p1_amount_out(p1_amount_out), .p2_amount_out(p2_amount_out));
