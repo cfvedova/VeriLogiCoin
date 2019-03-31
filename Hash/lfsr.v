@@ -9,7 +9,7 @@ module lfsr_bit(data, clk, reset);
 	always @ (posedge clk)
 	begin
 		if (!reset)
-			data_next <= 32'h60BCd9BE ; //An LFSR cannot have an all 0 state, thus reset to all 1's
+			data_next <= 32'h60BCd9BE ; //An LFSR cannot have an all 0 state
 		else
 			data_next <= {data_next[30:0], feedback}; //shift left the xor'd every posedge clockgit 
 	end
@@ -35,7 +35,7 @@ module lfsr(random_sequence, clk, reset, done_creating_sequence, enable);
 	always @(posedge clk)
 	begin
 		if (!reset) begin
-			counter <= 9'b000000111;
+			counter <= 9'b111111111;
 			generated_seq <= 256'b0;
 		end
 		else 

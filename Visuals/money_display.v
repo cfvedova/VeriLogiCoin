@@ -82,7 +82,7 @@ module money_display(clock, memory_out, load_memory, resetn,
 	bar_graph_display_one_counter p2_money(
 		.clk(clock),
 		.resetn(resetn),
-		.start_x(9'b100101110),
+		.start_x(9'b10101110),
 		.start_y(8'b00001010),
 		.graph_height(p2_bar_height),
 		.enable(p1_done && load_memory),

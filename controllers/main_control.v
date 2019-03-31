@@ -28,7 +28,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
     begin   // Start of state_table
         case (y_Q)
 			Startup: begin
-				if (!load_signal) Y_D = Startup;
+				if (!start_signal) Y_D = Startup;
 				else Y_D = INIT1;
 			end
 			INIT1: begin
@@ -212,7 +212,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
     always @(posedge clock)
     begin   // Start of state_FFs (state register)
         if(resetn == 1'b0) begin
-            y_Q <= start;
+            y_Q <= Startup;
 			end
         else begin
             y_Q <= Y_D;

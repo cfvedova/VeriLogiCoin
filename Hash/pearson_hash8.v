@@ -1,7 +1,7 @@
-module pearson_hash8(clock, message, reset_n, random_table, hash, finished);
+module pearson_hash8(clock, message, reset_n, random_table, hash, finished, enable);
 	//Assume 8 bit wide sequencing
 	input [7:0] message;
-	input reset_n, clock;
+	input reset_n, clock, enable;
 	input [287:0] random_table;
 	output [7:0] hash;
 	output finished;
@@ -18,11 +18,7 @@ module pearson_hash8(clock, message, reset_n, random_table, hash, finished);
 			counter <= 3'b000;
 			temp_hash <= 8'b0;
 		end
-		else begin
-			if (counter != 3'b111) begin
-				access_point <= temp_hash ^ message; 
-				counter <= counter + 1'b1;	
-			end
+		else if (enable) begin						
 			if (counter != 3'b111) begin
 			 case(access_point[7:3])
 				0:
@@ -94,7 +90,20 @@ module pearson_hash8(clock, message, reset_n, random_table, hash, finished);
 			end
 		end
 	end
-
+	
+	always @(negedge clock) begin
+		if (!reset_n) begin
+			access_point <= 8'b10101010;
+			counter <= 3'b000;
+			temp_hash <= 8'b0;
+		end
+		else  begin		
+			if (counter != 3'b111) begin
+				access_point <= temp_hash ^ message; 
+				counter <= counter + 1'b1;	
+			end
+		end
+	end
 	assign hash = (counter == 3'b111) ? temp_hash : 8'b0;
-	assign finished = (counter == 3'b111) ? 1'b1: 1'b0;
+	assign finished = (counter == 3'b111) ? 1'b1 : 1'b0;
 endmodule
