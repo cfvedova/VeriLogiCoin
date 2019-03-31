@@ -68,7 +68,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	lfsr lfsr(.random_sequence(random_table), .clk(CLOCK_50), .reset(global_reset), .done_creating_sequence(done_creating_sequence), .enable(random_init));
 	
 	//INIT Memory
-	make_starting_memory starting_mem(.clock(CLOCK_50), .resetn(global_reset), .random_table(random_table), .starting_memory(starting_memory));
+	make_starting_memory starting_mem(.clock(CLOCK_50), .resetn(global_reset), .random_table(random_table), .init_memory(init_memory), .starting_memory(starting_memory));
 	
 	//Memory RAM
 	ram ram1(.clock(CLOCK_50), .access_type(access_type), .data_in(data_in), .wren(wren), .result(memory_values), .resetn(global_reset));
@@ -80,7 +80,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	
 	//Main Controller
 	main_control main_control(.start_signal(~KEY[0]), .load_signal(~KEY[1]), .finished_init(finished_init), .finished_transaction(done_memory_store),
-							  .resetn(KEY[0]), .clock(CLOCK_50), .done_table_init(done_creating_sequence), .reset_others(reset_others), .init_memory(init_memory),
+							  .resetn(KEY[2]), .clock(CLOCK_50), .done_table_init(done_creating_sequence), .reset_others(reset_others), .init_memory(init_memory),
 							  .load_amount(load_amount), .load_key(load_key), .load_memory(load_memory), .start_transaction(start_transaction), .random_init(random_init), .global_reset(global_reset));
 	
 	//Main Controller for Transaction

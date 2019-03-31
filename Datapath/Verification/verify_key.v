@@ -10,9 +10,9 @@ module verify_key(resetn, public_key, input_key, random_table, clock, correct, p
 	output reg correct;
 	wire [7:0] input_public_key;
 	wire finished;
+	reg reg_enable;
 	wire enable;
 	assign enable = reg_enable;
-	reg reg_enable;
 	
 	pearson_hash8 ph(.clock(clock), .message(input_key), .reset_n(resetn), .random_table(random_table), .hash(input_public_key), .finished(finished), .enable(enable));
 	

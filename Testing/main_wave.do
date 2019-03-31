@@ -16,11 +16,14 @@ log {/*}
 # add wave {/*} would add all items in top level simulation module.
 add wave {/*}
 
-force {CLOCK_50} 1 0, 0 {10 ns} -repeat 20
+force {CLOCK_50} 1 0, 0 {10 ns} -repeat 20ns
 #Check Case 1
 force {SW} 2#0
-force {KEY} 2#1111
-run 40ns
+force {KEY} 2#1011
+run 800ns
+
+force {KEY[2]} 2#1
+run 800ns
 
 #INIT MEMORY
 force {KEY[0]} 2#0
