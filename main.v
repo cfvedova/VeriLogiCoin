@@ -40,6 +40,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	wire wren;
 	wire access_type;
 	wire done_memory_store;
+	wire done_hash_store;
 	wire [47:0] data_in;
 	wire [47:0] starting_memory;
 	
@@ -74,9 +75,9 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	ram ram1(.clock(CLOCK_50), .access_type(access_type), .data_in(data_in), .wren(wren), .result(memory_values), .resetn(global_reset));
 	
 	//Memory Controller
-	memory_control mem_control(.clock(CLOCK_50), .global_reset(global_reset), .resetn(overall_reset), .load_memory(load_memory), .init_memory(init_memory), .process(process),
-							   .datapath_out(result_out), .starting_memory(starting_memory), .write_enable(wren), .access_type(access_type),
-							   .data_in(data_in), .load_registers(load_registers), .done(done_memory_store), .finished_init(finished_init));
+	memory_control mem_control(.clock(CLOCK_50), .global_reset(global_reset), .resetn(overall_reset), .load_memory(load_memory), .init_memory(init_memory), .done_mining(done_mining), .process(process),
+							   .datapath_out(result_out), .starting_memory(starting_memory), .mining_hash(mining_hash), .write_enable(wren), .access_type(access_type),
+							   .data_in(data_in), .load_registers(load_registers), .done_hash_store(done_hash_store), .done_memory_store(done_memory_store), .finished_init(finished_init));
 	
 	//Main Controller
 	main_control main_control(.start_signal(~KEY[0]), .load_signal(~KEY[1]), .finished_init(finished_init), .finished_transaction(done_memory_store),
@@ -110,7 +111,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 		case (process)
 			3'b001: done_process <= done_data_process;
 			3'b010: done_process <= done_data_process; //Will be zero until the hash is complete
-			3'b011: done_process <= 1'b1;
+			3'b011: done_process <= done_hash_store;
 			3'b100: done_process <= done_memory_store;
 			default: done_process <= 1'b0;
 		endcase
