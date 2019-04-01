@@ -30,7 +30,7 @@ Z5 !s90 -reportprogress|300|-timescale|1ns/1ns|../main.v|
 Z6 o-timescale 1ns/1ns
 Z7 tCvgOpt 0
 vbar_graph_display_one_counter
-Z8 !s110 1554084481
+Z8 !s110 1554085075
 !i10b 1
 !s100 ]]4g?e[HzUDZRPZgE5Vl_0
 Io9LOhj4H_f0>nQ`Gf9Rjk2
@@ -44,7 +44,7 @@ R4
 r1
 !s85 0
 31
-Z10 !s108 1554084481.000000
+Z10 !s108 1554085075.000000
 Z11 !s107 ..\Hash\lfsr.v|..\Visuals\bar_graph_display_one_counter.v|..\Visuals\vga_adapter\vga_pll.v|..\Visuals\vga_adapter\vga_controller.v|..\Visuals\vga_adapter\vga_address_translator.v|..\Visuals\vga_adapter\vga_adapter.v|..\Visuals\money_display.v|..\Memory\make_starting_memory.v|..\Memory\RAM\ram_real.v|..\Datapath\Verification\..\..\Hash\pearson_hash64.v|..\Datapath\Verification\mine_block.v|..\Datapath\Verification\complete_transaction.v|..\Datapath\Verification\..\..\Hash\pearson_hash8.v|..\Datapath\Verification\verify_key.v|..\Datapath\Verification\verify_amount.v|..\Datapath\datapath.v|..\Controllers\memory_control.v|..\Controllers\transaction_control.v|..\Controllers\main_control.v|../main.v|
 R5
 !i113 1
@@ -303,7 +303,7 @@ R5
 R6
 R7
 vram
-R8
+!s110 1554084481
 !i10b 1
 !s100 a:H3g82i@djXX3bh90Phb0
 I73o?20fii>FC1bL3=YA8W0
@@ -317,7 +317,7 @@ R4
 r1
 !s85 0
 31
-R10
+!s108 1554084481.000000
 R11
 R5
 !i113 1

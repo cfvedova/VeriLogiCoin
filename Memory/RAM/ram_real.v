@@ -9,9 +9,10 @@ module ram(clock, access_type, data_in, wren, result, resetn);
 	reg [7:0] previous_hash;
 	
 	always @(posedge clock) begin
-		if (!resetn)
+		if (!resetn) begin
 			transaction_data <= 48'b0;
 			previous_hash <= 8'b11111111;
+		end
 		else if (wren) begin
 			if (access_type) begin
 				previous_hash <= data_in[7:0];
