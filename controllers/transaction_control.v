@@ -1,5 +1,3 @@
-`include "../hex_decoder.v"
-
 //step == 001 if Verify_Amount; == 010 if Verify_Signature; == 011 if Mine_Block; 100 if Finish_Transaction (Make sure computation is complete); == 000 if no step
 module transaction_control(start_transaction, done_step, done_travel, resetn, clock, step, travel, states);
 	input start_transaction, done_step, done_travel, resetn, clock;
@@ -106,7 +104,7 @@ module transaction_control(start_transaction, done_step, done_travel, resetn, cl
         endcase
     end // enable_signals
 	
-	hex_decoder h1(states, y_Q);
+	hex_decoder h1(.hex_digit(y_Q), .segments(states));
 	
     // State Register
     always @(posedge clock)
