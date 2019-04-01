@@ -8,6 +8,7 @@
 `include "Memory/make_starting_memory.v"
 `include "Visuals/money_display.v"
 `include "Hash/lfsr.v"
+`include "Mining/mine_block.v"
 
 //`default_nettype none
 module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N, VGA_R, VGA_G, VGA_B);
@@ -41,6 +42,10 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	wire access_type;
 	wire done_memory_store;
 	wire done_hash_store;
+	wire load_previous_hash;
+	wire enable_mining;
+	wire done_mining;
+	wire [7:0] new_block;
 	wire [47:0] data_in;
 	wire [47:0] starting_memory;
 	
@@ -76,8 +81,8 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	
 	//Memory Controller
 	memory_control mem_control(.clock(CLOCK_50), .global_reset(global_reset), .resetn(overall_reset), .load_memory(load_memory), .init_memory(init_memory), .done_mining(done_mining), .process(process),
-							   .datapath_out(result_out), .starting_memory(starting_memory), .mining_hash(mining_hash), .write_enable(wren), .access_type(access_type),
-							   .data_in(data_in), .load_registers(load_registers), .done_hash_store(done_hash_store), .done_memory_store(done_memory_store), .finished_init(finished_init));
+							   .datapath_out(result_out), .starting_memory(starting_memory), .mining_hash(new_block), .write_enable(wren), .access_type(access_type),
+							   .data_in(data_in), .load_registers(load_registers), .enable_mining(enable_mining), .done_hash_store(done_hash_store), .done_memory_store(done_memory_store), .finished_init(finished_init), .load_previous_hash(load_previous_hash));
 	
 	//Main Controller
 	main_control main_control(.start_signal(~KEY[0]), .load_signal(~KEY[1]), .finished_init(finished_init), .finished_transaction(done_memory_store),
@@ -91,7 +96,7 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	//Datapath for verifying Info.
 	datapath verdata(.process(process), .clock(CLOCK_50), .random_table(random_table), .memory_values(memory_values), .player_in(1'b0),
 					 .input_amount(SW[7:0]), .input_key(SW[7:0]), .load_amount(load_amount), .load_key(load_key), .load_player(1'b1),
-					 .load_register(load_registers), .resetn(overall_reset), .done_step(done_data_process), .result_out(result_out));
+					 .load_register(load_registers), .enable_mining(enable_mining), .load_previous_hash(load_previous_hash), .resetn(overall_reset), .done_step(done_data_process), .result_out(result_out), .done_mining(done_mining), .new_block(new_block));
 	
 	
 	//Money_display

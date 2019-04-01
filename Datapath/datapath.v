@@ -2,16 +2,19 @@
 `include "Verification/verify_key.v"
 `include "Verification/complete_transaction.v"
 
-module datapath(process, clock, random_table, memory_values, player_in, input_amount, input_key, load_amount, load_key, load_player, load_register, resetn, done_step, result_out);
+module datapath(process, clock, random_table, memory_values, player_in, input_amount, input_key, load_amount, load_key, load_player, load_register, enable_mining, load_previous_hash, resetn, done_step, result_out, done_mining, new_block);
 	input [287:0] random_table;
 	input [47:0] memory_values;
-	input clock, load_amount, load_key, load_player, load_register, resetn;
+	input clock, load_amount, load_key, load_player, load_register, load_previous_hash, resetn;
 	input [2:0] process;
 	input [7:0] input_amount, input_key;
 	input player_in;
+	input enable_mining;
 	
 	output reg done_step;
 	output [47:0] result_out;
+	output done_mining;
+	output [7:0] new_block;
 	
 	wire verify_amount_signal, verify_key_signal;
 	
@@ -23,6 +26,7 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 	reg [7:0] p2_public_key;
 	reg [7:0] p1_amount;
 	reg [7:0] p2_amount;
+	reg [7:0] previous_hash;
 	reg player;
 	
 	//Input Amount Register
@@ -73,11 +77,24 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 		end
 	end
 	
+	always @(posedge clock)
+	begin
+		if (resetn == 1'b0) begin
+			previous_hash <= 8'b0;
+		end
+		else if (load_previous_hash) begin
+			previous_hash <= memory_values[7:0];
+		end
+	end
+	
 	wire [7:0] player_amount = (player) ? p2_amount: p1_amount;
 	verify_amount va(.amount(amount), .player_money(player_amount), .clock(clock), .correct(verify_amount_signal));
 	
 	wire [7:0] real_public_key = (player) ? p2_public_key : p1_public_key;
 	verify_key vk(.process(process), .resetn(resetn), .public_key(real_public_key), .input_key(key), .random_table(random_table), .clock(clock), .correct(verify_key_signal));
+	
+	wire [7:0] private_key = (player) ? p2_private_key : p1_private_key;
+	mine_block mine_block1(.clock(clock), .resetn(resetn), .enable(enable_mining), .previous_hash(previous_hash), .signature(private_key), .amount(amount), .transaction_direction(player), .random_table(random_table), .done_mining(done_mining), .new_block(new_block));
 	
 	wire [7:0] p1_amount_out, p2_amount_out;
 	complete_transaction ct(.p1_amount(p1_amount), .p2_amount(p2_amount), .amount_change(amount), .person(player), .clock(clock), .p1_amount_out(p1_amount_out), .p2_amount_out(p2_amount_out));
@@ -91,5 +108,6 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 		endcase
 	end
 	
+	#Change for mining
 	assign result_out = {p1_private_key, p1_public_key, p1_amount_out, p2_private_key, p2_public_key, p2_amount_out};
 endmodule
