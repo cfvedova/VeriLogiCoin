@@ -136,7 +136,7 @@ module verification_process_display(clk, resetn, start_x, start_y, enable, x_coo
 	input enable;  
     output [8:0] x_coord; // X value to plot
 	output [7:0] y_coord; // Y value to plot
-	output complete;
+	output reg complete;
 
     // store iteration count (32x32 draw)
 	reg [9:0] counter; // [9:5] -> offset_y [4:0] ->offset_x
