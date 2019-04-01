@@ -1,4 +1,4 @@
-module mine_block(clock, resetn, enable, previous_hash, signature, amount, transaction_direction, done_mining, new_block, random_table);
+module mine_block(clock, resetn, enable, previous_hash, signature, amount, transaction_direction, random_table, done_mining, new_block);
 	input clock, resetn, enable;
 	input [7:0] previous_hash; //Previous block hash
 	input [7:0] signature; //Digital signature from player
@@ -13,7 +13,7 @@ module mine_block(clock, resetn, enable, previous_hash, signature, amount, trans
 	reg [38:0] proof_of_work;
 	
 	//In case no correct hashes can be generated with random_table, finish mining after a long amount of work
-	reg [40:0] backup_counter; 
+	reg [30:0] backup_counter; 
 	reg [3:0] hash_check;
 	
 	
@@ -39,13 +39,13 @@ module mine_block(clock, resetn, enable, previous_hash, signature, amount, trans
 	//Block for proof of work 
 	always @(posedge clock) begin
 		if (!resetn) begin
-			backup_counter <= 41'b0;
+			backup_counter <= 30'b0;
 			proof_of_work <= 39'b0;
 			hash_check <= 4'b1111;
 			hash_reset_reg <= 1'b1;
 		end
 		else begin
-			if (enable) begin
+			if (enable && (backup_counter != {30{1'b1}})  && (hash_check != 4'b0)) begin
 				
 				//Finished hashing 
 				if (finished) begin
@@ -80,6 +80,6 @@ module mine_block(clock, resetn, enable, previous_hash, signature, amount, trans
 	
 	assign hash_reset = hash_reset_reg;
 	assign enable_count = hash_reset_reg;
-	assign done_mining = ((backup_counter == {41{1'b1}})  || (hash_check == 4'b0)) ? 1'b1 : 1'b0;
-	assign new_block = ((backup_counter == {41{1'b1}})  || (hash_check == 4'b0)) ? temp_out : 8'b0;
+	assign done_mining = ((backup_counter == {30{1'b1}})  || (hash_check == 4'b0)) ? 1'b1 : 1'b0;
+	assign new_block = ((backup_counter == {30{1'b1}})  || (hash_check == 4'b0)) ? temp_out : 8'b0;
 endmodule
