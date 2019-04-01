@@ -13,7 +13,7 @@ module mine_block(clock, resetn, enable, previous_hash, signature, amount, trans
 	output [63:0] final_message;
 	
 	//This 39 bit value will change until we succesfully hash 
-	reg [38:0] proof_of_work;
+	reg [37:0] proof_of_work;
 	
 	//In case no correct hashes can be generated with random_table, finish mining after a long amount of work
 	reg [30:0] backup_counter; 
@@ -21,7 +21,7 @@ module mine_block(clock, resetn, enable, previous_hash, signature, amount, trans
 	
 	
 	//The 64 bit message to hash
-	wire [63:0] message = {previous_hash, amount, signature, transaction_direction, proof_of_work};
+	wire [63:0] message = {previous_hash, amount, signature, transaction_direction, proof_of_work, 1'b0};
 	wire [7:0] temp_out;
 	wire finished;
 	
@@ -43,7 +43,7 @@ module mine_block(clock, resetn, enable, previous_hash, signature, amount, trans
 	always @(posedge clock) begin
 		if (!resetn) begin
 			backup_counter <= 30'b0;
-			proof_of_work <= 39'b0;
+			proof_of_work <= 38'b0;
 			hash_check <= 4'b1111;
 			hash_reset_reg <= 1'b1;
 		end
