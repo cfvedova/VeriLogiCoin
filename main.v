@@ -4,7 +4,8 @@
 `include "Controllers/transaction_control.v"
 `include "Controllers/memory_control.v"
 `include "Datapath/datapath.v"
-`include "Memory/RAM/ram_real.v"
+`include "Memory/RAM/blockchain_ram_entry.v"
+`include "Memory/data_registers.v"
 `include "Memory/make_starting_memory.v"
 `include "Visuals/money_display.v"
 `include "Hash/lfsr.v"
@@ -51,14 +52,14 @@ module main(SW, KEY, CLOCK_50, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, VGA_CLK
 	
 	//Wires for Memory Control
 	wire load_registers; //Loads registers in datapath
-	wire wren;
+	wire wren_registers;
 	wire access_type;
 	wire done_memory_store;
 	wire done_hash_store;
 	wire load_previous_hash;
 	wire enable_mining;
 	wire done_mining;
-	wire [7:0] new_block;
+	wire [7:0] new_hash;
 	wire [47:0] data_in;
 	wire [47:0] starting_memory;
 	
@@ -71,6 +72,8 @@ module main(SW, KEY, CLOCK_50, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, VGA_CLK
 	
 	//Wires for Memory
 	wire [47:0] memory_values;
+	wire [63:0] new_block;
+	wire [63:0] output_block;
 
 	wire overall_reset = reset_others && global_reset;
 	//Init random table
@@ -79,12 +82,16 @@ module main(SW, KEY, CLOCK_50, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, VGA_CLK
 	//INIT Memory
 	make_starting_memory starting_mem(.clock(CLOCK_50), .resetn(global_reset), .random_table(random_table), .init_memory(init_memory), .starting_memory(starting_memory));
 	
-	//Memory RAM
-	ram ram1(.clock(CLOCK_50), .access_type(access_type), .data_in(data_in), .wren(wren), .result(memory_values), .resetn(global_reset));
+	wire wren_blockchain = access_type && wren_registers; //Only write the block if the registers are wri
+	//Blockchain Storage
+	blockchain blkchain(.currently_hashing(enable_mining), .wren(wren_blockchain), .message(new_block), .clock(CLOCK_50), .resetn(KEY[2]), .output_message(output_block));
+	
+	//Data Registers
+	data_registers data_register1(.clock(CLOCK_50), .access_type(access_type), .data_in(data_in), .wren(wren_registers), .result(memory_values), .resetn(global_reset));
 	
 	//Memory Controller
 	memory_control mem_control(.clock(CLOCK_50), .global_reset(global_reset), .resetn(overall_reset), .load_memory(load_memory), .init_memory(init_memory), .done_mining(done_mining), .process(process),
-							   .datapath_out(result_out), .starting_memory(starting_memory), .mining_hash(new_block), .write_enable(wren), .access_type(access_type),
+							   .datapath_out(result_out), .starting_memory(starting_memory), .mining_hash(new_hash), .write_enable(wren_registers), .access_type(access_type),
 							   .data_in(data_in), .load_registers(load_registers), .enable_mining(enable_mining), .done_hash_store(done_hash_store), .done_memory_store(done_memory_store), .finished_init(finished_init), .load_previous_hash(load_previous_hash));
 	
 	//Main Controller
@@ -100,13 +107,13 @@ module main(SW, KEY, CLOCK_50, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, VGA_CLK
 	datapath verdata(.process(process), .clock(CLOCK_50), .random_table(random_table), .memory_values(memory_values), .player_in(SW[0]),
 					 .input_amount(SW[7:0]), .input_key(SW[7:0]), .load_amount(load_amount), .load_key(load_key), .load_player(load_player),
 					 .load_register(load_registers), .enable_mining(enable_mining), .load_previous_hash(load_previous_hash), .resetn(overall_reset),
-					 .done_step(done_data_process), .result_out(result_out), .done_mining(done_mining), .new_block(new_block), .correct_sk(LEDR[7:0]),
-					 .HEX2(HEX2), .HEX3(HEX3), .HEX4(HEX4), .HEX5(HEX5));
+					 .done_step(done_data_process), .result_out(result_out), .done_mining(done_mining), .new_hash(new_hash), .final_message(new_block),
+					 .correct_sk(LEDR[7:0]), .HEX2(HEX2), .HEX3(HEX3), .HEX4(HEX4), .HEX5(HEX5));
 	
 	assign LEDR[9:8] = 2'b0;
 	
 	//Money_display
-	/*money_display display(.clock(CLOCK_50), .memory_out(memory_values), .load_memory(load_memory), .resetn(overall_reset), 
+	money_display display(.clock(CLOCK_50), .memory_out(memory_values), .load_memory(load_memory), .resetn(overall_reset), 
 		.VGA_CLK(VGA_CLK),   						
 		.VGA_HS(VGA_HS),							
 		.VGA_VS(VGA_VS),							
@@ -115,7 +122,7 @@ module main(SW, KEY, CLOCK_50, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, VGA_CLK
 		.VGA_R(VGA_R),   						
 		.VGA_G(VGA_G),	 						
 		.VGA_B(VGA_B)   						
-	);*/
+	);
 	
 	always @(*)
 	begin

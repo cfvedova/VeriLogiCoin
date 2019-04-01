@@ -1,4 +1,4 @@
-module ram(clock, access_type, data_in, wren, result, resetn);
+module data_registers(clock, access_type, data_in, wren, result, resetn);
 	input clock, resetn;
 	input access_type; //0: player values, 1: blockchain
 	input [47:0] data_in;

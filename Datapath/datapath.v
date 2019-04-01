@@ -4,7 +4,7 @@
 `include "Verification/mine_block.v"
 `include "../hex_decoder.v"
 
-module datapath(process, clock, random_table, memory_values, player_in, input_amount, input_key, load_amount, load_key, load_player, load_register, enable_mining, load_previous_hash, resetn, done_step, result_out, done_mining, new_block, correct_sk, HEX2, HEX3, HEX4, HEX5);
+module datapath(process, clock, random_table, memory_values, player_in, input_amount, input_key, load_amount, load_key, load_player, load_register, enable_mining, load_previous_hash, resetn, done_step, result_out, done_mining, new_hash, final_message, correct_sk, HEX2, HEX3, HEX4, HEX5);
 	input [287:0] random_table;
 	input [47:0] memory_values;
 	input clock, load_amount, load_key, load_player, load_register, load_previous_hash, resetn;
@@ -16,9 +16,10 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 	output reg done_step;
 	output [47:0] result_out;
 	output done_mining;
-	output [7:0] new_block;
+	output [7:0] new_hash;
 	output [6:0] HEX2, HEX3, HEX4, HEX5;
 	output [7:0] correct_sk;
+	output [63:0] final_message;
 	
 	wire verify_amount_signal, verify_key_signal;
 	
@@ -98,9 +99,8 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 	verify_key vk(.process(process), .resetn(resetn), .public_key(real_public_key), .input_key(key), .random_table(random_table), .clock(clock), .correct(verify_key_signal));
 	
 	wire [7:0] private_key = (player) ? p2_private_key : p1_private_key;
-	wire [7:0] output_block;
-	mine_block mine_block1(.clock(clock), .resetn(resetn), .enable(enable_mining), .previous_hash(previous_hash), .signature(private_key), .amount(amount), .transaction_direction(player), .random_table(random_table), .done_mining(done_mining), .new_block(output_block));
-	assign new_block = output_block;
+	mine_block mine_block1(.clock(clock), .resetn(resetn), .enable(enable_mining), .previous_hash(previous_hash), .signature(private_key), .amount(amount),
+						   .transaction_direction(player), .random_table(random_table), .done_mining(done_mining), .new_hash(new_hash), .final_message(final_message));
 	
 	wire [7:0] p1_amount_out, p2_amount_out;
 	complete_transaction ct(.p1_amount(p1_amount), .p2_amount(p2_amount), .amount_change(amount), .person(player), .clock(clock), .p1_amount_out(p1_amount_out), .p2_amount_out(p2_amount_out));

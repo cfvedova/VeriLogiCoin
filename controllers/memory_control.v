@@ -28,9 +28,11 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 	reg start_wait;
 	reg start_wait1;
 	reg start_wait2;
+	reg start_wait_write_hash;
 	reg [3:0] waited;
 	reg [2:0] waited_1;
 	reg [2:0] waited_2;
+	reg [9:0] waited_write_hash;
 	
 	always @(posedge clock) begin
 		if (!resetn || !start_wait) begin
@@ -41,6 +43,9 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 		end
 		if (!resetn || !start_wait2) begin
 			waited_2 <= 3'b0;
+		end
+		if (!resetn || !start_wait_write_hash) begin
+			waited_write_hash <= 10'b0;
 		end
 		if (resetn) begin
 			if (!global_reset) begin
@@ -54,6 +59,9 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 			end
 			if (start_wait2 && waited_2 != 3'b111) begin
 			waited_2 <= waited_2 + 1'b1;
+			end
+			if (start_wait_write_hash && waited_write_hash != 10'b1111111111) begin
+			waited_write_hash <= waited_write_hash + 1'b1;
 			end
 		end		
 	end
@@ -95,7 +103,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				else next_state = Start_Hashing;
 			end
 			Write_new_hash: begin
-					if(waited_1 == 3'b111) next_state = Buffer_3;
+					if(waited_write_hash == 10'b1111111111) next_state = Buffer_3;
 					else next_state = Write_new_hash;
 			end
 			Buffer_3: begin
@@ -115,6 +123,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 		start_wait <= 1'b0;
 		start_wait1 <= 1'b0;
 		start_wait2 <= 1'b0;
+		start_wait_write_hash <= 1'b0;
 		load_registers <= 1'b0;
 		load_previous_hash <= 1'b0;
 		enable_mining <= 1'b0;
@@ -131,6 +140,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				start_wait <= 1'b1;
 				start_wait1 <= 1'b0;
 				start_wait2 <= 1'b0;
+				start_wait_write_hash <= 1'b0;
 				load_registers <= 1'b0;
 				load_previous_hash <= 1'b0;
 				enable_mining <= 1'b0;
@@ -145,6 +155,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				start_wait <= 1'b0;
 				start_wait1 <= 1'b0;
 				start_wait2 <= 1'b1;
+				start_wait_write_hash <= 1'b0;
 				load_registers <= 1'b0;
 				load_previous_hash <= 1'b0;
 				enable_mining <= 1'b0;
@@ -159,6 +170,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				start_wait <= 1'b0;
 				start_wait1 <= 1'b0;
 				start_wait2 <= 1'b0;
+				start_wait_write_hash <= 1'b0;
 				load_registers <= 1'b0;
 				load_previous_hash <= 1'b0;
 				enable_mining <= 1'b0;
@@ -172,6 +184,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				start_wait <= 1'b0;
 				start_wait1 <= 1'b1;
 				start_wait2 <= 1'b0;
+				start_wait_write_hash <= 1'b0;
 				load_registers <= 1'b0;
 				load_previous_hash <= 1'b0;
 				enable_mining <= 1'b0;
@@ -185,6 +198,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				start_wait <= 1'b0;
 				start_wait1 <= 1'b0;
 				start_wait2 <= 1'b1;
+				start_wait_write_hash <= 1'b0;
 				load_registers <= 1'b1;
 				load_previous_hash <= 1'b0;
 				enable_mining <= 1'b0;
@@ -198,6 +212,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				start_wait <= 1'b0;
 				start_wait1 <= 1'b0;
 				start_wait2 <= 1'b0;
+				start_wait_write_hash <= 1'b0;
 				load_registers <= 1'b0;
 				load_previous_hash <= 1'b0;
 				enable_mining <= 1'b0;
@@ -211,6 +226,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				start_wait <= 1'b0;
 				start_wait1 <= 1'b0;
 				start_wait2 <= 1'b1;
+				start_wait_write_hash <= 1'b0;
 				load_registers <= 1'b0;
 				load_previous_hash <= 1'b1;
 				enable_mining <= 1'b0;
@@ -224,6 +240,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				start_wait <= 1'b0;
 				start_wait1 <= 1'b0;
 				start_wait2 <= 1'b0;
+				start_wait_write_hash <= 1'b0;
 				load_registers <= 1'b0;
 				load_previous_hash <= 1'b0;
 				enable_mining <= 1'b1;
@@ -235,8 +252,9 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 			end
 			Write_new_hash: begin
 				start_wait <= 1'b0;
-				start_wait1 <= 1'b1;
+				start_wait1 <= 1'b0;
 				start_wait2 <= 1'b0;
+				start_wait_write_hash <= 1'b1;
 				load_registers <= 1'b0;
 				load_previous_hash <= 1'b0;
 				enable_mining <= 1'b0;
@@ -250,6 +268,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				start_wait <= 1'b0;
 				start_wait1 <= 1'b0;
 				start_wait2 <= 1'b0;
+				start_wait_write_hash <= 1'b0;
 				load_registers <= 1'b0;
 				load_previous_hash <= 1'b0;
 				enable_mining <= 1'b0;
@@ -263,6 +282,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				start_wait <= 1'b0;
 				start_wait1 <= 1'b0;
 				start_wait2 <= 1'b1;
+				start_wait_write_hash <= 1'b0;
 				load_registers <= 1'b0;
 				load_previous_hash <= 1'b0;
 				enable_mining <= 1'b0;

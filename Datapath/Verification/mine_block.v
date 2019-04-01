@@ -1,6 +1,6 @@
 `include "../../Hash/pearson_hash64.v"
 
-module mine_block(clock, resetn, enable, previous_hash, signature, amount, transaction_direction, random_table, done_mining, new_block);
+module mine_block(clock, resetn, enable, previous_hash, signature, amount, transaction_direction, random_table, done_mining, new_hash, final_message);
 	input clock, resetn, enable;
 	input [7:0] previous_hash; //Previous block hash
 	input [7:0] signature; //Digital signature from player
@@ -9,7 +9,8 @@ module mine_block(clock, resetn, enable, previous_hash, signature, amount, trans
 	input [287:0] random_table; //LFSR table
 	
 	output done_mining;
-	output reg[7:0] new_block;
+	output reg[7:0] new_hash;
+	output [63:0] final_message;
 	
 	//This 39 bit value will change until we succesfully hash 
 	reg [38:0] proof_of_work;
@@ -86,14 +87,16 @@ module mine_block(clock, resetn, enable, previous_hash, signature, amount, trans
 	//Block for ouput hash
 	always @(posedge clock) begin
 		if (!resetn) begin
-			new_block <= 8'b0;
+			new_hash <= 8'b0;
 		end
 		if (done_mining) begin
-			new_block <= temp_out;
+			new_hash <= temp_out;
 		end
 	end
 	
 	assign hash_reset = hash_reset_reg;
 	assign enable_count = hash_reset_reg;
 	assign done_mining = ((backup_counter == {30{1'b1}})  || (hash_check == 4'b0)) ? 1'b1 : 1'b0;
+	
+	assign final_message = message;
 endmodule
