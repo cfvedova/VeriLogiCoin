@@ -1,5 +1,3 @@
-`include "../hex_decoder.v"
-
 //load_signal and start_signal are active high; finished_transaction signifies end of the animations fsa
 //load_memory signifies accessing the memory for the money of p1 and p2 to display it.
 //finished_transaction 
@@ -266,7 +264,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
         endcase
     end
 	
-	hex_decoder h0(states, y_Q);
+	hex_decoder h0(.hex_digit(y_Q), .segments(states));
 	
     // State Register
     always @(posedge clock)

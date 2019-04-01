@@ -114,10 +114,10 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 		endcase
 	end
 	
-	hex_decoder h2(HEX2, p2_amount[3:0]);
-	hex_decoder h3(HEX3, p2_amount[7:4]);
-	hex_decoder h4(HEX4, p1_amount[3:0]);
-	hex_decoder h5(HEX5, p1_amount[7:4]);
+	hex_decoder h2(.hex_digit(p2_amount[3:0]), .segments(HEX2));
+	hex_decoder h3(.hex_digit(p2_amount[7:4]), .segments(HEX3));
+	hex_decoder h4(.hex_digit(p1_amount[3:0]), .segments(HEX4));
+	hex_decoder h5(.hex_digit(p1_amount[7:4]), .segments(HEX5));
 	
 	assign correct_sk = private_key;
 	
