@@ -1,7 +1,10 @@
+`include "../hex_decoder.v"
+
 //step == 001 if Verify_Amount; == 010 if Verify_Signature; == 011 if Mine_Block; 100 if Finish_Transaction (Make sure computation is complete); == 000 if no step
-module transaction_control(start_transaction, done_step, done_travel, resetn, clock, step, travel);
+module transaction_control(start_transaction, done_step, done_travel, resetn, clock, step, travel, states);
 	input start_transaction, done_step, done_travel, resetn, clock;
 	
+	output [6:0] states;
 	output reg [2:0] step;
 	output reg [2:0] travel; //The bit of travel tells which travel it is on. travel1 == 001, etc. And not travel == 000.
 	
@@ -102,6 +105,8 @@ module transaction_control(start_transaction, done_step, done_travel, resetn, cl
 			end
         endcase
     end // enable_signals
+	
+	hex_decoder h1(states, y_Q);
 	
     // State Register
     always @(posedge clock)

@@ -2,8 +2,9 @@
 `include "Verification/verify_key.v"
 `include "Verification/complete_transaction.v"
 `include "Verification/mine_block.v"
+`include "../hex_decoder.v"
 
-module datapath(process, clock, random_table, memory_values, player_in, input_amount, input_key, load_amount, load_key, load_player, load_register, enable_mining, load_previous_hash, resetn, done_step, result_out, done_mining, new_block);
+module datapath(process, clock, random_table, memory_values, player_in, input_amount, input_key, load_amount, load_key, load_player, load_register, enable_mining, load_previous_hash, resetn, done_step, result_out, done_mining, new_block, correct_sk, HEX2, HEX3, HEX4, HEX5);
 	input [287:0] random_table;
 	input [47:0] memory_values;
 	input clock, load_amount, load_key, load_player, load_register, load_previous_hash, resetn;
@@ -16,6 +17,8 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 	output [47:0] result_out;
 	output done_mining;
 	output [7:0] new_block;
+	output [6:0] HEX2, HEX3, HEX4, HEX5;
+	output [7:0] correct_sk;
 	
 	wire verify_amount_signal, verify_key_signal;
 	
@@ -110,6 +113,13 @@ module datapath(process, clock, random_table, memory_values, player_in, input_am
 			default: done_step <= 1'b0;
 		endcase
 	end
+	
+	hex_decoder h2(HEX2, p2_amount[3:0]);
+	hex_decoder h3(HEX3, p2_amount[7:4]);
+	hex_decoder h4(HEX4, p1_amount[3:0]);
+	hex_decoder h5(HEX5, p1_amount[7:4]);
+	
+	assign correct_sk = private_key;
 	
 	assign result_out = {p1_private_key, p1_public_key, p1_amount_out, p2_private_key, p2_public_key, p2_amount_out};
 endmodule
