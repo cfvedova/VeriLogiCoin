@@ -122,7 +122,7 @@ module money_display(clock, memory_out, load_memory, resetn,
 			if (!p2_done) begin
 				x_plot <= p2_x_plot;
 				y_plot <= p2_y_plot;
-				plot_colour <= 3'b010
+				plot_colour <= 3'b010;
 			end
 		end
 	end
