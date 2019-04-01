@@ -104,6 +104,6 @@ module pearson_hash64(clock, message, reset_n, random_table, hash, finished, ena
 			end
 		end
 	end
-	assign hash = (counter == 5'b11111) ? temp_hash : 8'b0;
+	assign hash = (counter == 5'b11111) ? temp_hash : 8'b11111111;
 	assign finished = (counter == 5'b11111) ? 1'b1 : 1'b0;
 endmodule
