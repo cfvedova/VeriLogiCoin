@@ -50,12 +50,15 @@ module mine_block(clock, resetn, enable, previous_hash, signature, amount, trans
 			if (enable && (backup_counter != {30{1'b1}})  && (hash_check != 4'b0)) begin
 				
 				//Finished hashing 
-				if (finished) begin
+				if (finished && temp_out[7:4] != 4'b0) begin
 					hash_check <= temp_out[7:4];
 					proof_of_work <= proof_of_work + 1'b1;
 					backup_counter <= backup_counter + 1'b1;
 					hash_reset_reg <= 1'b1;
 				end	
+				if (temp_out[7:4] == 4'b0) begin
+					hash_check <= temp_out[7:4];
+				end
 				
 				//Buffer time finished, begin hashing
 				if (reset_wait == 3'b111) begin
@@ -81,7 +84,7 @@ module mine_block(clock, resetn, enable, previous_hash, signature, amount, trans
 	end
 	
 	//Block for ouput hash
-	always @(done_mining, resetn) begin
+	always @(posedge clock) begin
 		if (!resetn) begin
 			new_block <= 8'b0;
 		end
@@ -89,6 +92,7 @@ module mine_block(clock, resetn, enable, previous_hash, signature, amount, trans
 			new_block <= temp_out;
 		end
 	end
+	
 	assign hash_reset = hash_reset_reg;
 	assign enable_count = hash_reset_reg;
 	assign done_mining = ((backup_counter == {30{1'b1}})  || (hash_check == 4'b0)) ? 1'b1 : 1'b0;

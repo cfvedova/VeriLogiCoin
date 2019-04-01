@@ -35,6 +35,13 @@ run 10000ns
 force {SW[7:0]} 2#00000100
 run 20ns
 
+#LOAD PLAYER
+force {KEY[1]} 2#0
+run 800ns
+
+force {KEY[1]} 2#1
+run 800ns
+
 #LOAD AMOUNT
 force {KEY[1]} 2#0
 run 800ns
@@ -43,6 +50,48 @@ force {KEY[1]} 2#1
 run 800ns
 
 force {SW[7:0]} 2#01110101
+run 20ns
+
+#LOAD KEY
+force {KEY[1]} 2#0
+run 800ns
+
+force {KEY[1]} 2#1
+run 800ns
+
+force {SW[7:0]} 2#0
+run 20ns
+
+#START TRANSACTION
+force {KEY[0]} 2#0
+run 800ns
+
+force {KEY[0]} 2#1
+run 800ns
+
+run 50000ns
+
+#LOAD PLAYER
+force {SW[7:0]} 2#00000101
+run 20ns
+
+force {KEY[1]} 2#0
+run 800ns
+
+force {KEY[1]} 2#1
+run 800ns
+
+force {SW[7:0]} 2#01101000
+run 20ns
+
+#LOAD AMOUNT
+force {KEY[1]} 2#0
+run 800ns
+
+force {KEY[1]} 2#1
+run 800ns
+
+force {SW[7:0]} 2#00011011
 run 20ns
 
 #LOAD KEY

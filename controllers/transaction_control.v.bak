@@ -101,10 +101,6 @@ module transaction_control(start_transaction, done_step, done_travel, resetn, cl
 				step[2:0] <= 3'b100;
 				travel[2:0] <= 3'b0;
 			end
-			default: begin
-				travel[2:0] <= 3'b0;
-				step[2:0] <= 3'b0;
-			end
         endcase
     end // enable_signals
 	

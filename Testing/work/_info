@@ -30,13 +30,13 @@ Z5 !s90 -reportprogress|300|-timescale|1ns/1ns|../main.v|
 Z6 o-timescale 1ns/1ns
 Z7 tCvgOpt 0
 vbar_graph_display_one_counter
-Z8 !s110 1554085506
+Z8 !s110 1554142748
 !i10b 1
-!s100 ]]4g?e[HzUDZRPZgE5Vl_0
-Io9LOhj4H_f0>nQ`Gf9Rjk2
+!s100 M@zbCol>1dK9GinlYd<cz0
+IHBkUcfVE28H?j3<zYNLJ01
 R0
 Z9 dC:/Users/conor/desktop/school/csc258/project/testing
-w1553647424
+Z10 w1554139498
 R2
 R3
 L0 1
@@ -44,8 +44,8 @@ R4
 r1
 !s85 0
 31
-Z10 !s108 1554085506.000000
-Z11 !s107 ..\Hash\lfsr.v|..\Visuals\bar_graph_display_one_counter.v|..\Visuals\vga_adapter\vga_pll.v|..\Visuals\vga_adapter\vga_controller.v|..\Visuals\vga_adapter\vga_address_translator.v|..\Visuals\vga_adapter\vga_adapter.v|..\Visuals\money_display.v|..\Memory\make_starting_memory.v|..\Memory\RAM\ram_real.v|..\Datapath\Verification\..\..\Hash\pearson_hash64.v|..\Datapath\Verification\mine_block.v|..\Datapath\Verification\complete_transaction.v|..\Datapath\Verification\..\..\Hash\pearson_hash8.v|..\Datapath\Verification\verify_key.v|..\Datapath\Verification\verify_amount.v|..\Datapath\datapath.v|..\Controllers\memory_control.v|..\Controllers\transaction_control.v|..\Controllers\main_control.v|../main.v|
+Z11 !s108 1554142748.000000
+Z12 !s107 ..\Hash\lfsr.v|..\Visuals\transaction_display.v|..\Visuals\bar_graph_display_one_counter.v|..\Visuals\vga_adapter\vga_pll.v|..\Visuals\vga_adapter\vga_controller.v|..\Visuals\vga_adapter\vga_address_translator.v|..\Visuals\vga_adapter\vga_adapter.v|..\Visuals\money_display.v|..\Memory\make_starting_memory.v|..\Memory\RAM\ram_real.v|../hex_decoder.v|..\Datapath\Verification\..\..\Hash\pearson_hash64.v|..\Datapath\Verification\mine_block.v|..\Datapath\Verification\complete_transaction.v|..\Datapath\Verification\..\..\Hash\pearson_hash8.v|..\Datapath\Verification\verify_key.v|..\Datapath\Verification\verify_amount.v|..\Datapath\datapath.v|..\Controllers\memory_control.v|..\Controllers\transaction_control.v|..\Controllers\main_control.v|../main.v|
 R5
 !i113 1
 R6
@@ -57,7 +57,7 @@ R8
 IjlXnIdCNCK6dl0F5Z`z9@2
 R0
 R9
-Z12 w1554067725
+Z13 w1554067725
 8..\Datapath\Verification\complete_transaction.v
 F..\Datapath\Verification\complete_transaction.v
 L0 1
@@ -65,8 +65,8 @@ R4
 r1
 !s85 0
 31
-R10
 R11
+R12
 R5
 !i113 1
 R6
@@ -74,20 +74,41 @@ R7
 vdatapath
 R8
 !i10b 1
-!s100 2jU61EU68@oNIb:gDR`X_2
-I8[c7<8CLmDlVE7PXZjnlz2
+!s100 BV2oQze317z698l:DghY92
+IOLS:9^]7Fi=3>`K?;TbPk0
 R0
 R9
-w1554083765
+w1554140018
 8..\Datapath\datapath.v
 F..\Datapath\datapath.v
-L0 6
+L0 7
 R4
 r1
 !s85 0
 31
-R10
 R11
+R12
+R5
+!i113 1
+R6
+R7
+vhex_decoder
+R8
+!i10b 1
+!s100 @a2ob^905c_YUaTCdH^XI1
+IC6482BE2N<^YTDA`D<c940
+R0
+R9
+R10
+8../hex_decoder.v
+F../hex_decoder.v
+L0 1
+R4
+r1
+!s85 0
+31
+R11
+R12
 R5
 !i113 1
 R6
@@ -99,16 +120,16 @@ R8
 I;<BM^?P5OC]kn3gG2OLbP0
 R0
 R9
-R12
-Z13 8..\Hash\lfsr.v
-Z14 F..\Hash\lfsr.v
+R13
+Z14 8..\Hash\lfsr.v
+Z15 F..\Hash\lfsr.v
 L0 20
 R4
 r1
 !s85 0
 31
-R10
 R11
+R12
 R5
 !i113 1
 R6
@@ -120,16 +141,16 @@ R8
 Ib^@HCkSI4oGNQM062CF4T1
 R0
 R9
-R12
 R13
 R14
+R15
 L0 1
 R4
 r1
 !s85 0
 31
-R10
 R11
+R12
 R5
 !i113 1
 R6
@@ -137,11 +158,11 @@ R7
 vmain
 R8
 !i10b 1
-!s100 gkO>2iAdEII8lIA7e?fSS3
-ID;kN;OLdPg^X7>WTPmRG41
+!s100 MkQ]QzUF;:bCIXR9C<mQL2
+IUfOCFnQYkdUdhMnc=JneG3
 R0
 R9
-w1554083183
+w1554141848
 8../main.v
 F../main.v
 L0 13
@@ -149,8 +170,8 @@ R4
 r1
 !s85 0
 31
-R10
 R11
+R12
 R5
 !i113 1
 R6
@@ -158,11 +179,11 @@ R7
 vmain_control
 R8
 !i10b 1
-!s100 `8@nD7X[1cg5G^6nLH5`23
-Inmg94_hehKKW1mLgKnXPR0
+!s100 4gQ5[X[]=YeVi?nOlCO?50
+IM?5CCg=?9CTAIaBG1oNGd0
 R0
 R9
-R12
+w1554139905
 8..\Controllers\main_control.v
 F..\Controllers\main_control.v
 L0 4
@@ -170,8 +191,8 @@ R4
 r1
 !s85 0
 31
-R10
 R11
+R12
 R5
 !i113 1
 R6
@@ -191,8 +212,8 @@ R4
 r1
 !s85 0
 31
-R10
 R11
+R12
 R5
 !i113 1
 R6
@@ -212,8 +233,8 @@ R4
 r1
 !s85 0
 31
-R10
 R11
+R12
 R5
 !i113 1
 R6
@@ -221,11 +242,11 @@ R7
 vmine_block
 R8
 !i10b 1
-!s100 7XKkZ]kU;d`B2k99YG7FV2
-IXM1U>f9g2GNS?5i5bRK>B0
+!s100 fCgikWZ9gW[[fTZ`SIh>K0
+I0<m0o[GdND_]eeOePgfO:3
 R0
 R9
-w1554083953
+w1554141675
 8..\Datapath\Verification\mine_block.v
 F..\Datapath\Verification\mine_block.v
 L0 3
@@ -233,8 +254,8 @@ R4
 r1
 !s85 0
 31
-R10
 R11
+R12
 R5
 !i113 1
 R6
@@ -242,20 +263,20 @@ R7
 vmoney_display
 R8
 !i10b 1
-!s100 :KGzZKFHI23>0@XanjZJm2
-I@=e^7C8HZz84^1:N2cWEC0
+!s100 dU<V4Mm0T9MWI??@KGZc>0
+IoO<nedFi4RnlalS]l:1zM0
 R0
 R9
-R12
+R10
 8..\Visuals\money_display.v
 F..\Visuals\money_display.v
-L0 6
+L0 7
 R4
 r1
 !s85 0
 31
-R10
 R11
+R12
 R5
 !i113 1
 R6
@@ -275,8 +296,8 @@ R4
 r1
 !s85 0
 31
-R10
 R11
+R12
 R5
 !i113 1
 R6
@@ -296,8 +317,8 @@ R4
 r1
 !s85 0
 31
-R10
 R11
+R12
 R5
 !i113 1
 R6
@@ -317,8 +338,8 @@ R4
 r1
 !s85 0
 31
-R10
 R11
+R12
 R5
 !i113 1
 R6
@@ -347,11 +368,11 @@ R7
 vtransaction_control
 R8
 !i10b 1
-!s100 H^]KiP;B:LSG7ncNUP`1<2
-I0P60?oMRmobZ00`?DMaR<2
+!s100 Cn6I]`UghcfB]@^YLN<bb0
+INfALKUH4fUAz>L`^67AN53
 R0
 R9
-w1554083201
+w1554141773
 8..\Controllers\transaction_control.v
 F..\Controllers\transaction_control.v
 L0 2
@@ -359,8 +380,71 @@ R4
 r1
 !s85 0
 31
-R10
 R11
+R12
+R5
+!i113 1
+R6
+R7
+vtransaction_display
+R8
+!i10b 1
+!s100 d@9ET7LPBkXA3]h?ZgH^A2
+II?:E?U=B7XTF1<9E]f88N1
+R0
+R9
+R10
+Z16 8..\Visuals\transaction_display.v
+Z17 F..\Visuals\transaction_display.v
+L0 1
+R4
+r1
+!s85 0
+31
+R11
+R12
+R5
+!i113 1
+R6
+R7
+vverification_connection_display
+R8
+!i10b 1
+!s100 hUTS@b7OOK?O]mbbnf`YY1
+I@T[In;NLeBVQz7A4MFga:1
+R0
+R9
+R10
+R16
+R17
+L0 96
+R4
+r1
+!s85 0
+31
+R11
+R12
+R5
+!i113 1
+R6
+R7
+vverification_process_display
+R8
+!i10b 1
+!s100 ZA<RVBMd7GjO^5_`VLK2_3
+IM5Wd@S<cYh7bnmc;=1S<83
+R0
+R9
+R10
+R16
+R17
+L0 131
+R4
+r1
+!s85 0
+31
+R11
+R12
 R5
 !i113 1
 R6
@@ -380,8 +464,8 @@ R4
 r1
 !s85 0
 31
-R10
 R11
+R12
 R5
 !i113 1
 R6
@@ -401,8 +485,8 @@ R4
 r1
 !s85 0
 31
-R10
 R11
+R12
 R5
 !i113 1
 R6
@@ -414,7 +498,7 @@ R8
 I09jcU2R1b]a5Rho6z0AQn2
 R0
 R9
-Z15 w1553035064
+Z18 w1553035064
 8..\Visuals\vga_adapter\vga_adapter.v
 F..\Visuals\vga_adapter\vga_adapter.v
 L0 78
@@ -422,8 +506,8 @@ R4
 r1
 !s85 0
 31
-R10
 R11
+R12
 R5
 !i113 1
 R6
@@ -435,7 +519,7 @@ R8
 IM^8b^87jAU11fG2g]XAXE2
 R0
 R9
-R15
+R18
 8..\Visuals\vga_adapter\vga_address_translator.v
 F..\Visuals\vga_adapter\vga_address_translator.v
 L0 4
@@ -443,8 +527,8 @@ R4
 r1
 !s85 0
 31
-R10
 R11
+R12
 R5
 !i113 1
 R6
@@ -456,7 +540,7 @@ R8
 IZ=<SK;<[WM1ViOD9^oaoK3
 R0
 R9
-R15
+R18
 8..\Visuals\vga_adapter\vga_controller.v
 F..\Visuals\vga_adapter\vga_controller.v
 L0 9
@@ -464,8 +548,8 @@ R4
 r1
 !s85 0
 31
-R10
 R11
+R12
 R5
 !i113 1
 R6
@@ -477,7 +561,7 @@ R8
 I5a`oX2EQKd;dnRi:iz@bM3
 R0
 R9
-R15
+R18
 8..\Visuals\vga_adapter\vga_pll.v
 F..\Visuals\vga_adapter\vga_pll.v
 L0 36
@@ -485,8 +569,8 @@ R4
 r1
 !s85 0
 31
-R10
 R11
+R12
 R5
 !i113 1
 R6
