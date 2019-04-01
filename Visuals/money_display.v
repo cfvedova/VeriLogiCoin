@@ -3,6 +3,7 @@
 `include "vga_adapter/vga_controller.v"
 `include "vga_adapter/vga_pll.v"
 `include "bar_graph_display_one_counter.v"
+`include "transaction_display.v"
 module money_display(clock, memory_out, load_memory, resetn, 
 		VGA_CLK,   						//	VGA Clock
 		VGA_HS,							//	VGA H_SYNC
@@ -39,6 +40,10 @@ module money_display(clock, memory_out, load_memory, resetn,
 	wire [6:0] p1_bar_height = memory_out[31:25];
 	wire [6:0] p2_bar_height = memory_out[7:1];
 	
+	wire [8:0] t1_x_plot;
+	wire [7:0] t1_y_plot;
+	wire t1_done;
+	
 	reg [8:0] x_plot;
 	reg [7:0] y_plot;
 	// Create an Instance of a VGA controller - there can be only one!
@@ -74,7 +79,7 @@ module money_display(clock, memory_out, load_memory, resetn,
 		.start_x(9'b000001010),
 		.start_y(8'b00001010),
 		.graph_height(p1_bar_height),
-		.enable(load_memory),
+		.enable(t1_done),
 		.x_coord(p1_x_plot),
 		.y_coord(p1_y_plot),
 		.done(p1_done));
@@ -89,9 +94,24 @@ module money_display(clock, memory_out, load_memory, resetn,
 		.x_coord(p2_x_plot),
 		.y_coord(p2_y_plot),
 		.done(p2_done));
-	
+		
+	transaction_display t1(
+		.clk(clock), 
+		.resetn(resetn), 
+		.start_x(9'b000010000), 
+		.start_y(8'b01000000), 
+		.enable(load_memory), 
+		.x_coord(t1_x_plot), 
+		.y_coord(t1_y_plot), 
+		.done_drawing(t1_done));
+		
+		
 	always @(posedge clock) begin
-		if (!p1_done) begin
+		if (!t1_done) begin
+			x_plot <= t1_x_plot;
+			y_plot <= t1_y_plot;
+		end
+		else if (!p1_done) begin
 			x_plot <= p1_x_plot;
 			y_plot <= p1_y_plot;
 		end

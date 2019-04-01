@@ -101,56 +101,31 @@ module verification_connection_display(clk, resetn, start_x, start_y, enable, x_
 	input enable;  
     output [8:0] x_coord; // X value to plot
 	output [7:0] y_coord; // Y value to plot
-	output complete; 
+	output reg complete; 
 
-     
-    // input registers
-    reg [8:0] x;
-	reg [7:0] y;
-
-    // store iteration count
-	reg [4:0] offset_x; //Connection signal is 32 pixels wide
-	reg offset_y; // Connection signal is 2 pixels tall
-	wire y_enable;
-    
+    // store iteration count (32x2 draw)
+	reg [5:0] counter; // [5] -> offset_y [4:0] ->offset_x
+  
     // Registers x, y with respective input logic
     always @ (posedge clk) begin
         if (!resetn) begin
-            x <= start_x;
-			y <= start_y;
-        end
+            complete <= 1'b0;
+			counter <= 6'b0;
+        end		
+		else begin
+			if (enable) begin
+				if (counter != 6'b111111) begin
+					counter <= counter + 1'b1;
+				end
+				else begin
+					complete <= 1'b1;
+				end
+			end
+		end
     end
 
-
-    // counter for x
-	always @(posedge clk) begin
-		if (!resetn)
-			offset_x <= 5'b0;
-		else if (enable) begin
-			if (offset_x != 5'b11111) 
-				offset_x <= offset_x + 1'b1;
-			else 
-				offset_x <= 5'b0;
-		end
-	end
-	
-	assign y_enable = (offset_x == 5'b11111) ? 1 : 0;
-	
-	// counter for y
-	always @(posedge clk) begin
-		if (!resetn)
-			offset_y <= 1'b0;
-		else if (enable && y_enable) begin
-			if (offset_y != 1'b1) 
-				offset_y <= offset_y + 1'b1;
-			else 
-				offset_y <= 1'b0;
-		end
-	end
-
-	assign x_coord = x + offset_x;
-	assign y_coord = y + offset_y; 
-	assign complete = ((x_coord == start_x + 32) && (y_coord == start_y + 2)) ? 1 : 0; //We plotted the entire line
+	assign x_coord = start_x + counter[4:0];
+	assign y_coord = start_y + counter[5]; 
 endmodule
 
 module verification_process_display(clk, resetn, start_x, start_y, enable, x_coord, y_coord, complete);
@@ -161,54 +136,29 @@ module verification_process_display(clk, resetn, start_x, start_y, enable, x_coo
 	input enable;  
     output [8:0] x_coord; // X value to plot
 	output [7:0] y_coord; // Y value to plot
-	output complete;
+	output reg complete;
 
-     
-    // input registers
-    reg [8:0] x;
-	reg [7:0] y;
-
-    // store iteration count
-	reg [4:0] offset_x; //Connection signal is 32 pixels wide
-	reg [4:0] offset_y; // Connection signal is 32 pixels tall
-	wire y_enable;
-    
+    // store iteration count (32x32 draw)
+	reg [9:0] counter; // [9:5] -> offset_y [4:0] ->offset_x
+  
     // Registers x, y with respective input logic
     always @ (posedge clk) begin
         if (!resetn) begin
-            x <= start_x;
-			y <= start_y;
-        end
+            complete <= 1'b0;
+			counter <= 10'b0;
+        end		
+		else begin
+			if (enable) begin
+				if (counter != 10'b1111111111) begin
+					counter <= counter + 1'b1;
+				end
+				else begin
+					complete <= 1'b1;
+				end
+			end
+		end
     end
 
-
-    // counter for x
-	always @(posedge clk) begin
-		if (!resetn)
-			offset_x <= 5'b0;
-		else if (enable) begin
-			if (offset_x != 5'b11111) 
-				offset_x <= offset_x + 1'b1;
-			else 
-				offset_x <= 5'b0;
-		end
-	end
-	
-	assign y_enable = (offset_x == 5'b11111) ? 1 : 0;
-	
-	// counter for y
-	always @(posedge clk) begin
-		if (!resetn)
-			offset_y <= 5'b0;
-		else if (enable && y_enable) begin
-			if (offset_y != 5'b11111) 
-				offset_y <= offset_y + 1'b1;
-			else 
-				offset_y <= 5'b0;
-		end
-	end
-
-	assign x_coord = x + offset_x;
-	assign y_coord = y + offset_y; 
-	assign complete = ((x_coord == start_x + 32) && (y_coord == start_y + 32)) ? 1 : 0; //We plotted the entire box
+	assign x_coord = start_x + counter[9:6];
+	assign y_coord = start_y + counter[4:0];   
 endmodule
