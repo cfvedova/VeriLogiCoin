@@ -1,13 +1,24 @@
 //load_signal and start_signal are active high; finished_transaction signifies end of the animations fsa
 //load_memory signifies accessing the memory for the money of p1 and p2 to display it.
 //finished_transaction 
-module main_control(start_signal, load_signal, finished_init, finished_transaction, resetn, clock, done_table_init, reset_others, load_amount, load_key, load_memory, init_memory, start_transaction, random_init, global_reset);
+module main_control(start_signal, load_signal, finished_init, finished_transaction, resetn, clock, done_table_init, reset_others, load_player, load_amount, load_key, load_memory, init_memory, start_transaction, random_init, global_reset);
 	input start_signal, load_signal, finished_init, finished_transaction, resetn, clock, done_table_init;
-    output reg init_memory, load_memory, load_amount, load_key, start_transaction, reset_others, random_init, global_reset;
+    output reg init_memory, load_memory, load_amount, load_key, start_transaction, reset_others, load_player, random_init, global_reset;
 	
     reg [3:0] y_Q, Y_D; // y_Q represents current state, Y_D represents next state
 
-    localparam start = 4'b0000, Load_Amount_State = 4'b0001, wait1 = 4'b0010, Load_Key = 4'b0011, wait2 = 4'b0100, Transaction = 4'b0101, Reset_Others = 4'b0110, INIT1 = 4'b0111, INIT2 = 4'b1000, Startup = 4'b1001;
+    localparam start = 4'b0000,
+			   Load_Player_State = 4'b0001,
+			   wait1 = 4'b0010,
+			   Load_Amount_State = 4'b0011,
+			   wait2 = 4'b0100,
+			   Load_Key = 4'b0101,
+			   wait3 = 4'b0110,
+			   Transaction = 4'b0111,
+			   Reset_Others = 4'b1000,
+			   INIT1 = 4'b1001,
+			   INIT2 = 4'b1010,
+			   Startup = 4'b1011;
 	
 	reg [1:0] reset_others_counter;
 	reg start_reset_others_counter;
@@ -41,22 +52,30 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 			end
             start: begin
                    if (!load_signal) Y_D = start;
-                   else Y_D = Load_Amount_State;
+                   else Y_D = Load_Player_State;
 		    end
-            Load_Amount_State: begin
-                   if(load_signal) Y_D = Load_Amount_State;
+            Load_Player_State: begin
+                   if(load_signal) Y_D = Load_Player_State;
                    else Y_D = wait1;
 		    end
             wait1: begin
                    if(!load_signal) Y_D = wait1;
+                   else Y_D = Load_Amount_State;
+		    end
+			Load_Amount_State: begin
+                   if(load_signal) Y_D = Load_Amount_State;
+                   else Y_D = wait2;
+		    end
+            wait2: begin
+                   if(!load_signal) Y_D = wait2;
                    else Y_D = Load_Key;
 		    end
             Load_Key: begin
                    if(load_signal) Y_D = Load_Key;
-                   else Y_D = wait2;
+                   else Y_D = wait3;
 		    end
-            wait2: begin
-                   if(!start_signal) Y_D = wait2;
+            wait3: begin
+                   if(!start_signal) Y_D = wait3;
                    else Y_D = Transaction;
 		    end
             Transaction: begin
@@ -76,6 +95,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
         load_amount <= 1'b0;
 		load_key <= 1'b0;
 		load_memory <= 1'b0;
+		load_player <= 1'b0;
 		start_transaction <= 1'b0;
 		reset_others <= 1'b1;
 		init_memory <= 1'b0;
@@ -88,6 +108,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_amount <= 1'b0;
 				load_key <= 1'b0;
 				load_memory <= 1'b0;
+				load_player <= 1'b0;
 				start_transaction <= 1'b0;
 				reset_others <= 1'b1;
 				init_memory <= 1'b0;
@@ -99,6 +120,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_amount <= 1'b0;
 				load_key <= 1'b0;
 				load_memory <= 1'b1;
+				load_player <= 1'b0;
 				start_transaction <= 1'b0;
 				reset_others <= 1'b1;
 				init_memory <= 1'b0;
@@ -106,10 +128,11 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				global_reset <= 1'b1;
 				start_reset_others_counter <= 1'b0;
 			end
-            Load_Amount_State: begin
-				load_amount <= 1'b1;
+			Load_Player_State: begin
+				load_amount <= 1'b0;
 				load_key <= 1'b0;
 				load_memory <= 1'b0;
+				load_player <= 1'b1;
 				start_transaction <= 1'b0;
 				reset_others <= 1'b1;
 				init_memory <= 1'b0;
@@ -121,6 +144,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_amount <= 1'b0;
 				load_key <= 1'b0;
 				load_memory <= 1'b0;
+				load_player <= 1'b0;
 				start_transaction <= 1'b0;
 				reset_others <= 1'b1;
 				init_memory <= 1'b0;
@@ -128,10 +152,11 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				global_reset <= 1'b1;
 				start_reset_others_counter <= 1'b0;
 			end
-            Load_Key: begin
-				load_amount <= 1'b0;
-				load_key <= 1'b1;
+            Load_Amount_State: begin
+				load_amount <= 1'b1;
+				load_key <= 1'b0;
 				load_memory <= 1'b0;
+				load_player <= 1'b0;
 				start_transaction <= 1'b0;
 				reset_others <= 1'b1;
 				init_memory <= 1'b0;
@@ -143,6 +168,31 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_amount <= 1'b0;
 				load_key <= 1'b0;
 				load_memory <= 1'b0;
+				load_player <= 1'b0;
+				start_transaction <= 1'b0;
+				reset_others <= 1'b1;
+				init_memory <= 1'b0;
+				random_init <= 1'b0;
+				global_reset <= 1'b1;
+				start_reset_others_counter <= 1'b0;
+			end
+            Load_Key: begin
+				load_amount <= 1'b0;
+				load_key <= 1'b1;
+				load_memory <= 1'b0;
+				load_player <= 1'b0;
+				start_transaction <= 1'b0;
+				reset_others <= 1'b1;
+				init_memory <= 1'b0;
+				random_init <= 1'b0;
+				global_reset <= 1'b1;
+				start_reset_others_counter <= 1'b0;
+			end
+            wait3: begin
+				load_amount <= 1'b0;
+				load_key <= 1'b0;
+				load_memory <= 1'b0;
+				load_player <= 1'b0;
 				start_transaction <= 1'b0;
 				reset_others <= 1'b1;
 				init_memory <= 1'b0;
@@ -154,6 +204,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_amount <= 1'b0;
 				load_key <= 1'b0;
 				load_memory <= 1'b0;
+				load_player <= 1'b0;
 				start_transaction <= 1'b1;
 				reset_others <= 1'b1;
 				init_memory <= 1'b0;
@@ -165,6 +216,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_amount <= 1'b0;
 				load_key <= 1'b0;
 				load_memory <= 1'b0;
+				load_player <= 1'b0;
 				start_transaction <= 1'b0;
 				reset_others <= 1'b0;
 				init_memory <= 1'b0;
@@ -176,6 +228,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_amount <= 1'b0;
 				load_key <= 1'b0;
 				load_memory <= 1'b0;
+				load_player <= 1'b0;
 				start_transaction <= 1'b0;
 				reset_others <= 1'b1;
 				init_memory <= 1'b0;
@@ -187,6 +240,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_amount <= 1'b0;
 				load_key <= 1'b0;
 				load_memory <= 1'b0;
+				load_player <= 1'b0;
 				start_transaction <= 1'b0;
 				reset_others <= 1'b1;
 				init_memory <= 1'b1;
@@ -198,6 +252,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_amount <= 1'b0;
 				load_key <= 1'b0;
 				load_memory <= 1'b0;
+				load_player <= 1'b0;
 				start_transaction <= 1'b0;
 				reset_others <= 1'b1;
 				init_memory <= 1'b0;
