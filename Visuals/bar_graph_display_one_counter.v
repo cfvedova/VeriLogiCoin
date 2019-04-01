@@ -4,24 +4,24 @@ module bar_graph_display_one_counter(clk, resetn, start_x, start_y, graph_height
 	input [8:0] start_x; // 0 -> 320
 	input [7:0] start_y; // 0 -> 240
 	input enable;  
-	input [6:0] graph_height; // 0 -> 100
+	input [7:0] graph_height; // 0 -> 200
     output [8:0] x_coord; // X value to plot
 	output [7:0] y_coord; // Y value to plot
 	output reg done;
 
     // store iteration count
-	reg [9:0] counter; // counter[9:3] is y plot, counter [2:0] is x plot
+	reg [10:0] counter; // counter[10:3] is y plot, counter [2:0] is x plot
 
     
     // Registers x, y with respective input logic
     always @ (posedge clk) begin
         if (!resetn) begin
 			done <= 1'b0;
-			counter <= 10'b0;
+			counter <= 11'b0;
         end
 		else begin
 			if (enable) begin
-				if (counter[9:3] != graph_height[6:0] || counter[2:0] != 3'b111) begin
+				if (counter[10:3] != (graph_height[7:0] + 1'b1) || counter[2:0] != 3'b000) begin
 					counter <= counter + 1'b1;
 				end
 				else begin
@@ -32,5 +32,5 @@ module bar_graph_display_one_counter(clk, resetn, start_x, start_y, graph_height
     end
 
 	assign x_coord = start_x + counter[2:0];
-	assign y_coord = start_y + counter[9:3]; 
+	assign y_coord = start_y - counter[10:3]; 
 endmodule

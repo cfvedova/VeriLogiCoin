@@ -37,8 +37,8 @@ module money_display(clock, memory_out, load_memory, resetn,
 	wire [7:0] p2_y_plot;
 	wire p2_done;
 	
-	wire [6:0] p1_bar_height = memory_out[31:25];
-	wire [6:0] p2_bar_height = memory_out[7:1];
+	wire [7:0] p1_bar_height = memory_out[31:24];
+	wire [7:0] p2_bar_height = memory_out[7:0];
 	
 	wire [8:0] t1_x_plot;
 	wire [7:0] t1_y_plot;
@@ -76,8 +76,8 @@ module money_display(clock, memory_out, load_memory, resetn,
 	bar_graph_display_one_counter p1_money(
 		.clk(clock),
 		.resetn(resetn),
-		.start_x(9'b000001010),
-		.start_y(8'b00001010),
+		.start_x(9'b000011010),
+		.start_y(8'b11001010),
 		.graph_height(p1_bar_height),
 		.enable(t1_done),
 		.x_coord(p1_x_plot),
@@ -87,8 +87,8 @@ module money_display(clock, memory_out, load_memory, resetn,
 	bar_graph_display_one_counter p2_money(
 		.clk(clock),
 		.resetn(resetn),
-		.start_x(9'b10101110),
-		.start_y(8'b00001010),
+		.start_x(9'b11101110),
+		.start_y(8'b11001010),
 		.graph_height(p2_bar_height),
 		.enable(p1_done && load_memory),
 		.x_coord(p2_x_plot),
@@ -98,8 +98,8 @@ module money_display(clock, memory_out, load_memory, resetn,
 	transaction_display t1(
 		.clk(clock), 
 		.resetn(resetn), 
-		.start_x(9'b000010000), 
-		.start_y(8'b01000000), 
+		.start_x(9'b001110000), 
+		.start_y(8'b11000000), 
 		.enable(load_memory), 
 		.x_coord(t1_x_plot), 
 		.y_coord(t1_y_plot), 

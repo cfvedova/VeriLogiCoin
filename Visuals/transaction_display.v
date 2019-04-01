@@ -45,11 +45,11 @@ module transaction_display(clk, resetn, start_x, start_y, enable, x_coord, y_coo
 	//Drawing
 	verification_connection_display step1(.clk(clk), .resetn(resetn), .start_x(start_x), .start_y(start_y), .enable(enable), .x_coord(step1_x), .y_coord(step1_y), .complete(start_two));
 	verification_process_display step2(.clk(clk), .resetn(resetn), .start_x(start_x + 16), .start_y(start_y - 8), .enable(start_two), .x_coord(step2_x), .y_coord(step2_y), .complete(start_three));
-	verification_connection_display step3(.clk(clk), .resetn(resetn), .start_x(start_x + 32), .start_y(start_y), .enable(start_three), .x_coord(step3_x), .y_coord(step3_y), .complete(start_four));
-	verification_process_display step4(.clk(clk), .resetn(resetn), .start_x(start_x + 48), .start_y(start_y - 8), .enable(start_four), .x_coord(step4_x), .y_coord(step4_y), .complete(start_five));
-	verification_connection_display step5(.clk(clk), .resetn(resetn), .start_x(start_x + 64), .start_y(start_y), .enable(start_five), .x_coord(step5_x), .y_coord(step5_y), .complete(start_six));
-	verification_process_display step6(.clk(clk), .resetn(resetn), .start_x(start_x + 80), .start_y(start_y - 8), .enable(start_six), .x_coord(step6_x), .y_coord(step6_y), .complete(start_seven));
-	verification_connection_display step7(.clk(clk), .resetn(resetn), .start_x(start_x + 96), .start_y(start_y), .enable(start_seven), .x_coord(step7_x), .y_coord(step7_y), .complete(done));
+	verification_connection_display step3(.clk(clk), .resetn(resetn), .start_x(start_x + 64), .start_y(start_y), .enable(start_three), .x_coord(step3_x), .y_coord(step3_y), .complete(start_four));
+	verification_process_display step4(.clk(clk), .resetn(resetn), .start_x(start_x + 112), .start_y(start_y - 8), .enable(start_four), .x_coord(step4_x), .y_coord(step4_y), .complete(start_five));
+	verification_connection_display step5(.clk(clk), .resetn(resetn), .start_x(start_x + 160), .start_y(start_y), .enable(start_five), .x_coord(step5_x), .y_coord(step5_y), .complete(start_six));
+	verification_process_display step6(.clk(clk), .resetn(resetn), .start_x(start_x + 208), .start_y(start_y - 8), .enable(start_six), .x_coord(step6_x), .y_coord(step6_y), .complete(start_seven));
+	verification_connection_display step7(.clk(clk), .resetn(resetn), .start_x(start_x + 256), .start_y(start_y), .enable(start_seven), .x_coord(step7_x), .y_coord(step7_y), .complete(done));
 	
 
 	//Assign plotting points to the current display block
@@ -103,18 +103,18 @@ module verification_connection_display(clk, resetn, start_x, start_y, enable, x_
 	output [7:0] y_coord; // Y value to plot
 	output reg complete; 
 
-    // store iteration count (32x2 draw)
-	reg [5:0] counter; // [5] -> offset_y [4:0] ->offset_x
+    // store iteration count (16x2 draw)
+	reg [4:0] counter; // [4] -> offset_y [3:0] ->offset_x
   
     // Registers x, y with respective input logic
     always @ (posedge clk) begin
         if (!resetn) begin
             complete <= 1'b0;
-			counter <= 6'b0;
+			counter <= 5'b0;
         end		
 		else begin
 			if (enable) begin
-				if (counter != 6'b111111) begin
+				if (counter != 5'b11111) begin
 					counter <= counter + 1'b1;
 				end
 				else begin
@@ -124,8 +124,8 @@ module verification_connection_display(clk, resetn, start_x, start_y, enable, x_
 		end
     end
 
-	assign x_coord = start_x + counter[4:0];
-	assign y_coord = start_y + counter[5]; 
+	assign x_coord = start_x + counter[3:0];
+	assign y_coord = start_y + counter[4]; 
 endmodule
 
 module verification_process_display(clk, resetn, start_x, start_y, enable, x_coord, y_coord, complete);
@@ -139,17 +139,17 @@ module verification_process_display(clk, resetn, start_x, start_y, enable, x_coo
 	output reg complete;
 
     // store iteration count (32x32 draw)
-	reg [9:0] counter; // [9:5] -> offset_y [4:0] ->offset_x
+	reg [8:0] counter; // [8:5] -> offset_y [4:0] ->offset_x
   
     // Registers x, y with respective input logic
     always @ (posedge clk) begin
         if (!resetn) begin
             complete <= 1'b0;
-			counter <= 10'b0;
+			counter <= 9'b0;
         end		
 		else begin
 			if (enable) begin
-				if (counter != 10'b1111111111) begin
+				if (counter != 9'b111111111) begin
 					counter <= counter + 1'b1;
 				end
 				else begin
@@ -159,6 +159,6 @@ module verification_process_display(clk, resetn, start_x, start_y, enable, x_coo
 		end
     end
 
-	assign x_coord = start_x + counter[9:6];
-	assign y_coord = start_y + counter[4:0];   
+	assign x_coord = start_x + counter[8:4];
+	assign y_coord = start_y + counter[3:0];   
 endmodule
