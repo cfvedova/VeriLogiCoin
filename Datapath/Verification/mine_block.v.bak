@@ -1,3 +1,5 @@
+`include "../Hash/pearson_hash64.v"
+
 module mine_block(clock, resetn, enable, previous_hash, signature, amount, transaction_direction, random_table, done_mining, new_block);
 	input clock, resetn, enable;
 	input [7:0] previous_hash; //Previous block hash
@@ -79,15 +81,16 @@ module mine_block(clock, resetn, enable, previous_hash, signature, amount, trans
 	end
 	
 	//Block for ouput hash
-	always @(posedge done_mining, resetn) begin
+	always @(done_mining, resetn) begin
 		if (!resetn) begin
 			new_block <= 8'b0;
 		end
-
-		if (done_mining) begin
+		else if (done_mining) begin
 			new_block <= temp_out;
 		end
-
+		else begin
+			new_block <= new_block;
+		end
 	end
 	assign hash_reset = hash_reset_reg;
 	assign enable_count = hash_reset_reg;

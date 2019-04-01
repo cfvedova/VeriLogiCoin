@@ -1,3 +1,5 @@
+`include "../../Hash/pearson_hash64.v"
+
 module mine_block(clock, resetn, enable, previous_hash, signature, amount, transaction_direction, random_table, done_mining, new_block);
 	input clock, resetn, enable;
 	input [7:0] previous_hash; //Previous block hash
@@ -7,7 +9,7 @@ module mine_block(clock, resetn, enable, previous_hash, signature, amount, trans
 	input [287:0] random_table; //LFSR table
 	
 	output done_mining;
-	output [7:0] new_block;
+	output reg[7:0] new_block;
 	
 	//This 39 bit value will change until we succesfully hash 
 	reg [38:0] proof_of_work;
@@ -72,14 +74,22 @@ module mine_block(clock, resetn, enable, previous_hash, signature, amount, trans
 			if (reset_wait == 3'b111) begin
 				reset_wait <= 3'b0;
 			end	
-			if (enable_count) begin
+			if (enable_count && (backup_counter != {30{1'b1}})  && (hash_check != 4'b0)) begin
 				reset_wait <= reset_wait + 1'b1;
 			end
 		end
 	end
 	
+	//Block for ouput hash
+	always @(done_mining, resetn) begin
+		if (!resetn) begin
+			new_block <= 8'b0;
+		end
+		if (done_mining) begin
+			new_block <= temp_out;
+		end
+	end
 	assign hash_reset = hash_reset_reg;
 	assign enable_count = hash_reset_reg;
 	assign done_mining = ((backup_counter == {30{1'b1}})  || (hash_check == 4'b0)) ? 1'b1 : 1'b0;
-	assign new_block = ((backup_counter == {30{1'b1}})  || (hash_check == 4'b0)) ? temp_out : 8'b0;
 endmodule

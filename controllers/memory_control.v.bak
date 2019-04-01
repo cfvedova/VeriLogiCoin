@@ -8,21 +8,20 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 	output reg write_enable, load_previous_hash, access_type, load_registers, enable_mining, done_hash_store, done_memory_store, finished_init;
 	output reg [47:0] data_in;
 	
-	reg [3:0] current_state;
-	reg [3:0] next_state;
+	reg [2:0] current_state;
+	reg [2:0] next_state;
 	
 	//States
 	localparam 	Init_memory = 4'b0000,
-				Init_memory_Buffer = 4'b0001,
-				Buffer_1 = 4'b0010,
-				Load_data = 4'b0011,
-				Wait1 = 4'b0100,
-				Buffer_2 = 4'b0101,
-				Get_prev_hash = 4'b0110,
-				Start_Hashing = 4'b0111,
-				Write_new_hash = 4'b1000,
-				Buffer_3 = 4'b1001,
-				Write_data = 4'b1010;
+				Buffer_1 = 4'b0001,
+				Load_data = 4'b0010,
+				Wait1 = 4'b0011,
+				Buffer_2 = 4'b0100,
+				Get_prev_hash = 4'b0101,
+				Start_Hashing = 4'b0110,
+				Write_new_hash = 4'b0111,
+				Buffer_3 = 4'b1000,
+				Write_data = 4'b1001;
 	
 	//Wait signals to give buffer time to memory access
 	reg start_wait;
@@ -242,7 +241,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				enable_mining <= 1'b0;
 				write_enable <= 1'b1;
 				done_hash_store <= 1'b0;
-				done_memory_store <= 1'b0;
+				done_memory_store <= 1'b1;
 				access_type <= 1'b1;
 				data_in <= {40'b0, mining_hash};
 			end
@@ -261,6 +260,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 			end
 			Write_data: begin
 				start_wait <= 1'b0;
+				start_waited_init_buffer <= 1'b0;
 				start_wait1 <= 1'b0;
 				start_wait2 <= 1'b1;
 				load_registers <= 1'b0;
