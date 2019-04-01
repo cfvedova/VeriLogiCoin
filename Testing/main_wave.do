@@ -30,7 +30,7 @@ force {KEY[0]} 2#0
 run 800ns
 
 force {KEY[0]} 2#1
-run 100000ns
+run 10000ns
 
 force {SW[7:0]} 2#00000100
 run 20ns
@@ -62,4 +62,4 @@ run 800ns
 force {KEY[0]} 2#1
 run 800ns
 
-run 10000ns
+run 50000ns

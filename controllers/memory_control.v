@@ -256,7 +256,7 @@ module memory_control(clock, global_reset, resetn, load_memory, starting_memory,
 				write_enable <= 1'b0;
 				done_hash_store <= 1'b1;
 				done_memory_store <= 1'b0;
-				access_type <= 1'b0;
+				access_type <= 1'b1;
 				data_in <= {40'b0, mining_hash};
 			end
 			Write_data: begin
