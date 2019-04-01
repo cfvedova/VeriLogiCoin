@@ -21,7 +21,7 @@ module transaction_display(clk, resetn, start_x, start_y, enable, x_coord, y_coo
 
 	//Measure what stage of drawing is complete
 	reg [2:0] step_count;
-	always @(clk) begin
+	always @(posedge clk) begin
 		step_count <= start_two + start_three + start_four + start_five + start_six + start_seven;
 	end
 
@@ -53,7 +53,7 @@ module transaction_display(clk, resetn, start_x, start_y, enable, x_coord, y_coo
 	
 
 	//Assign plotting points to the current display block
-	always @(clk) 	// declare always block
+	always @(posedge clk) 	// declare always block
 	begin
 		case (step_count) // start case statement
 			3'b000: begin

@@ -4,7 +4,7 @@
 `include "vga_adapter/vga_pll.v"
 `include "bar_graph_display_one_counter.v"
 `include "transaction_display.v"
-module money_display(clock, memory_out, load_memory, resetn, 
+module money_display(clock, memory_out, load_memory, resetn, correct, enable_redraw,
 		VGA_CLK,   						//	VGA Clock
 		VGA_HS,							//	VGA H_SYNC
 		VGA_VS,							//	VGA V_SYNC
@@ -18,6 +18,7 @@ module money_display(clock, memory_out, load_memory, resetn,
 	input [47:0] memory_out;
 	input load_memory;
 	input resetn;
+	input correct, enable_redraw;
 	
 	// Do not change the following outputs
 	output			VGA_CLK;   				//	VGA Clock
@@ -37,8 +38,8 @@ module money_display(clock, memory_out, load_memory, resetn,
 	wire [7:0] p2_y_plot;
 	wire p2_done;
 	
-	wire [7:0] p1_bar_height = memory_out[31:24];
-	wire [7:0] p2_bar_height = memory_out[7:0];
+	wire [7:0] p1_bar_height = 8'b11111111 - memory_out[31:24];
+	wire [7:0] p2_bar_height = 8'b11111111 - memory_out[7:0];
 	
 	wire [8:0] t1_x_plot;
 	wire [7:0] t1_y_plot;
@@ -56,7 +57,7 @@ module money_display(clock, memory_out, load_memory, resetn,
 			.colour(plot_colour),
 			.x(x_plot),
 			.y(y_plot),
-			.plot(!p2_done),
+			.plot(enable_redraw || !p2_done),
 			/* Signals for the DAC to drive the monitor. */
 			.VGA_R(VGA_R),
 			.VGA_G(VGA_G),
@@ -91,7 +92,7 @@ module money_display(clock, memory_out, load_memory, resetn,
 		.start_x(9'b11101111),
 		.start_y(8'b11001010),
 		.graph_height(p2_bar_height),
-		.enable(p1_done && load_memory),
+		.enable(p1_done),
 		.x_coord(p2_x_plot),
 		.y_coord(p2_y_plot),
 		.done(p2_done));
@@ -99,19 +100,25 @@ module money_display(clock, memory_out, load_memory, resetn,
 	transaction_display t1(
 		.clk(clock), 
 		.resetn(resetn), 
-		.start_x(9'b001101010), 
+		.start_x(9'b001100010), 
 		.start_y(8'b11000000), 
-		.enable(load_memory), 
+		.enable(load_memory || enable_redraw), 
 		.x_coord(t1_x_plot), 
 		.y_coord(t1_y_plot), 
 		.done_drawing(t1_done));
 		
 		
 	always @(posedge clock) begin
-		if (!t1_done) begin
+		if (!t1_done || enable_redraw) begin
 			x_plot <= t1_x_plot;
 			y_plot <= t1_y_plot;
-			plot_colour <= 3'b111;
+			if (correct) begin
+				plot_colour <= 3'b111;
+			end
+			else begin
+				plot_colour <= 3'b100;
+			end
+			
 		end
 		else if (!p1_done) begin
 			x_plot <= p1_x_plot;
@@ -122,7 +129,7 @@ module money_display(clock, memory_out, load_memory, resetn,
 			if (!p2_done) begin
 				x_plot <= p2_x_plot;
 				y_plot <= p2_y_plot;
-				plot_colour <= 3'b010
+				plot_colour <= 3'b010;
 			end
 		end
 	end
