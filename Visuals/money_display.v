@@ -46,13 +46,14 @@ module money_display(clock, memory_out, load_memory, resetn,
 	
 	reg [8:0] x_plot;
 	reg [7:0] y_plot;
+	reg [2:0] plot_colour;
 	// Create an Instance of a VGA controller - there can be only one!
 	// Define the number of colours as well as the initial background
 	// image file (.MIF) for the controller.
 	vga_adapter VGA(
 			.resetn(resetn),
 			.clock(clock),
-			.colour(3'b010),
+			.colour(plot_colour),
 			.x(x_plot),
 			.y(y_plot),
 			.plot(!p2_done),
@@ -76,7 +77,7 @@ module money_display(clock, memory_out, load_memory, resetn,
 	bar_graph_display_one_counter p1_money(
 		.clk(clock),
 		.resetn(resetn),
-		.start_x(9'b000011010),
+		.start_x(9'b00011111),
 		.start_y(8'b11001010),
 		.graph_height(p1_bar_height),
 		.enable(t1_done),
@@ -87,7 +88,7 @@ module money_display(clock, memory_out, load_memory, resetn,
 	bar_graph_display_one_counter p2_money(
 		.clk(clock),
 		.resetn(resetn),
-		.start_x(9'b11101110),
+		.start_x(9'b11101111),
 		.start_y(8'b11001010),
 		.graph_height(p2_bar_height),
 		.enable(p1_done && load_memory),
@@ -98,7 +99,7 @@ module money_display(clock, memory_out, load_memory, resetn,
 	transaction_display t1(
 		.clk(clock), 
 		.resetn(resetn), 
-		.start_x(9'b001110000), 
+		.start_x(9'b001101010), 
 		.start_y(8'b11000000), 
 		.enable(load_memory), 
 		.x_coord(t1_x_plot), 
@@ -110,15 +111,18 @@ module money_display(clock, memory_out, load_memory, resetn,
 		if (!t1_done) begin
 			x_plot <= t1_x_plot;
 			y_plot <= t1_y_plot;
+			plot_colour <= 3'b111;
 		end
 		else if (!p1_done) begin
 			x_plot <= p1_x_plot;
 			y_plot <= p1_y_plot;
+			plot_colour <= 3'b010;
 		end
 		else begin
 			if (!p2_done) begin
 				x_plot <= p2_x_plot;
 				y_plot <= p2_y_plot;
+				plot_colour <= 3'b010
 			end
 		end
 	end
