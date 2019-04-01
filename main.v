@@ -10,10 +10,23 @@
 `include "Hash/lfsr.v"
 
 //`default_nettype none
-module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N, VGA_R, VGA_G, VGA_B);
+module main(SW, KEY, CLOCK_50, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N, VGA_R, VGA_G, VGA_B);
 	input [9:0] SW;
 	input [3:0] KEY;
 	input CLOCK_50;
+	
+	output [9:0] LEDR;
+	output [6:0] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5;
+	
+	//VGA output for display. Do not change
+	output VGA_CLK;   				//	VGA Clock
+	output VGA_HS;					//	VGA H_SYNC
+	output VGA_VS;					//	VGA V_SYNC
+	output VGA_BLANK_N;				//	VGA BLANK
+	output VGA_SYNC_N;				//	VGA SYNC
+	output [9:0] VGA_R;   				//	VGA Red[9:0]
+	output [9:0] VGA_G;	 				//	VGA Green[9:0]
+	output [9:0] VGA_B;   				//	VGA Blue[9:0]
 	
 	//Wires for main_control
 	wire load_player;
@@ -59,16 +72,6 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	//Wires for Memory
 	wire [47:0] memory_values;
 
-	//VGA output for display. Do not change
-	output VGA_CLK;   				//	VGA Clock
-	output VGA_HS;					//	VGA H_SYNC
-	output VGA_VS;					//	VGA V_SYNC
-	output VGA_BLANK_N;				//	VGA BLANK
-	output VGA_SYNC_N;				//	VGA SYNC
-	output [9:0] VGA_R;   				//	VGA Red[9:0]
-	output [9:0] VGA_G;	 				//	VGA Green[9:0]
-	output [9:0] VGA_B;   				//	VGA Blue[9:0]
-	
 	wire overall_reset = reset_others && global_reset;
 	//Init random table
 	lfsr lfsr(.random_sequence(random_table), .clk(CLOCK_50), .reset(global_reset), .done_creating_sequence(done_creating_sequence), .enable(random_init));
@@ -86,19 +89,21 @@ module main(SW, KEY, CLOCK_50, VGA_CLK, VGA_HS, VGA_VS,	VGA_BLANK_N, VGA_SYNC_N,
 	
 	//Main Controller
 	main_control main_control(.start_signal(~KEY[0]), .load_signal(~KEY[1]), .finished_init(finished_init), .finished_transaction(done_memory_store),
-							  .resetn(KEY[2]), .clock(CLOCK_50), .done_table_init(done_creating_sequence), .reset_others(reset_others), .init_memory(init_memory), .load_player(load_player),
-							  .load_amount(load_amount), .load_key(load_key), .load_memory(load_memory), .start_transaction(start_transaction), .random_init(random_init), .global_reset(global_reset));
+							  .resetn(KEY[2]), .reset_transaction(KEY[3]), .clock(CLOCK_50), .done_table_init(done_creating_sequence), .reset_others(reset_others), .init_memory(init_memory), .load_player(load_player),
+							  .load_amount(load_amount), .load_key(load_key), .load_memory(load_memory), .start_transaction(start_transaction), .random_init(random_init), .global_reset(global_reset), .states(HEX0));
 	
 	//Main Controller for Transaction
 	transaction_control transac_control(.start_transaction(start_transaction), .done_step(done_process), .done_travel(done_travel),
-										.resetn(overall_reset), .clock(CLOCK_50), .step(process), .travel(travel));
+										.resetn(overall_reset), .clock(CLOCK_50), .step(process), .travel(travel), .states(HEX1));
 	
 	//Datapath for verifying Info.
 	datapath verdata(.process(process), .clock(CLOCK_50), .random_table(random_table), .memory_values(memory_values), .player_in(SW[0]),
 					 .input_amount(SW[7:0]), .input_key(SW[7:0]), .load_amount(load_amount), .load_key(load_key), .load_player(load_player),
 					 .load_register(load_registers), .enable_mining(enable_mining), .load_previous_hash(load_previous_hash), .resetn(overall_reset),
-					 .done_step(done_data_process), .result_out(result_out), .done_mining(done_mining), .new_block(new_block));
+					 .done_step(done_data_process), .result_out(result_out), .done_mining(done_mining), .new_block(new_block), .correct_sk(LEDR[7:0]),
+					 .HEX2(HEX2), .HEX3(HEX3), .HEX4(HEX4), .HEX5(HEX5));
 	
+	assign LEDR[9:8] = 2'b0;
 	
 	//Money_display
 	money_display display(.clock(CLOCK_50), .memory_out(memory_values), .load_memory(load_memory), .resetn(overall_reset), 

@@ -1,12 +1,15 @@
+`include "../hex_decoder.v"
+
 //load_signal and start_signal are active high; finished_transaction signifies end of the animations fsa
 //load_memory signifies accessing the memory for the money of p1 and p2 to display it.
 //finished_transaction 
-module main_control(start_signal, load_signal, finished_init, finished_transaction, resetn, clock, done_table_init, reset_others, load_player, load_amount, load_key, load_memory, init_memory, start_transaction, random_init, global_reset);
-	input start_signal, load_signal, finished_init, finished_transaction, resetn, clock, done_table_init;
+module main_control(start_signal, load_signal, finished_init, finished_transaction, resetn, reset_transaction, clock, done_table_init, reset_others, load_player, load_amount, load_key, load_memory, init_memory, start_transaction, random_init, global_reset, states);
+	input start_signal, load_signal, finished_init, finished_transaction, resetn, reset_transaction, clock, done_table_init;
     output reg init_memory, load_memory, load_amount, load_key, start_transaction, reset_others, load_player, random_init, global_reset;
+	output [6:0] states;
 	
     reg [3:0] y_Q, Y_D; // y_Q represents current state, Y_D represents next state
-
+	
     localparam start = 4'b0000,
 			   Load_Player_State = 4'b0001,
 			   wait1 = 4'b0010,
@@ -263,12 +266,17 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
         endcase
     end
 	
+	hex_decoder h0(states, y_Q);
+	
     // State Register
     always @(posedge clock)
     begin   // Start of state_FFs (state register)
         if(resetn == 1'b0) begin
             y_Q <= Startup;
 			end
+		else if (reset_transaction == 1'b0) begin
+			y_Q = Reset_Others;
+		end
         else begin
             y_Q <= Y_D;
 			end
