@@ -113,7 +113,7 @@ module main(SW, KEY, CLOCK_50, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, VGA_CLK
 	assign LEDR[9:8] = 2'b0;
 	
 	//Money_display
-	money_display display(.clock(CLOCK_50), .memory_out(memory_values), .load_memory(load_memory), .resetn(overall_reset), .correct(correct), .enable_redraw(redraw_incorrect_state),
+	money_display display(.clock(CLOCK_50), .memory_out(memory_values), .load_memory(load_memory), .resetn(overall_reset), .enable_redraw(redraw_incorrect_state),
 		.VGA_CLK(VGA_CLK),   						
 		.VGA_HS(VGA_HS),							
 		.VGA_VS(VGA_VS),							
@@ -129,7 +129,7 @@ module main(SW, KEY, CLOCK_50, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, VGA_CLK
 	reg correct;
 	
 	wire redraw_incorrect_state;
-	assign redraw_incorrect_state = second_counter == {39{1'b1}};
+	assign redraw_incorrect_state = !correct;
 	
 	always @(posedge CLOCK_50) begin
 		if (~KEY[3]) begin
