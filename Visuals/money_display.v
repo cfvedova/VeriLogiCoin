@@ -19,6 +19,9 @@ module money_display(clock, memory_out, load_memory, resetn, blackout, done_plot
 	input load_memory;
 	input resetn;
 	input blackout;
+	output done_plotting;
+	
+	assign done_plotting = p2_black_done;
 	
 	output done_plotting;
 	// Do not change the following outputs
