@@ -19,6 +19,9 @@ module money_display(clock, memory_out, load_memory, resetn, blackout, done_plot
 	input load_memory;
 	input resetn;
 	input blackout;
+	output done_plotting;
+	
+	assign done_plotting = p2_black_done;
 	
 	// Do not change the following outputs
 	output			VGA_CLK;   				//	VGA Clock
@@ -136,7 +139,7 @@ module money_display(clock, memory_out, load_memory, resetn, blackout, done_plot
 		.y_coord(p2_black_y_plot),
 		.done(p2_black_done));
 	always @(posedge clock) begin
-		if blackout begin
+		if (blackout) begin
 			plot_colour <= 3'b0;
 			if (!p1_black_done) begin
 				x_plot <= p1_black_x_plot;
