@@ -1,9 +1,9 @@
 //load_signal and start_signal are active high; finished_transaction signifies end of the animations fsa
 //load_memory signifies accessing the memory for the money of p1 and p2 to display it.
 //finished_transaction 
-module main_control(start_signal, load_signal, finished_init, finished_transaction, resetn, reset_transaction, clock, done_table_init, done_plotting, reset_others, load_player, load_amount, load_key, load_memory, init_memory, start_transaction, random_init, global_reset, reset_screen, states);
+module main_control(start_signal, load_signal, finished_init, finished_transaction, resetn, reset_transaction, clock, done_table_init, done_plotting, reset_others, load_player, load_amount, load_key, load_memory, init_memory, start_transaction, random_init, global_reset, blackout, states);
 	input start_signal, load_signal, finished_init, finished_transaction, resetn, reset_transaction, clock, done_table_init, done_plotting;
-    output reg init_memory, load_memory, load_amount, load_key, start_transaction, reset_others, load_player, random_init, global_reset, reset_screen;
+    output reg init_memory, load_memory, load_amount, load_key, start_transaction, reset_others, load_player, random_init, global_reset, blackout;
 	output [6:0] states;
 	
     reg [3:0] y_Q, Y_D; // y_Q represents current state, Y_D represents next state
@@ -20,8 +20,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 			   wait3 = 4'b1001,
 			   Transaction = 4'b1010,
 			   Reset_Others = 4'b1011,
-			   Blackout_Screen = 4'b1100,
-			   Reset_Screen = 4'b1101;
+			   Blackout_Screen = 4'b1100;
 	
 	reg [1:0] reset_others_counter;
 	reg start_reset_others_counter;
@@ -83,11 +82,7 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 		    end
             Transaction: begin
                    if(!finished_transaction) Y_D = Transaction;
-				   else Y_D = Reset_Others;
-			end
-			Reset_Screen: begin
-				if(reset_others_counter != 2'b11) Y_D = Reset_Screen;
-				else Y_D = Blackout_Screen;
+				   else Y_D = Blackout_Screen;
 			end
 			Blackout_Screen: begin
 				if(!done_plotting) Y_D = Blackout_Screen;
@@ -108,8 +103,8 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 		load_memory <= 1'b0;
 		load_player <= 1'b0;
 		start_transaction <= 1'b0;
+		blackout <= 1'b0;
 		reset_others <= 1'b1;
-		reset_screen <= 1'b1;
 		init_memory <= 1'b0;
 		random_init <= 1'b0;
 		global_reset <= 1'b1;
@@ -122,8 +117,8 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_memory <= 1'b0;
 				load_player <= 1'b0;
 				start_transaction <= 1'b0;
+				blackout <= 1'b0;
 				reset_others <= 1'b1;
-				reset_screen <= 1'b1;
 				init_memory <= 1'b0;
 				random_init <= 1'b0;
 				global_reset <= 1'b0;
@@ -135,8 +130,8 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_memory <= 1'b1;
 				load_player <= 1'b0;
 				start_transaction <= 1'b0;
+				blackout <= 1'b0;
 				reset_others <= 1'b1;
-				reset_screen <= 1'b1;
 				init_memory <= 1'b0;
 				random_init <= 1'b0;
 				global_reset <= 1'b1;
@@ -148,8 +143,8 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_memory <= 1'b0;
 				load_player <= 1'b1;
 				start_transaction <= 1'b0;
+				blackout <= 1'b0;
 				reset_others <= 1'b1;
-				reset_screen <= 1'b1;
 				init_memory <= 1'b0;
 				random_init <= 1'b0;
 				global_reset <= 1'b1;
@@ -161,8 +156,8 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_memory <= 1'b0;
 				load_player <= 1'b0;
 				start_transaction <= 1'b0;
+				blackout <= 1'b0;
 				reset_others <= 1'b1;
-				reset_screen <= 1'b1;
 				init_memory <= 1'b0;
 				random_init <= 1'b0;
 				global_reset <= 1'b1;
@@ -174,8 +169,8 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_memory <= 1'b0;
 				load_player <= 1'b0;
 				start_transaction <= 1'b0;
+				blackout <= 1'b0;
 				reset_others <= 1'b1;
-				reset_screen <= 1'b1;
 				init_memory <= 1'b0;
 				random_init <= 1'b0;
 				global_reset <= 1'b1;
@@ -187,8 +182,8 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_memory <= 1'b0;
 				load_player <= 1'b0;
 				start_transaction <= 1'b0;
+				blackout <= 1'b0;
 				reset_others <= 1'b1;
-				reset_screen <= 1'b1;
 				init_memory <= 1'b0;
 				random_init <= 1'b0;
 				global_reset <= 1'b1;
@@ -200,8 +195,8 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_memory <= 1'b0;
 				load_player <= 1'b0;
 				start_transaction <= 1'b0;
+				blackout <= 1'b0;
 				reset_others <= 1'b1;
-				reset_screen <= 1'b1;
 				init_memory <= 1'b0;
 				random_init <= 1'b0;
 				global_reset <= 1'b1;
@@ -213,8 +208,8 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_memory <= 1'b0;
 				load_player <= 1'b0;
 				start_transaction <= 1'b0;
+				blackout <= 1'b0;
 				reset_others <= 1'b1;
-				reset_screen <= 1'b1;
 				init_memory <= 1'b0;
 				random_init <= 1'b0;
 				global_reset <= 1'b1;
@@ -226,34 +221,21 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_memory <= 1'b0;
 				load_player <= 1'b0;
 				start_transaction <= 1'b1;
+				blackout <= 1'b0;
 				reset_others <= 1'b1;
-				reset_screen <= 1'b1;
 				init_memory <= 1'b0;
 				random_init <= 1'b0;
 				global_reset <= 1'b1;
 				start_reset_others_counter <= 1'b0;
 			end
-			Reset_Screen: begin
-				load_amount <= 1'b0;
-				load_key <= 1'b0;
-				load_memory <= 1'b0;
-				load_player <= 1'b0;
-				start_transaction <= 1'b0;
-				reset_others <= 1'b1;
-				reset_screen <= 1'b0;
-				init_memory <= 1'b0;
-				random_init <= 1'b0;
-				global_reset <= 1'b1;
-				start_reset_others_counter <= 1'b1;
-            end
 			Blackout_Screen: begin
 				load_amount <= 1'b0;
 				load_key <= 1'b0;
 				load_memory <= 1'b0;
 				load_player <= 1'b0;
 				start_transaction <= 1'b0;
+				blackout <= 1'b1;
 				reset_others <= 1'b1;
-				reset_screen <= 1'b1;
 				init_memory <= 1'b0;
 				random_init <= 1'b0;
 				global_reset <= 1'b1;
@@ -265,8 +247,8 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_memory <= 1'b0;
 				load_player <= 1'b0;
 				start_transaction <= 1'b0;
+				blackout <= 1'b0;
 				reset_others <= 1'b0;
-				reset_screen <= 1'b1;
 				init_memory <= 1'b0;
 				random_init <= 1'b0;
 				global_reset <= 1'b1;
@@ -278,8 +260,8 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_memory <= 1'b0;
 				load_player <= 1'b0;
 				start_transaction <= 1'b0;
+				blackout <= 1'b0;
 				reset_others <= 1'b1;
-				reset_screen <= 1'b1;
 				init_memory <= 1'b0;
 				random_init <= 1'b1;
 				global_reset <= 1'b1;
@@ -291,8 +273,8 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_memory <= 1'b0;
 				load_player <= 1'b0;
 				start_transaction <= 1'b0;
+				blackout <= 1'b0;
 				reset_others <= 1'b1;
-				reset_screen <= 1'b1;
 				init_memory <= 1'b1;
 				random_init <= 1'b0;
 				global_reset <= 1'b1;
@@ -304,8 +286,8 @@ module main_control(start_signal, load_signal, finished_init, finished_transacti
 				load_memory <= 1'b0;
 				load_player <= 1'b0;
 				start_transaction <= 1'b0;
+				blackout <= 1'b0;
 				reset_others <= 1'b1;
-				reset_screen <= 1'b1;
 				init_memory <= 1'b0;
 				random_init <= 1'b0;
 				global_reset <= 1'b1;
