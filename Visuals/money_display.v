@@ -4,7 +4,7 @@
 `include "vga_adapter/vga_pll.v"
 `include "bar_graph_display_one_counter.v"
 `include "transaction_display.v"
-module money_display(clock, memory_out, load_memory, resetn, 
+module money_display(clock, memory_out, load_memory, resetn, reset_screen, done_plotting,
 		VGA_CLK,   						//	VGA Clock
 		VGA_HS,							//	VGA H_SYNC
 		VGA_VS,							//	VGA V_SYNC

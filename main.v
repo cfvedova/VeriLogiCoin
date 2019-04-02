@@ -39,6 +39,8 @@ module main(SW, KEY, CLOCK_50, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, VGA_CLK
 	wire random_init;
 	wire done_creating_sequence;
 	wire global_reset;
+	wire reset_screen;
+	wire done_plotting;
 	
 	//Connections between controls
 	wire start_transaction;
@@ -95,9 +97,9 @@ module main(SW, KEY, CLOCK_50, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, VGA_CLK
 							   .data_in(data_in), .load_registers(load_registers), .enable_mining(enable_mining), .done_hash_store(done_hash_store), .done_memory_store(done_memory_store), .finished_init(finished_init), .load_previous_hash(load_previous_hash));
 	
 	//Main Controller
-	main_control main_control(.start_signal(~KEY[0]), .load_signal(~KEY[1]), .finished_init(finished_init), .finished_transaction(done_memory_store),
+	main_control main_control(.start_signal(~KEY[0]), .load_signal(~KEY[1]), .finished_init(finished_init), .finished_transaction(done_memory_store), .done_plotting(done_plotting),
 							  .resetn(KEY[2]), .reset_transaction(KEY[3]), .clock(CLOCK_50), .done_table_init(done_creating_sequence), .reset_others(reset_others), .init_memory(init_memory), .load_player(load_player),
-							  .load_amount(load_amount), .load_key(load_key), .load_memory(load_memory), .start_transaction(start_transaction), .random_init(random_init), .global_reset(global_reset), .states(HEX0));
+							  .load_amount(load_amount), .load_key(load_key), .load_memory(load_memory), .start_transaction(start_transaction), .random_init(random_init), .global_reset(global_reset), .reset_screen(reset_screen), .states(HEX0));
 	
 	//Main Controller for Transaction
 	transaction_control transac_control(.start_transaction(start_transaction), .done_step(done_process), .done_travel(done_travel),
@@ -113,7 +115,7 @@ module main(SW, KEY, CLOCK_50, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, VGA_CLK
 	assign LEDR[9:8] = 2'b0;
 	
 	//Money_display
-	money_display display(.clock(CLOCK_50), .memory_out(memory_values), .load_memory(load_memory), .resetn(overall_reset),
+	money_display display(.clock(CLOCK_50), .memory_out(memory_values), .load_memory(load_memory), .resetn(overall_reset), .reset_screen(reset_screen), .done_plotting(done_plotting),
 		.VGA_CLK(VGA_CLK),   						
 		.VGA_HS(VGA_HS),							
 		.VGA_VS(VGA_VS),							
