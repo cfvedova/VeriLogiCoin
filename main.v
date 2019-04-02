@@ -115,7 +115,7 @@ module main(SW, KEY, CLOCK_50, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, VGA_CLK
 	assign LEDR[9:8] = 2'b0;
 	
 	//Money_display
-	money_display display(.clock(CLOCK_50), .memory_out(memory_values), .load_memory(load_memory), .resetn(overall_reset), .reset_screen(reset_screen), .done_plotting(done_plotting),
+	money_display display(.clock(CLOCK_50), .memory_out(memory_values), .load_memory(load_memory), .resetn(overall_reset), .blackout(reset_screen), .done_plotting(done_plotting),
 		.VGA_CLK(VGA_CLK),   						
 		.VGA_HS(VGA_HS),							
 		.VGA_VS(VGA_VS),							

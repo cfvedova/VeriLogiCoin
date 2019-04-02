@@ -106,7 +106,7 @@ module money_display(clock, memory_out, load_memory, resetn, blackout, done_plot
 	transaction_display t1(
 		.clk(clock), 
 		.resetn(resetn), 
-		.start_x(9'b001101010), 
+		.start_x(9'b001001000), 
 		.start_y(8'b11000000), 
 		.enable(load_memory), 
 		.x_coord(t1_x_plot), 
