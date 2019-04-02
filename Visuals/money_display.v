@@ -140,7 +140,7 @@ module money_display(clock, memory_out, load_memory, resetn, blackout, done_plot
 	assign done_plotting = p2_black_done;
 	
 	always @(posedge clock) begin
-		if blackout begin
+		if (blackout) begin
 			plot_colour <= 3'b0;
 			if (!p1_black_done) begin
 				x_plot <= p1_black_x_plot;
