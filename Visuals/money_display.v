@@ -18,7 +18,9 @@ module money_display(clock, memory_out, load_memory, resetn, reset_screen, done_
 	input [47:0] memory_out;
 	input load_memory;
 	input resetn;
+	input reset_screen;
 	
+	output done_plotting;
 	// Do not change the following outputs
 	output			VGA_CLK;   				//	VGA Clock
 	output			VGA_HS;					//	VGA H_SYNC
