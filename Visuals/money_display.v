@@ -4,6 +4,8 @@
 `include "vga_adapter/vga_pll.v"
 `include "bar_graph_display_one_counter.v"
 `include "transaction_display.v"
+`include "plot_black.v"
+
 module money_display(clock, memory_out, load_memory, resetn, blackout, done_plotting,
 		VGA_CLK,   						//	VGA Clock
 		VGA_HS,							//	VGA H_SYNC
@@ -21,9 +23,6 @@ module money_display(clock, memory_out, load_memory, resetn, blackout, done_plot
 	input blackout;
 	output done_plotting;
 	
-	assign done_plotting = p2_black_done;
-	
-	output done_plotting;
 	// Do not change the following outputs
 	output			VGA_CLK;   				//	VGA Clock
 	output			VGA_HS;					//	VGA H_SYNC
@@ -34,26 +33,20 @@ module money_display(clock, memory_out, load_memory, resetn, blackout, done_plot
 	output	[9:0]	VGA_G;	 				//	VGA Green[9:0]
 	output	[9:0]	VGA_B;   				//	VGA Blue[9:0]
 	
+	wire blk_done;
+	wire [8:0] x_coord_blk;
+	wire [7:0] y_coord_blk;
+	
 	wire [8:0] p1_x_plot;
 	wire [7:0] p1_y_plot;
 	wire p1_done;
-	wire p1_black_done;
-	wire p1_black_x_plot;
-	wire p1_black_y_plot;
 	
 	wire [8:0] p2_x_plot;
 	wire [7:0] p2_y_plot;
 	wire p2_done;
-	wire p2_black_done;
-	wire p2_black_x_plot;
-	wire p2_black_y_plot;
 	
 	wire [7:0] p1_bar_height = memory_out[31:24];
 	wire [7:0] p2_bar_height = memory_out[7:0];
-	
-	wire [8:0] t1_x_plot;
-	wire [7:0] t1_y_plot;
-	wire t1_done;
 	
 	reg [8:0] x_plot;
 	reg [7:0] y_plot;
@@ -67,7 +60,7 @@ module money_display(clock, memory_out, load_memory, resetn, blackout, done_plot
 			.colour(plot_colour),
 			.x(x_plot),
 			.y(y_plot),
-			.plot(!p2_done || !p2_black_done),
+			.plot(!p2_done || !blk_done),
 			/* Signals for the DAC to drive the monitor. */
 			.VGA_R(VGA_R),
 			.VGA_G(VGA_G),
@@ -91,7 +84,7 @@ module money_display(clock, memory_out, load_memory, resetn, blackout, done_plot
 		.start_x(9'b00011111),
 		.start_y(8'b11001010),
 		.graph_height(p1_bar_height),
-		.enable(t1_done),
+		.enable(load_memory),
 		.x_coord(p1_x_plot),
 		.y_coord(p1_y_plot),
 		.done(p1_done));
@@ -107,61 +100,21 @@ module money_display(clock, memory_out, load_memory, resetn, blackout, done_plot
 		.y_coord(p2_y_plot),
 		.done(p2_done));
 		
-	transaction_display t1(
-		.clk(clock), 
-		.resetn(resetn), 
-		.start_x(9'b001001000), 
-		.start_y(8'b11000000), 
-		.enable(load_memory), 
-		.x_coord(t1_x_plot), 
-		.y_coord(t1_y_plot), 
-		.done_drawing(t1_done));
 		
+	plot_black plt_blk(.clk(clock), .resetn(resetn), .enable(blackout), .x_coord(x_coord_blk), .y_coord(y_coord_blk), .done(blk_done));
 		
-	bar_graph_display_one_counter p1_black(
-		.clk(clock),
-		.resetn(resetn),
-		.start_x(9'b00011111),
-		.start_y(8'b11001010),
-		.graph_height(8'b11111111),
-		.enable(blackout),
-		.x_coord(p1_black_x_plot),
-		.y_coord(p1_black_y_plot),
-		.done(p1_black_done));
-
-	bar_graph_display_one_counter p2_black(
-		.clk(clock),
-		.resetn(resetn),
-		.start_x(9'b11101111),
-		.start_y(8'b11001010),
-		.graph_height(8'b11111111),
-		.enable(p1_black_done),
-		.x_coord(p2_black_x_plot),
-		.y_coord(p2_black_y_plot),
-		.done(p2_black_done));
-		
-	assign done_plotting = p2_black_done;
+	assign done_plotting = blk_done;
 	
 	always @(posedge clock) begin
 		if (blackout) begin
-			plot_colour <= 3'b0;
-			if (!p1_black_done) begin
-				x_plot <= p1_black_x_plot;
-				y_plot <= p1_black_y_plot;
+			if (!blk_done) begin
+				plot_colour <= 3'b000;
+				x_plot <= x_coord_blk;
+				y_plot <= y_coord_blk;
 			end
-			else begin
-				x_plot <= p2_black_x_plot;
-				y_plot <= p2_black_y_plot;
-			end
-		
 		end
 		else begin
-			if (!t1_done) begin
-				x_plot <= t1_x_plot;
-				y_plot <= t1_y_plot;
-				plot_colour <= 3'b111;
-			end
-			else if (!p1_done) begin
+			if (!p1_done) begin
 				x_plot <= p1_x_plot;
 				y_plot <= p1_y_plot;
 				plot_colour <= 3'b010;

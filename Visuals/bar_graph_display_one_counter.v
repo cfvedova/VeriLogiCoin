@@ -21,7 +21,7 @@ module bar_graph_display_one_counter(clk, resetn, start_x, start_y, graph_height
         end
 		else begin
 			if (enable) begin
-				if (counter[10:3] != (graph_height[7:0] + 1'b1) || counter[2:0] != 3'b000) begin
+				if (counter[10:3] != graph_height[7:0] || counter[2:0] != 3'b111) begin
 					counter <= counter + 1'b1;
 				end
 				else begin
